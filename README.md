@@ -234,8 +234,14 @@ The **Parent Chore Dashboard** is designed to be **efficient and intuitive**, sh
 ---
 
 # 🔧 How to Implement This Dashboard
-Follow these steps to integrate the **Kids Chore & Reward Dashboard** into Home Assistant.
+Follow these steps to quickly set up the **KidsChores Dashboard** in Home Assistant, including both the **Kids** and **Parent** sections.  
 
+This approach creates a **complete dashboard** in one step. Once it’s set up, you can:  
+- 📌 **Move individual cards** to different positions or dashboards.  
+- 🛠️ **Customize the layout** to suit your needs.  
+- 📝 **Extract specific sections** from the dashboard YAML if you prefer to use them individually or in other dashboards.  
+
+If you’re comfortable working with YAML, you can review the dashboard code to **select and reuse any individual cards or sections** that fit your needs.  
 ---
 
 ## 📌 Step 1: Install Custom Cards  
@@ -261,7 +267,7 @@ To keep the dashboard organized, create a **separate section for chore tracking*
 
 ---
 
-## 📌 Step 3: Add the Kids Dashboard YAML  
+## 📌 Step 3: Add the Dashboard YAML  
 1. **Open your new dashboard.**  
 2. Click **"Edit Dashboard" → "Manage Dashboard" 
 3. Click the **"Edit Pencil"** next to the view name and select **"Edit Yaml"**  
@@ -269,7 +275,7 @@ To keep the dashboard organized, create a **separate section for chore tracking*
 
 ![image](https://github.com/user-attachments/assets/21fe22b0-26d8-4031-a1f9-005f10d4f2ad)
 
-
+https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc-dashboard.yaml
 
 
 ---
@@ -280,36 +286,10 @@ Since this YAML uses a **placeholder name**, update it to match your child's nam
 1. **Find and replace all instances of:**  
    - `Kidname` → (e.g., `"Payton"`)  
    - `kidname` → (e.g., `"payton"`)  
-   - `KIDNAME` → (e.g., `"PAYTON"`)  
 2. Ensure **case-sensitive replacement** to avoid errors.  
 3. Click **"Save"** to apply changes.  
 
-Note - If you are using something other than "points" for tracking, you will also need to do a find / replace of all versions being sure to match case.
-
----
-
-## 📌 Step 5: Add the Parent Dashboard YAML  
-1. **Click "Add Card"** and select **"Manual"**  
-2. **Copy and paste the Parent Chore Dashboard YAML** into the card.  
-
-``` yaml
-
-
-```
-
-
----
-
-## 📌 Step 6: Find and Replace Again  
-Since the parent dashboard also references `Kidname`, repeat the **find-and-replace** process. 
-
-1. Replace **all instances** of:  
-   - `Kidname`
-   - `kidname`
-   - `KIDNAME`
-2. Click **"Save"** to apply changes.  
-
-Note - If you are using something other than "points" for tracking, you will also need to do a find / replace of all versions being sure to match case.
+Note - No longer required to change the "points" text, the new dashboard dynamically grabs the point label from the integration.
 
 ---
 
