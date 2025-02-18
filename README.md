@@ -4,6 +4,10 @@ A fully automated **UI dashboard** designed for the [**KidsChores Integration**]
 ## 🌟 Overview  
 The **KidsChores Dashboard** is a **front-end UI** built on top of the **KidsChores Integration**, which handles all chore tracking, reward management, and point calculations in the background. The dashboard provides a user-friendly interface to interact with those features, giving kids a fun, engaging experience and parents a complete management view without any manual setup.  
 
+![image](https://github.com/user-attachments/assets/e684f032-ab47-44c0-98fa-1df4431d2a7e)
+
+<a href="https://www.buymeacoffee.com/shillingcll" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ### What This UI Provides:  
 ✅ **A fully automated, kid-friendly interface** for viewing and claiming tasks.  
 ✅ **A comprehensive parent control panel** for reviewing and approving chore completions and rewards.  
