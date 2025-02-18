@@ -277,7 +277,6 @@ To keep the dashboard organized, create a **separate section for chore tracking*
 
 https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc-dashboard.yaml
 
-
 ---
 
 ## 📌 Step 4: Find and Replace "Kidname"  
@@ -290,6 +289,19 @@ Since this YAML uses a **placeholder name**, update it to match your child's nam
 3. Click **"Save"** to apply changes.  
 
 Note - No longer required to change the "points" text, the new dashboard dynamically grabs the point label from the integration.
+
+---
+
+## 📌 Step 5: Add Required Helpers (UI Support)  
+Currently, the KidsChores Dashboard requires a few **helpers** to support interactive features in the UI. These helpers enable functions such as chore selection and custom date adjustments. While these may be **temporary requirements**, they are necessary for full dashboard functionality at this time.  
+
+You will need to add:  
+- 📂 **input_select.kc_{kid}_chore_list** — For selecting individual chores.  
+- 🗓️ **input_datetime.kc_ui_set_date_helper** — For setting custom due dates.  
+- ⚙️ **Automation: kc_ui_set_date_on_hold** — Triggers date adjustments from the UI.  
+
+📄 [**kc-dashboard-uihelpers.yaml**](https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc-dashboard-uihelpers.yaml)  
+
 
 ---
 
