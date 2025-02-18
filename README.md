@@ -53,6 +53,12 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
 
 ---
 
+### 📌 **Example Kids Dashboard UI:** 
+![image](https://github.com/user-attachments/assets/654c9046-afdf-49f8-bda7-75eff5459cc3) 
+
+
+---
+
 ### 🔹 Dashboard Sections Overview  
 
 #### 1️⃣ Points & Progress Tracking  
@@ -81,6 +87,8 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
 - All chores are claimed with a **single click**—no extra actions needed.  
 - Completion is indicated by icon color and a badge overlay (no separate “Completed” category).  
 
+![image](https://github.com/user-attachments/assets/73897ced-0199-46d0-8fbf-151b13a9e5c8)
+
 ---
 
 #### 3️⃣ Rewards Section  
@@ -106,6 +114,11 @@ The **Kids Showcase** section is a dedicated dashboard celebrating the child’s
 - 💎 **Point Multipliers:** Highlights how badges increase points earned for completing chores.  
 
 The Kids Showcase offers a **fun and motivational way** for kids to see their hard work pay off, track their goals, and stay excited about their progress. 🚀  
+
+---
+
+### 📌 **Example Kids Showcase Dashboard UI:** 
+![image](https://github.com/user-attachments/assets/ba63fc0a-5449-4f81-accf-1da602413ba5)
 
 ---
 
@@ -136,6 +149,11 @@ The **Parent Dashboard** is a fully automated control panel for managing chore a
 
 ---
 
+### 📌 **Example Parents Dashboard UI:** 
+![image](https://github.com/user-attachments/assets/730a7869-e29e-433b-9f3d-0ffbca3bc220)
+
+---
+
 ## 📌 Parent Dashboard Sections  
 
 ### **1️⃣ Parent Dashboard Overview Card**  
@@ -156,6 +174,8 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
   - 🎁 **Pending Rewards**  
 - Displays important details like points earned and completion status.  
 
+![image](https://github.com/user-attachments/assets/6ef975ea-d2e3-44e1-9872-6ac3b7029d80)
+
 ---
 
 ### **3️⃣ Overdue Chores Management ("Hold to Reset")**  
@@ -163,6 +183,8 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 - Provides two options:  
   - 🛑 **Reset All Overdue Chores** for the child.  
   - 📌 **Reset Individual Chores** with due date and status shown.  
+
+![image](https://github.com/user-attachments/assets/e2b1807b-b957-49c7-9d83-d9df78f74cb5)
 
 ---
 
@@ -173,6 +195,8 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
   - 📅 **+1 Week**  
   - ❌ **Clear Date**  
   - 📆 **Set Custom Date and Time** with a date picker.
+
+![image](https://github.com/user-attachments/assets/ba74677c-fb94-41cf-b125-7a5eaa1d2015)
  
 ---
 
