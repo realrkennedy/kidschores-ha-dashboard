@@ -1007,9 +1007,23 @@ sections:
                         {
                           'type': 'grid',
                           'title': '',
-                          'columns': 3,
+                          'columns': 4,
                           'square': False,
                           'cards': [
+                            {
+                              'type': 'custom:mushroom-template-card',
+                              'primary': '+Next Due',
+                              'icon': 'mdi:calendar-refresh',
+                              'icon_color': 'blue',
+                              'layout': 'vertical',
+                              'tap_action': {
+                                'action': 'call-service',
+                                'service': 'kidschores.skip_chore_due_date',
+                                'data': {
+                                  'chore_name': ns.chore_selected
+                                }
+                              }
+                            },
                             {
                               'type': 'custom:mushroom-template-card',
                               'primary': '+1 Day',
