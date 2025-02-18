@@ -1,0 +1,42 @@
+# The following are required helpers in this first version, they may not be needed long term.
+# Find and replace Kidname and kidname (case sensitive) in the helpers below then add them to your configuration.  You will need to duplicate the input_select for each kid as well as the action in the automation.
+
+
+
+input_select:
+  kc_kidname_chore_list:
+    name: Kidname's Chore List
+    options:
+      - "None"
+
+input_datetime:
+  kc_ui_set_date_helper:
+    name: Set Chore Date
+    has_date: true
+    has_time: true
+
+automation:
+  - alias: "Update KidsChore UI Helpers"
+    triggers:
+      - trigger: homeassistant
+        event: start
+      - trigger: time_pattern
+        minutes: "/5"
+    action:
+      - action: input_select.set_options
+        data:
+          entity_id: input_select.kc_kidname_chore_list
+          options: >
+            {% set chore_names = states.sensor 
+              | selectattr('entity_id', 'search', 'sensor.kc_kidname_chore_status') 
+              | selectattr('attributes.friendly_name', 'defined') 
+              | map(attribute='attributes.friendly_name') 
+              | list %}
+            {% set chore_names = chore_names | map('regex_replace', '^.* - ', '') | list %}
+            {{ ['None'] + chore_names if chore_names else ['None', 'No Chores Found'] }}
+
+      - action: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.kc_ui_set_date_helper
+        data:
+          datetime: "{{ (now().replace(hour=23, minute=0, second=0, microsecond=0) + timedelta(days=1)).isoformat() }}"
