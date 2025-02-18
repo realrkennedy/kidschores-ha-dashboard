@@ -1,6 +1,4 @@
-## 🔄 **Updated for Entity Name Changes in Version 0.2.0** 🔄  
-
-# 🏡 KidsChores and Rewards Dashboard  
+# 🏡 Kids Chores and Rewards Dashboard  
 A fully automated **UI dashboard** designed for the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha) by **VaReTaS**, seamlessly integrating with Home Assistant. This dashboard provides a **front-end interface** for interacting with the KidsChores system, which manages all backend logic for chores, points, rewards, and penalties. No custom buttons or manual dashboards are needed—just install, configure, and enjoy a fully featured interface in minutes.  
 
 ## 🌟 Overview  
@@ -266,13 +264,13 @@ To keep the dashboard organized, create a **separate section for chore tracking*
 ## 📌 Step 3: Add the Kids Dashboard YAML  
 1. **Open your new dashboard.**  
 2. Click **"Edit Dashboard" → "Manage Dashboard" 
-3. Click **"Add Card"** and select **"Manual"**  
-4. **Copy and paste the Kids Chore Dashboard YAML** into the card.  
+3. Click the **"Edit Pencil"** next to the view name and select **"Edit Yaml"**  
+4. **Copy and paste the Kids Chore Dashboard YAML** into the view.  
 
-``` yaml
+![image](https://github.com/user-attachments/assets/21fe22b0-26d8-4031-a1f9-005f10d4f2ad)
 
 
-````
+
 
 ---
 
