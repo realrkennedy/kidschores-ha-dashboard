@@ -123,9 +123,9 @@ sections:
                                "**📅 Weekly Completed:** &nbsp;&nbsp;" ~ ns.weekly_completed ~ "  \n"
                                "**☀️ Today's Completed:** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n"
                                "**🏆 Achievements:** &nbsp;&nbsp; \n" ~ 
-                               (('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None") ~ "  \n"
+                               (('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;None") ~ "  \n"
                                "**🔥 Challenges:** &nbsp;&nbsp; \n" ~ 
-                               (('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;None") ~ "  \n"
+                               (('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;None") ~ "  \n"
                   }
                 }},
       - type: grid
@@ -419,9 +419,8 @@ sections:
 
                 {# -- Get Multiplier for Highest Badge -- #}  {%- set
                 highest_badge_entity = 'sensor.kc_' ~ ns.highest_badge | lower |
-                replace(' ', '_') ~ '_badge' -%}  {%- set
-                ns.highest_badge_multiplier = state_attr(highest_badge_entity,
-                'points_multiplier') | default('1') -%}
+                replace(' ', '_') ~ '_badge' -%}  {%- set ns.highest_badge_multiplier =
+                state_attr(highest_badge_entity, 'points_multiplier') if state_attr(highest_badge_entity, 'points_multiplier') is not none else 1 -%}
 
                 {# -- Construct the Badge List with Icons -- #}   {%- set
                 ns.badge_list = "\n " -%}   {%- for badge in ns.all_badges -%}
