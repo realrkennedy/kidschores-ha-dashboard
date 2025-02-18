@@ -12,6 +12,8 @@ The **KidsChores Dashboard** is a **front-end UI** built on top of the **KidsCho
 ✅ **Automatic categorization** of chores based on their due dates and statuses.  
 ✅ **Built-in gamification** with badges, streaks, challenges, and rewards.  
 ✅ **Real-time tracking of achievements and challenges** in easy-to-read cards.  
+✅ **Designed to work well on mobile screen size but also works great on desktop, and tablets** 
+
 
 ### What the KidsChores Integration Handles (Backend):  
 🔹 **Chore state management** (e.g., overdue, claimed, completed).  
@@ -40,10 +42,10 @@ The **KidsChores Dashboard** is a **front-end UI** built on top of the **KidsCho
  
 ---
 
-# 🎨 KidsChores Dashboard  
+# 🎨 Kids Dashboard  
 
 ### 🏠 Overview  
-The **KidsChores Dashboard** is designed to give kids a simple, fun, and engaging way to track their progress, earn rewards, and celebrate their achievements. Built automatically from the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha), it encourages responsibility and consistency without any manual setup or customization.  
+The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way to track their progress, earn rewards, and celebrate their achievements. Built automatically from the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha), it encourages responsibility and consistency without any manual setup or customization.  
 
 ⭐ **Easy and Fun:** Simple, one-click actions for chores and rewards.  
 🚀 **Motivating:** See progress on achievements, challenges, and badges in real-time.  
@@ -66,9 +68,9 @@ The **KidsChores Dashboard** is designed to give kids a simple, fun, and engagin
 #### 2️⃣ Chores Section  
 - Chores are **automatically categorized** into:  
   - 🛑 **Overdue** — Chores past their due date  
-  - ☀️ **Morning** — Chores due before noon  
-  - 🌞 **Daily** — Chores due between noon and midnight  
-  - 🗓️ **Anytime** — Future chores or those without a set date  
+  - ☀️ **Due this Morning** — Chores due before noon  
+  - 🌞 **Due Today** — Chores due between noon and midnight  
+  - 🗓️ **Upcoming & Bonus** — Future chores or those without a set date  
 
 - Each chore card displays:  
   - 💎 **Points earned**  
@@ -115,37 +117,97 @@ The **KidsChores Dashboard** is designed with kids in mind—**simple, fun, and 
 # 👩‍👦 Parent Chore Dashboard  
 
 ### 🏠 Overview  
-The **Parent Dashboard** provides **full control** over chore approvals, penalties, and manual point adjustments. Parents can review **pending approvals**, apply **penalties for missed tasks**, and manually adjust points.
+The **Parent Dashboard** is a fully automated control panel for managing chore approvals, point adjustments, and penalties. It is designed to **minimize space** by **dynamically showing sections** only when actions are needed—such as pending approvals or overdue chore resets. Built on the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha), it offers intuitive, space-efficient cards for full parental control.  
 
-📌 **Example Dashboard UI:**  
-![image](https://github.com/user-attachments/assets/7017a03e-5d56-4000-a279-6722db2b1401)
-
-### 🔹 Features
-- ✅ **Approve or deny chores** with a simple hold action.  
-- ✅ **Apply penalties** for incomplete tasks.  
-- ✅ **Manually adjust points** when necessary.  
-- ✅ **Monitor all chore-related activity** in a **7-day log**.  
+📌 **Smart Display:** Sections like approvals and overdue chore resets **only appear when required.**  
+💥 **Quick Actions:** All actions use **“Hold to apply”** for secure, confirmed interactions.  
+📊 **Full Visibility:** Activity logs provide a complete history of points and approvals.  
 
 ---
 
-## 📌 Parent Dashboard Sections
+### 🔹 Features Overview  
 
-### **1️⃣ Approvals Section ("Hold to Approve")**
-- Parents can **approve or deny** chores marked as completed.
-- Chores are categorized into:
-  - **Pending Chores**
-  - **Pending Rewards**
-- If no approvals are needed, it displays a **"None Available"** message.
+- ✅ **Parent Dashboard Overview Card** — Displays key stats such as points, progress, and penalties.  
+- ✅ **Approve or deny chores and rewards** with a simple hold action.  
+- ✅ **Reset overdue chores** individually or all at once.  
+- ✅ **Adjust individual chore due dates** quickly.  
+- ✅ **Manage points and penalties under “Pluses & Minuses.”**  
+- ✅ **Monitor all activity** with a 7-day activity log.  
 
-### **2️⃣ Penalties Section ("Hold to Apply")**
-- Allows parents to **apply penalties** for missed or incomplete chores.
-- Displays **points deducted and penalty count**.
+---
 
-### **3️⃣ Manual Points Adjustment**
-- Parents can manually **add or remove points** from the child’s account.
+## 📌 Parent Dashboard Sections  
 
-### **4️⃣ Activity Log (7-Day History)**
-- Logs all **chore claims, approvals, penalties, and reward redemptions**.
+### **1️⃣ Parent Dashboard Overview Card**  
+The **Parent Dashboard Overview Card** provides a quick snapshot of the child's progress and current status:  
+- 📊 **Current Points Total** with point label and icon.  
+- 📅 **Chores Completed:** Today, This Week, and This Month.  
+- 🚨 **Number of Overdue Chores**, if any.  
+- 💎 **Reward Activity:** Recent claims and approvals.  
+- ⚠️ **Penalties Applied:** Number of penalties and total points lost.  
+- 📈 **Total Penalty Points** deducted to date.  
+
+---
+
+### **2️⃣ Approvals Section ("Hold to Approve")**  
+- **Appears only when approvals are pending**—fully hidden otherwise.  
+- Allows parents to **approve or deny**:  
+  - 📝 **Pending Chores**  
+  - 🎁 **Pending Rewards**  
+- Displays important details like points earned and completion status.  
+
+---
+
+### **3️⃣ Overdue Chores Management ("Hold to Reset")**  
+- **Appears only when chores are overdue.**  
+- Provides two options:  
+  - 🛑 **Reset All Overdue Chores** for the child.  
+  - 📌 **Reset Individual Chores** with due date and status shown.  
+
+---
+
+### **5️⃣ Chore Due Date Adjustments ("Hold to Apply")**  
+- Displays a **chore selector** to quickly find and update due dates.  
+- Provides options for adjusting due dates:  
+  - 📅 **+1 Day**  
+  - 📅 **+1 Week**  
+  - ❌ **Clear Date**  
+  - 📆 **Set Custom Date and Time** with a date picker.
+ 
+---
+
+### **4️⃣ Pluses & Minuses ("Hold to Apply")**  
+The **Pluses & Minuses** section combines **Manual Points Adjustments** and **Penalties**, providing an all-in-one interface for point management.  
+
+#### ➕ **Manual Points Adjustment**  
+- Displays easy-access buttons to:  
+  - ➕ **Add points** (e.g., for extra chores or positive behavior).  
+  - ➖ **Remove points** (e.g., corrections or adjustments).  
+- Shows the child's current point total and updates immediately.  
+- All actions require a **“Hold to apply”** for confirmation.  
+
+#### 💥 **Penalties Management**  
+- Displays penalty options to deduct points for missed chores or behavior issues.  
+- Each penalty button shows:  
+  - 💥 **Points deducted**  
+  - 📊 **Times penalty was applied**  
+- Total penalty points applied are shown in the Parent Overview.  
+- Penalties are confirmed using **“Hold to apply”**.  
+
+---
+
+### **6️⃣ Activity Log (7-Day History)**  
+- Logs all chore-related activity, including:  
+  - 📝 **Chore claims**  
+  - ✅ **Chore and reward approvals**  
+  - 💥 **Penalties applied**  
+  - 💰 **Reward redemptions**  
+- Provides a **clear timeline of events** for easy tracking.  
+
+---
+
+The **Parent Chore Dashboard** is designed to be **efficient and intuitive**, showing only necessary options and grouping key actions under **“Pluses & Minuses”** for simplicity. All functionality is powered by the **KidsChores Integration**, ensuring automatic updates and zero manual setup. 🚀  
+
 
 ---
 
