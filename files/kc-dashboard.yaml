@@ -1251,16 +1251,20 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(Kid_name='', entity_list=[]) -%}  {%- set
-                ns.Kid_name = 'Kidname' -%}
-
-                {#-- Build a list of entities for this kid --#} {%- set
-                prefix_pattern = '(button|sensor)\\.kc_' ~ (ns.Kid_name|lower) ~
-                '_' -%} {%- set entities = (states.button |
-                selectattr('entity_id', 'match', prefix_pattern) | list) +
-                (states.sensor | selectattr('entity_id', 'match',
-                prefix_pattern) | list) -%}
-
+                {%- set ns = namespace(Kid_name='', entity_list=[]) -%}   {%- set
+                ns.Kid_name = 'Payton' -%}
+        
+                {#-- Build a list of entities for this kid, excluding unwanted sensors
+                --#} {%- set prefix_pattern = '(button|sensor)\\.kc_' ~
+                (ns.Kid_name|lower) ~ '_' -%} {%- set exclude_pattern = '^sensor\\.kc_'
+                ~ (ns.Kid_name|lower) ~
+                '_(chore_(claims|approvals|streak)|reward_(claims|approvals))_' -%}
+        
+                {%- set entities = (states.button | selectattr('entity_id', 'match',
+                prefix_pattern) | list) +
+                                   (states.sensor | selectattr('entity_id', 'match', prefix_pattern) 
+                                    | rejectattr('entity_id', 'match', exclude_pattern) | list) -%}
+        
                 {%- for entity in entities -%}
                     {%- set ns.entity_list = ns.entity_list + [entity.entity_id] -%}
                 {%- endfor -%} {{
