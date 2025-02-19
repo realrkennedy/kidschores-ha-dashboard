@@ -1263,7 +1263,7 @@ sections:
             filter:
               template: >-
                 {%- set ns = namespace(Kid_name='', entity_list=[]) -%}   {%- set
-                ns.Kid_name = 'Payton' -%}
+                ns.Kid_name = 'Kidname' -%}
         
                 {#-- Build a list of entities for this kid, excluding unwanted sensors
                 --#} {%- set prefix_pattern = '(button|sensor)\\.kc_' ~
