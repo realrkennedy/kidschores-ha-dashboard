@@ -193,12 +193,20 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 ### **5️⃣ Chore Due Date Adjustments ("Hold to Apply")**  
 - Displays a **chore selector** to quickly find and update due dates.  
 - Provides options for adjusting due dates:  
-  - 📅 **+1 Day**  
+  - 📅 **+Next Due**
+  - 📅 **+1 Day**    
   - 📅 **+1 Week**  
   - ❌ **Clear Date**  
   - 📆 **Set Custom Date and Time** with a date picker.
 
+- Before selecting a chore:
+  
 ![image](https://github.com/user-attachments/assets/ba74677c-fb94-41cf-b125-7a5eaa1d2015)
+
+- Options appear after chore is selected:
+
+![image](https://github.com/user-attachments/assets/0e7c400c-3866-444e-a1b6-0ca2b2a0d0c0)
+
  
 ---
 
