@@ -243,8 +243,16 @@ sections:
                           else due_date.strftime('%a %b %-d')
                         )
                       -%}   
+                      {%- set due_date_short = 
+                        'No due date' if not due_date 
+                        else (
+                          due_date.strftime('%-I:%M %p') if due_date.date() == today 
+                          else due_date.strftime('%a %b %-d')
+                        )
+                      -%}   
                       {%- set chore_state = states(chore_sensor_id) -%}
                       {%- set points = state_attr(chore_sensor_id, 'default_points') | string -%}
+                      {%- set global_chore_state = state_attr(chore_sensor_id, 'global_state') -%}
                       {%- set streak = states(streak_chore_sensor_id) | string -%}              
                       {%- set secondary_options = 'Points: ' + points + '\n' + 'Streak: ' + streak + '\n' + 'Last: ' + last_update  + '\n \n' + 'Status: ' + chore_state + '\n' + 'Due: ' + due_date_short -%}
                       {%- set secondary = ns.points_label ~ ': ' + points + '\n' + 'Streak: ' + streak + '\n \n' + 'Status: ' + chore_state.title() + '\n' + 'Due: ' + due_date_short -%}
@@ -253,6 +261,7 @@ sections:
                             'yellow' if chore_state == 'partial' else
                             'orange' if chore_state == 'claimed' else
                             'red' if chore_state == 'overdue' else
+                            'purple' if '_in_part' in global_chore_state else
                             'grey'
                           ) -%}
                       {%- set badge_color = (
@@ -260,6 +269,7 @@ sections:
                             'green' if chore_state == 'partial' else
                             'green' if chore_state == 'claimed' else
                             'red' if chore_state == 'overdue' else
+                            'purple' if '_in_part' in global_chore_state else
                             'grey'
                           ) -%}
                       {%- set badge_icon = (
@@ -267,6 +277,7 @@ sections:
                             'mdi:check-bold' if chore_state == 'partial' else
                             'mdi:check-bold' if chore_state == 'claimed' else
                             'mdi:exclamation-thick' if chore_state == 'overdue' else
+                            'mdi:account-group' if '_in_part' in global_chore_state else
                             ''
                           ) -%}
                       {{
