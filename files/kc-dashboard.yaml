@@ -746,7 +746,7 @@ sections:
                                ("\n" ~ ('\n'.join(ns.reward_progress)) if ns.reward_progress | length > 0 else "None") ~ "  \n\n"
                                "#### ⚠️ Penalties Applied: &nbsp;&nbsp;" ~ 
                                ("\n" ~ ('\n'.join(ns.penalties)) if ns.penalties | length > 0 else "None") ~ "  \n"
-                               "**💥 Total Penalty Points:** " ~ ns.total_penalty_points ~ "  \n"
+                               "**💥 Total Penalty " ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.total_penalty_points ~ "  \n"
                   }
                 }},
       - square: false
