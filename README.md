@@ -85,7 +85,11 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
   - 🔥 **Streak count**  
   - 📅 **Due date and time**  
   - 📌 **Status:** Pending, Approved, or Claimed  
-- Shared chores are clearly marked with **“(S)”** for easy identification.  
+- Shared chores are clearly marked with **“(S)”** for easy identification.  When one child claims a shared chore, the dashboard visually updates for the other assigned kids by displaying a purple icon and a multi-person symbol, indicating that someone else has already completed it. However, this is purely for awareness—each child's chore responsibility remains independently handled in the backend system. Their task can still become overdue if unclaimed, and they can still claim and get approval for completing it. While single-completion shared chores aren't currently supported, this visual indicator can serve as a helpful workaround for families managing shared tasks.
+
+![image](https://github.com/user-attachments/assets/8eb4bd9a-f99f-4468-9bed-23acbdc443e4)
+
+ 
 - All chores are claimed with a **single click**—no extra actions needed.  
 - Completion is indicated by icon color and a badge overlay (no separate “Completed” category).  
 
