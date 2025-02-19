@@ -590,7 +590,7 @@ sections:
                     {
                       'type': 'markdown',
                       'content': "### 🏁 No Challenges Found  \n"
-                                 "Join a challenge to push your limits!"
+                                 "Start a challenge to push your limits!"
                     }
                   }},
                 {%- else -%}
