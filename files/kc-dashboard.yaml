@@ -122,10 +122,10 @@ sections:
                                "#### " ~ "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;" ~ ns.points_label ~ ": &nbsp;&nbsp;" ~ ns.points ~ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ ns.badge_display_line ~ " \n"
                                "**📅 Weekly Completed:** &nbsp;&nbsp;" ~ ns.weekly_completed ~ "  \n"
                                "**☀️ Today's Completed:** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n"
-                               "**🏆 Achievements:** &nbsp;&nbsp; \n" ~ 
-                               (('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;None") ~ "  \n"
-                               "**🔥 Challenges:** &nbsp;&nbsp; \n" ~ 
-                               (('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;None") ~ "  \n"
+                               "**🏆 Achievements:** &nbsp;&nbsp; " ~ 
+                               ("\n" ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;None") ~ "  \n"
+                               "**🔥 Challenges:** &nbsp;&nbsp; " ~ 
+                               ("\n" ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;None") ~ "  \n"
                   }
                 }},
       - type: grid
