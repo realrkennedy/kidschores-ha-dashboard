@@ -2,6 +2,8 @@
 # These are typically added to your configuration.yaml, although there are a few different ways to do it for those more experienced.
 # Find and replace Kidname and kidname (case sensitive) in the helpers below then add them to your configuration.  You will need to duplicate the input_select for each kid as well as the action in the automation.
 # Note there are 3 different examples for the different number of kids.  Only select the single scenario that fits your needs.  In the scenarios with multiple kids, you would need to replace kidname1 kidname2, etc
+# For those of you that want to use the UI to create the automation, scroll to the bottom where I have included a copy/paste example, but it is really just removing the "-" in front of alias and replacing with a space.
+
 
 ##########################################################################
 ###################### Example 1 for single kid ##########################
@@ -167,3 +169,31 @@ automation:
           entity_id: input_datetime.kc_ui_set_date_helper
         data:
           datetime: "{{ (now().replace(hour=23, minute=0, second=0, microsecond=0) + timedelta(days=1)).isoformat() }}"
+
+
+##################################################################################################################################
+###################### Copy paste version of single kid automation for creating the automation in the UI ##########################         
+alias: "Update KidsChore UI Helpers"
+triggers:
+  - trigger: homeassistant
+    event: start
+  - trigger: time_pattern
+    minutes: "/5"
+action:
+  - action: input_select.set_options
+    data:
+      entity_id: input_select.kc_kidname_chore_list
+      options: >
+        {% set chore_names = states.sensor 
+          | selectattr('entity_id', 'search', 'sensor.kc_kidname_chore_status') 
+          | selectattr('attributes.friendly_name', 'defined') 
+          | map(attribute='attributes.friendly_name') 
+          | list %}
+        {% set chore_names = chore_names | map('regex_replace', '^.* - ', '') | list %}
+        {{ ['None'] + chore_names if chore_names else ['None', 'No Chores Found'] }}
+
+  - action: input_datetime.set_datetime
+    target:
+      entity_id: input_datetime.kc_ui_set_date_helper
+    data:
+      datetime: "{{ (now().replace(hour=23, minute=0, second=0, microsecond=0) + timedelta(days=1)).isoformat() }}"
