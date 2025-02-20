@@ -1,7 +1,7 @@
 # The following are required helpers in this first version, they may not be needed long term.
 # These are typically added to your configuration.yaml, although there are a few different ways to do it for those more experienced.
 # Find and replace Kidname and kidname (case sensitive) in the helpers below then add them to your configuration.  You will need to duplicate the input_select for each kid as well as the action in the automation.
-# Note there are 3 different examples for the different number of kids.  Only select the single scenario that fits your needs.  In the scenarious with multiple kids, you would need to replace kidname1 kidname2, etc
+# Note there are 3 different examples for the different number of kids.  Only select the single scenario that fits your needs.  In the scenarios with multiple kids, you would need to replace kidname1 kidname2, etc
 
 ##########################################################################
 ###################### Example 1 for single kid ##########################
