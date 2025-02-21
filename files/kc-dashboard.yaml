@@ -1,7 +1,7 @@
 type: sections
 max_columns: 4
 title: Kidname Chores
-path: kidname
+path: Kidname
 sections:
   - type: grid
     cards:
@@ -167,13 +167,27 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
-                overdue_buttons=[], am_buttons=[], pm_buttons=[],
-                other_buttons=[], complete_buttons=[], heading_card_blank='',
-                points_label='', points_icon='') -%} 
+                {%- set ns = namespace(Kid_name='', 
+                  Kid_name_normalize='',
+                  pref_exclude_approved='', 
+                  overdue_buttons=[], 
+                  am_buttons=[],
+                  pm_buttons=[],
+                  other_buttons=[],
+                  complete_buttons=[],
+                  heading_card_blank='',
+                  points_label='', 
+                  points_icon='') -%} 
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {#-- Set preferences --#} 
+
+                {%- set ns.pref_exclude_approved = false -%}
+
+                {#-- Set Kid_name and normalize --#} 
+
+                {%- set ns.Kid_name = 'Kidname'-%} 
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -189,8 +203,10 @@ sections:
                     "Ý": "y", "ý": "y",
                     "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
                     " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                } -%} 
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
                 {%- endfor -%} {%- set ns.Kid_name_normalize =
                 ns.Kid_name_normalize | lower -%}
@@ -224,6 +240,8 @@ sections:
                   {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') -%}
                   {%- if sensor_state == 'overdue' -%}
                     {%- set ns.overdue_buttons = ns.overdue_buttons + [button] -%}
+                  {%- elif sensor_state == 'approved' and state_attr(chore_sensor_id,'allow_multiple_claims_per_day') == false and ns.pref_exclude_approved == true -%}
+                    {#-- Do nothing --#}
                   {%- else -%}
                     {%- if due_date_str is not none and due_date_str != 'unknown' -%}
                       {%- set due_date_ts = as_timestamp(due_date_str) -%}
@@ -291,23 +309,31 @@ sections:
                           else due_date.strftime('%a %b %-d')
                         )
                       -%}   
+                      {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
                       {%- set chore_state = states(chore_sensor_id) -%}
+                      {%- set chore_state_display = states(chore_sensor_id).title() ~ ' (M)' if multi_approve == true else states(chore_sensor_id).title() -%}
                       {%- set points = state_attr(chore_sensor_id, 'default_points') | string -%}
+                      {%- set global_chore_state = state_attr(chore_sensor_id, 'global_state') -%}
+                      {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
                       {%- set streak = states(streak_chore_sensor_id) | string -%}              
                       {%- set secondary_options = 'Points: ' + points + '\n' + 'Streak: ' + streak + '\n' + 'Last: ' + last_update  + '\n \n' + 'Status: ' + chore_state + '\n' + 'Due: ' + due_date_short -%}
-                      {%- set secondary = ns.points_label ~ ': ' + points + '\n' + 'Streak: ' + streak + '\n \n' + 'Status: ' + chore_state.title() + '\n' + 'Due: ' + due_date_short -%}
+                      {%- set secondary = ns.points_label ~ ': ' + points + '\n' + 'Streak: ' + streak + '\n \n' + 'Status: ' + chore_state_display + '\n' + 'Due: ' + due_date_short -%}
                       {%- set icon_color = (
+                            'blue' if chore_state == 'approved' and multi_approve == true else
                             'green' if chore_state == 'approved' else
                             'yellow' if chore_state == 'partial' else
                             'orange' if chore_state == 'claimed' else
                             'red' if chore_state == 'overdue' else
+                            'purple' if '_in_part' in global_chore_state else
                             'grey'
                           ) -%}
                       {%- set badge_color = (
+                            'blue' if chore_state == 'approved' and multi_approve == true else
                             'green' if chore_state == 'approved' else
                             'green' if chore_state == 'partial' else
                             'green' if chore_state == 'claimed' else
                             'red' if chore_state == 'overdue' else
+                            'purple' if '_in_part' in global_chore_state else
                             'grey'
                           ) -%}
                       {%- set badge_icon = (
@@ -315,6 +341,7 @@ sections:
                             'mdi:check-bold' if chore_state == 'partial' else
                             'mdi:check-bold' if chore_state == 'claimed' else
                             'mdi:exclamation-thick' if chore_state == 'overdue' else
+                            'mdi:account-group' if '_in_part' in global_chore_state else
                             ''
                           ) -%}
                       {{
@@ -523,11 +550,11 @@ sections:
                 {%- endfor -%}
 
                 {# -- Collect Achievements with Progress, Rewards, and Icons --
-                #}   {%- set achievement_prefix = 'sensor.kc_' ~ ns.Kid_name |
-                lower ~ '_achievement_status_' -%}   {%- set achievement_list =
-                states.sensor | selectattr('entity_id', 'match',
-                achievement_prefix ~ '.*') | list -%}   {%- for sensor in
-                achievement_list -%}
+                #}   {%- set achievement_prefix = 'sensor.kc_' ~
+                ns.Kid_name_normalize ~ '_achievement_status_' -%}   {%- set
+                achievement_list = states.sensor | selectattr('entity_id',
+                'match', achievement_prefix ~ '.*') | list -%}   {%- for sensor
+                in achievement_list -%}
                   {%- set name = state_attr(sensor.entity_id, 'achievement_name') | default('Unknown Achievement') -%}
                   {%- set achievement_icon = state_attr(sensor.entity_id, 'icon') | default('mdi:trophy-outline') -%}
                   {%- set progress = states(sensor.entity_id) | float(default=0) -%}
@@ -542,10 +569,10 @@ sections:
                 {%- endfor -%}
 
                 {# -- Collect Challenges with Progress, Rewards, and Icons --
-                #}   {%- set challenge_prefix = 'sensor.kc_' ~ ns.Kid_name |
-                lower ~ '_challenge_status_' -%}   {%- set challenge_list =
-                states.sensor | selectattr('entity_id', 'match',
-                challenge_prefix ~ '.*') | list -%}   {%- for sensor in
+                #}   {%- set challenge_prefix = 'sensor.kc_' ~
+                ns.Kid_name_normalize ~ '_challenge_status_' -%}   {%- set
+                challenge_list = states.sensor | selectattr('entity_id',
+                'match', challenge_prefix ~ '.*') | list -%}   {%- for sensor in
                 challenge_list -%}
                   {%- set name = state_attr(sensor.entity_id, 'challenge_name') | default('Unknown Challenge') -%}
                   {%- set challenge_icon = state_attr(sensor.entity_id, 'icon') | default('mdi:fire') -%}
@@ -641,30 +668,49 @@ sections:
                 {%- else -%}
                   {%- for achievement_sensor in achievements -%}
                     {%- set achievement_name = state_attr(achievement_sensor.entity_id, 'achievement_name') | default('Unknown') -%}
-                    {%- set achievement_overall_sensor = achievement_sensor.entity_id | regex_replace('^sensor\\.kc_[^_]+_', 'sensor.kc_') -%}
+                    {%- set achievement_icon = state_attr(achievement_sensor.entity_id, 'icon') or 'mdi:trophy' -%}          
+                    {%- set achievement_overall_sensor = achievement_sensor.entity_id | regex_replace('^sensor\.kc_[a-zA-Z0-9_]+_achievement_status_', 'sensor.kc_achievement_status_') -%}
                     {%- set target_value = state_attr(achievement_sensor.entity_id, 'target_value') | int(default=0) -%}
                     {%- set raw_progress = state_attr(achievement_sensor.entity_id, 'raw_progress') | float(default=0) -%}
                     {%- set awarded = state_attr(achievement_sensor.entity_id, 'awarded') | default(false) -%}
                     {%- set reward_points = state_attr(achievement_overall_sensor, 'reward_points') | int(default=0) -%}
-                    {%- set achievement_type = state_attr(achievement_overall_sensor, 'type') | default('General') -%}
+                    {%- set achievement_type = state_attr(achievement_overall_sensor, 'type') | default('chore_streak') -%}
                     {%- set progress_percentage = ((raw_progress / target_value) * 100) | round(1) if target_value > 0 else 0 -%}
-                    {%- set icon = state_attr(achievement_sensor.entity_id, 'icon') | default('mdi:flag-checkered') -%}
-
+                    {%- set associated_chore = state_attr(achievement_sensor.entity_id, 'associated_chore') | default('') -%}
+                    {%- set description = state_attr(achievement_sensor.entity_id, 'description') | default('') -%}
+                    {%- set criteria = state_attr(achievement_sensor.entity_id, 'criteria') | default('') -%}
+                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                  
                     {%- set awarded_text = '✔️ Earned' if awarded else '⌛ In Process' -%}
-                    {%- set goal_label = 
-                      target_value ~ ' (Streak Goal)' if achievement_type == 'chore_streak' 
-                      else target_value ~ ' (Completion Goal)'
-                    -%}
+                    {%- set goal_label = target_value ~ ' (Streak Goal)' if achievement_type == 'chore_streak' else target_value ~ ' (Completion Goal)' -%}
+                    {%- set kids_display = assigned_kids | join(', ') if assigned_kids | count > 0 else '' -%}
+                  
+                    {%- set content = "## <ha-icon icon=" ~ achievement_icon ~ "></ha-icon> Achievement: " ~ achievement_name ~ "  \n" %}
+                    {%- set content = content ~ "### 🏅 Award Status: &nbsp;&nbsp;" ~ awarded_text ~ "  \n" %}
+                    {%- if description -%}
+                      {%- set content = content ~ "#### 📖 &nbsp;&nbsp;" ~ description ~ "  \n" %}
+                    {%- endif -%}
+                    {%- if criteria -%}
+                      {%- set content = content ~ "**📌 Criteria:** &nbsp;&nbsp;" ~ criteria ~ "  \n" %}
+                    {%- endif -%}
+                    {%- set content = content ~ "**🎯 Goal:** &nbsp;&nbsp;" ~ goal_label ~ "  \n" %}
+                    {%- if reward_points > 0 -%}
+                      {%- set content = content ~ "**💎 Reward:** &nbsp;&nbsp;" ~ reward_points|string ~ " points  \n" %}
+                    {%- endif -%}
+                    {%- set content = content ~ "\n **📊 Progress:** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" %}
+                    {%- if kids_display -%}
+                      {%- set content = content ~ "**👥 Assigned To:** &nbsp;&nbsp;" ~ kids_display ~ "  \n" %}
+                    {%- endif -%}
+                    {%- if associated_chore -%}
+                      {%- set content = content ~ "**🛠 Related Chore:** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" %}
+                    {%- endif -%}
 
+
+                  
                     {{
                       {
                         'type': 'markdown',
-                        'content': "### <ha-icon icon='" ~ icon ~ "'></ha-icon> Achievement: &nbsp;" ~ achievement_name ~ "  \n"
-                                   "**🎯 Goal:** &nbsp;&nbsp;" ~  goal_label ~ " \n"
-                                   "**📊 Progress:** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ 
-                                   " (" ~ progress_percentage|string ~ "%)  \n"
-                                   "**💎 Reward:** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ ns.points_label ~ "  \n"
-                                   "**🏅 Awarded:** &nbsp;&nbsp;" ~ awarded_text ~ "  \n"
+                        'content': content
                       }
                     }},
                   {%- endfor -%}
@@ -735,35 +781,53 @@ sections:
                 {%- else -%}
                   {%- for challenge_sensor in challenges -%}
                     {%- set challenge_name = state_attr(challenge_sensor.entity_id, 'challenge_name') | default('Unknown') -%}
-                    {%- set challenge_overall_sensor = challenge_sensor.entity_id | regex_replace('^sensor\\.kc_[^_]+_', 'sensor.kc_') -%}
+                    {%- set challenge_icon = state_attr(challenge_sensor.entity_id, 'icon') or 'mdi:flag-checkered' -%}            
+                    {%- set challenge_overall_sensor = challenge_sensor.entity_id | regex_replace('^sensor\.kc_[a-zA-Z0-9_]+_challenge_status_', 'sensor.kc_challenge_status_') -%}
                     {%- set target_value = state_attr(challenge_sensor.entity_id, 'target_value') | int(default=0) -%}
                     {%- set raw_progress = state_attr(challenge_sensor.entity_id, 'raw_progress') | float(default=0) -%}
                     {%- set awarded = state_attr(challenge_sensor.entity_id, 'awarded') | default(false) -%}
                     {%- set reward_points = state_attr(challenge_overall_sensor, 'reward_points') | int(default=0) -%}
-                    {%- set start_date_utc = state_attr(challenge_overall_sensor, 'start_date') -%}
-                    {%- set end_date_utc = state_attr(challenge_overall_sensor, 'end_date') -%}
-                    {%- set challenge_type = state_attr(challenge_overall_sensor, 'type') | default('General') -%}
-
-                    {# Convert start and end dates to local time and short format #}
-                    {%- set start_date = as_datetime(start_date_utc).astimezone().strftime('%b %d, %Y') if start_date_utc else 'N/A' -%}
-                    {%- set end_date = as_datetime(end_date_utc).astimezone().strftime('%b %d, %Y') if end_date_utc else 'N/A' -%}
-                    {%- set icon = state_attr(challenge_sensor.entity_id, 'icon') | default('mdi:flag-checkered') -%}
-
-                    {%- set progress_percentage = states(challenge_sensor.entity_id) | float(default=0) | round(0) -%}
+                    {%- set challenge_type = state_attr(challenge_overall_sensor, 'type') | default('total_within_window') -%}
+                    {%- set progress_percentage = ((raw_progress / target_value) * 100) | round(1) if target_value > 0 else 0 -%}
+                    {%- set associated_chore = state_attr(challenge_sensor.entity_id, 'associated_chore') | default('') -%}
+                    {%- set description = state_attr(challenge_sensor.entity_id, 'description') | default('') -%}
+                    {%- set criteria = state_attr(challenge_sensor.entity_id, 'criteria') | default('') -%}
+                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                  
                     {%- set awarded_text = '✔️ Earned' if awarded else '⌛ In Process' -%}
                     {%- set goal_label = target_value ~ ' (Total Chores)' if challenge_type == 'total_within_window' else target_value ~ ' (Per Day Goal)' -%}
-
+                    {%- set kids_display = assigned_kids | join(', ') if assigned_kids | count > 0 else '' -%}
+                    {# Convert start and end dates to local time and short format #}
+                    {%- set start_date_utc = state_attr(challenge_overall_sensor, 'start_date') -%}
+                    {%- set end_date_utc = state_attr(challenge_overall_sensor, 'end_date') -%}
+                    {%- set start_date = as_datetime(start_date_utc).astimezone().strftime('%b %d, %Y') if start_date_utc else 'N/A' -%}
+                    {%- set end_date = as_datetime(end_date_utc).astimezone().strftime('%b %d, %Y') if end_date_utc else 'N/A' -%}
+                  
+                    {%- set content = "## <ha-icon icon=" ~ challenge_icon ~ "></ha-icon> Challenge: " ~ challenge_name ~ "  \n" %}
+                    {%- set content = content ~ "### 🏅 Award Status: &nbsp;&nbsp;" ~ awarded_text ~ "  \n" %}
+                    {%- if description -%}
+                      {%- set content = content ~ "#### 📖 &nbsp;&nbsp;" ~ description ~ "  \n" %}
+                    {%- endif -%}
+                    {%- if criteria -%}
+                      {%- set content = content ~ "**📌 Criteria:** &nbsp;&nbsp;" ~ criteria ~ "  \n" %}
+                    {%- endif -%}
+                    {%- set content = content ~ "**🎯 Goal:** &nbsp;&nbsp;" ~ goal_label ~ "  \n" %}
+                    {%- set content = content ~ "**📅 Start Date:** &nbsp;&nbsp;" ~ start_date ~ "  \n" %}
+                    {%- set content = content ~ "**📅 End Date:** &nbsp;&nbsp;" ~ end_date ~ " \n" %}
+                    {%- if reward_points > 0 -%}
+                      {%- set content = content ~ "**💎 Reward:** &nbsp;&nbsp;" ~ reward_points|string ~ " points  \n" %}
+                    {%- endif -%}
+                    {%- set content = content ~ "\n **📊 Progress:** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" %}
+                    {%- if kids_display -%}
+                      {%- set content = content ~ "**👥 Assigned To:** &nbsp;&nbsp;" ~ kids_display ~ "  \n" %}
+                    {%- endif -%}
+                    {%- if associated_chore -%}
+                      {%- set content = content ~ "**🛠 Related Chore:** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" %}
+                    {%- endif -%}         
                     {{
                       {
                         'type': 'markdown',
-                        'content': "### <ha-icon icon='" ~ icon ~ "'></ha-icon> Challenge: &nbsp;" ~ challenge_name ~ "  \n"
-                                   "**🎯 Goal:** &nbsp;&nbsp;" ~ goal_label ~ " \n"
-                                   "**📊 Progress:** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ 
-                                   " (" ~ progress_percentage|string ~ "%)  \n"
-                                   "**💎 Reward:** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ ns.points_label ~ "  \n"
-                                   "**📅 Start Date:** &nbsp;&nbsp;" ~ start_date ~ "  \n"
-                                   "**📅 End Date:** &nbsp;&nbsp;" ~ end_date ~ "  \n"
-                                   "**🏅 Status:** &nbsp;&nbsp;" ~ awarded_text ~ "  \n"
+                        'content': content
                       }
                     }},
                   {%- endfor -%}
@@ -883,14 +947,14 @@ sections:
                 -%}   {%- for sensor in penalty_list -%}
                   {%- set penalty_name = state_attr(sensor.entity_id, 'penalty_name') | default('Unknown Penalty') -%}
                   {%- set penalty_icon = state_attr(sensor.entity_id, 'icon') | default('mdi:alert') -%}
-                  {%- set penalty_points = state_attr(sensor.entity_id, 'penalty_points') | int(default=0) -%}
+                  {%- set penalty_points = state_attr(sensor.entity_id, 'penalty_points') | float(default=0) -%}
                   {%- set penalty_count = states(sensor.entity_id) | int(default=0) -%}
 
                   {%- if penalty_count > 0 -%}
-                    {%- set ns.total_penalty_points = ns.total_penalty_points + (penalty_points * penalty_count) -%}
+                    {%- set ns.total_penalty_points = ns.total_penalty_points + (-penalty_points * penalty_count) -%}
                     {%- set ns.penalties = ns.penalties + [
                       "- <ha-icon icon='" ~ penalty_icon ~ "'></ha-icon> **" ~ penalty_name ~ ":** Applied " 
-                      ~ penalty_count ~ " times (💥 " ~ (penalty_points * penalty_count) ~ " points)"
+                      ~ penalty_count ~ " times (💥 " ~ (-penalty_points * penalty_count) ~ " " ~ ns.points_label ~ ")"
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
@@ -926,10 +990,10 @@ sections:
               template: >-
                 {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
                 approve_chore_buttons=[], approve_reward_buttons=[],
-                heading_card_blank='', has_approvals='false') -%}  
+                heading_card_blank='', has_approvals='false',
+                chore_name_normalize='', reward_name_normalize='') -%}  
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {%- set ns.Kid_name = 'Kidname'-%} {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -958,27 +1022,34 @@ sections:
                     'heading': '',
                     'heading_style': 'title',
                   }
-                -%}   {#-- Build a list of button entities for this kid --#}  
-                {%- set prefix_pattern = 'button\\.kc_' ~
-                (ns.Kid_name_normalize)
-                ~'_(chore|reward)_(approval|disapproval)_' -%}   {%- set buttons
-                = states.button | selectattr('entity_id', 'match',
-                prefix_pattern) | list-%} 
+                -%}    
 
-                {#-- Use namespace to persist changes across loop iterations
-                --#}  {%- for button in buttons -%}
-                  {%- set button_type = 'chore' if '_chore_' in button.entity_id else 'reward' -%}
-                  {%- set sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_(approval|disapproval)_', '_status_') -%}
-                  {%- set sensor_state = states(sensor_id) -%}
-                  {#-- Add to appropriate list if the state is 'claimed' --#}
-                  {%- if sensor_state == 'claimed' -%}
-                    {%- if button_type == 'chore' -%}
-                      {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + [button] -%}
-                    {%- else -%}
-                      {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + [button] -%}
-                    {%- endif -%}
-                  {%- endif -%}
-                {%- endfor -%}
+                {%- set pending_chore_data =
+                state_attr('sensor.kc_pending_chore_approvals', ns.Kid_name) |
+                default([], true) -%} {%- set pending_reward_data =
+                state_attr('sensor.kc_pending_reward_approvals', ns.Kid_name) |
+                default([], true) -%}
+
+
+                {%- if pending_chore_data | count > 0 -%}
+                  {%- for chore in pending_chore_data | unique(attribute='chore_name') -%}
+                    {%- set ns.chore_name_normalize = chore.chore_name -%}  
+                    {%- for letter, replacement in replacements.items() -%}
+                      {%- set ns.chore_name_normalize = ns.chore_name_normalize | replace(letter, replacement) -%}
+                    {%- endfor -%} 
+                    {%- set ns.chore_name_normalize = ns.chore_name_normalize | lower -%}
+                    {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + ['button.kc_' ~ ns.Kid_name_normalize ~ '_chore_approval_' ~ ns.chore_name_normalize] + ['button.kc_' ~ ns.Kid_name_normalize ~ '_chore_disapproval_' ~ ns.chore_name_normalize]-%}
+                  {%- endfor -%}
+                {%- endif -%} {%- if pending_reward_data | count > 0 -%}
+                  {%- for reward in pending_reward_data | unique(attribute='reward_name') -%}
+                    {%- set ns.reward_name_normalize = reward.reward_name -%}  
+                    {%- for letter, replacement in replacements.items() -%}
+                      {%- set ns.reward_name_normalize = ns.reward_name_normalize | replace(letter, replacement) -%}
+                    {%- endfor -%} 
+                    {%- set ns.reward_name_normalize = ns.reward_name_normalize | lower -%}
+                    {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + ['button.kc_' ~ ns.Kid_name_normalize ~ '_reward_approval_' ~ ns.reward_name_normalize] + ['button.kc_' ~ ns.Kid_name_normalize ~ '_reward_disapproval_' ~ ns.reward_name_normalize]-%}
+                  {%- endfor -%}
+                {%- endif -%}
 
                 {%- set button_groups = [
                     {'name': 'Chore Approvals', 'buttons': ns.approve_chore_buttons, 'icon': 'mdi:thumb-up-outline'},
@@ -1000,39 +1071,40 @@ sections:
                     {{- ns.heading_card_blank -}},          
 
                     {%- for button in group.buttons -%}
-                      {%- set sensor_id = button.entity_id 
+                      {%- set sensor_id = button 
                           | regex_replace('^button\\.kc_', 'sensor.kc_') 
                           | regex_replace('_(approval|disapproval)_', '_status_') 
                       -%}
+
                       {%- set primary = 
-                          ('OK: ' ~ button.attributes.friendly_name | regex_replace('^[^-]+ - ([^ ]+) .* - (.*)$', '\\2')) 
-                          if button.entity_id | regex_search('_approval_') 
+                          ('OK: ' ~ state_attr(button, 'friendly_name') | regex_replace('^[^-]+ - ([^ ]+) .* - (.*)$', '\\2')) 
+                          if button | regex_search('_approval_') 
                           else 
-                          ('NO: ' ~ button.attributes.friendly_name | regex_replace('^[^-]+ - ([^ ]+) .* - (.*)$', '\\2')) 
+                          ('NO: ' ~ state_attr(button, 'friendly_name') | regex_replace('^[^-]+ - ([^ ]+) .* - (.*)$', '\\2')) 
                       -%}
                       {%- set icon = 
-                          'mdi:thumb-up' if '_approval_' in button.entity_id else 
-                          'mdi:thumb-down' if '_disapproval_' in button.entity_id else 
-                          button.attributes.icon 
+                          'mdi:thumb-up' if '_approval_' in button else 
+                          'mdi:thumb-down' if '_disapproval_' in button else 
+                          'mdi:progress-question' 
                       -%}
                       {%- set icon_color = 
-                          'green' if '_approval_' in button.entity_id else 
-                          'red' if '_disapproval_' in button.entity_id else 
+                          'green' if '_approval_' in button else 
+                          'red' if '_disapproval_' in button else 
                           'grey'
                       -%}
                       {{
                         {
                           'type': 'custom:mushroom-template-card',
-                          'entity': button.entity_id,
+                          'entity': button,
                           'primary': primary,
                           'icon': icon,
                           'layout': '',
                           'icon_color': icon_color,
                           'tap_action': {
-                            'action': 'more-info'
+                            'action': 'toggle'
                           },
                           'hold_action': {
-                            'action': 'toggle'
+                            'action': 'more-info'
                           },
                         }
                       }},
@@ -1107,9 +1179,9 @@ sections:
                 state_attr(points_sensor, 'icon') -%}
 
                 {# -- Get Selected Chore from Input Select -- #} {%- set
-                ns.chore_select_entity = 'input_select.kc_' ~
-                ns.Kid_name_normalize ~ '_chore_list' -%} {%- set
-                ns.chore_selected = states(ns.chore_select_entity) -%} {%- set
+                ns.chore_select_entity = 'select.kc_' ~ ns.Kid_name_normalize ~
+                '_chore_list' -%} {%- set ns.chore_selected =
+                states(ns.chore_select_entity) -%} {%- set
                 ns.chore_sensor_id_prefix = 'sensor.kc_' ~ ns.Kid_name_normalize
                 ~ '_chore_status_' -%}
 
@@ -1447,10 +1519,10 @@ sections:
                         'icon_color': icon_color,
                         'layout': 'vertical',
                         'tap_action': {
-                          'action': 'more-info'
+                          'action': 'toggle'
                         },
                         'hold_action': {
-                          'action': 'toggle'
+                          'action': 'more-info'
                         }
                       }
                     }},
@@ -1532,10 +1604,10 @@ sections:
                       'icon': button.attributes.icon,
                       'icon_color': icon_color,
                       'tap_action': {
-                        'action': 'more-info'
+                        'action': 'toggle'
                       },
                       'hold_action': {
-                        'action': 'toggle'
+                        'action': 'more-info'
                       }
                     }
                   }},
