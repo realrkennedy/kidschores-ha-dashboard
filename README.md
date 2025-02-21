@@ -87,7 +87,12 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
   - 📌 **Status:** Pending, Approved, or Claimed  
 - Shared chores are clearly marked with **“(S)”** for easy identification.  When one child claims a shared chore, the dashboard visually updates for the other assigned kids by displaying a purple icon and a multi-person symbol, indicating that someone else has already completed it. However, this is purely for awareness—each child's chore responsibility remains independently handled in the backend system. Their task can still become overdue if unclaimed, and they can still claim and get approval for completing it. While single-completion shared chores aren't currently supported, this visual indicator can serve as a helpful workaround for families managing shared tasks.
 
-![image](https://github.com/user-attachments/assets/8eb4bd9a-f99f-4468-9bed-23acbdc443e4)
+![image](https://github.com/user-attachments/assets/895987ec-e3ca-4d75-b034-435492d3f649)
+
+
+- Multi-claim chores now display in blue after their first approval. These chores also show an "(M)" after their status, indicating they can be claimed again.
+
+![image](https://github.com/user-attachments/assets/52362b7f-633e-4df2-b6d4-1cefaddaf864)
 
  
 - All chores are claimed with a **single click**—no extra actions needed.  
@@ -139,7 +144,7 @@ The **KidsChores Dashboard** is designed with kids in mind—**simple, fun, and 
 The **Parent Dashboard** is a fully automated control panel for managing chore approvals, point adjustments, and penalties. It is designed to **minimize space** by **dynamically showing sections** only when actions are needed—such as pending approvals or overdue chore resets. Built on the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha), it offers intuitive, space-efficient cards for full parental control.  
 
 📌 **Smart Display:** Sections like approvals and overdue chore resets **only appear when required.**  
-💥 **Quick Actions:** All actions use **“Hold to apply”** for secure, confirmed interactions.  
+💥 **Quick Actions:** All actions use **“Single click to apply”** for quick and easy interactions.  
 📊 **Full Visibility:** Activity logs provide a complete history of points and approvals.  
 
 ---
@@ -173,7 +178,7 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 
 ---
 
-### **2️⃣ Approvals Section ("Hold to Approve")**  
+### **2️⃣ Approvals Section**  
 - **Appears only when approvals are pending**—fully hidden otherwise.  
 - Allows parents to **approve or deny**:  
   - 📝 **Pending Chores**  
@@ -184,7 +189,7 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 
 ---
 
-### **3️⃣ Overdue Chores Management ("Hold to Reset")**  
+### **3️⃣ Overdue Chores Management**  
 - **Appears only when chores are overdue.**  
 - Provides two options:  
   - 🛑 **Reset All Overdue Chores** for the child.  
@@ -194,7 +199,7 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 
 ---
 
-### **5️⃣ Chore Due Date Adjustments ("Hold to Apply")**  
+### **5️⃣ Chore Due Date Adjustments**  
 - Displays a **chore selector** to quickly find and update due dates.  
 - Provides options for adjusting due dates:  
   - 📅 **+Next Due**
@@ -214,15 +219,14 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
  
 ---
 
-### **4️⃣ Pluses & Minuses ("Hold to Apply")**  
+### **4️⃣ Pluses & Minuses**  
 The **Pluses & Minuses** section combines **Manual Points Adjustments** and **Penalties**, providing an all-in-one interface for point management.  
 
 #### ➕ **Manual Points Adjustment**  
 - Displays easy-access buttons to:  
   - ➕ **Add points** (e.g., for extra chores or positive behavior).  
   - ➖ **Remove points** (e.g., corrections or adjustments).  
-- Shows the child's current point total and updates immediately.  
-- All actions require a **“Hold to apply”** for confirmation.  
+- Shows the child's current point total and updates immediately.   
 
 #### 💥 **Penalties Management**  
 - Displays penalty options to deduct points for missed chores or behavior issues.  
@@ -230,7 +234,6 @@ The **Pluses & Minuses** section combines **Manual Points Adjustments** and **Pe
   - 💥 **Points deducted**  
   - 📊 **Times penalty was applied**  
 - Total penalty points applied are shown in the Parent Overview.  
-- Penalties are confirmed using **“Hold to apply”**.  
 
 ---
 
@@ -309,12 +312,16 @@ Note - No longer required to change the "points" text, the new dashboard dynamic
 ---
 
 ## 📌 Step 5: Add Required Helpers (UI Support)  
-Currently, the KidsChores Dashboard requires a few **helpers** to support interactive features in the UI. These helpers enable functions such as chore selection and custom date adjustments. While these may be **temporary requirements**, they are necessary for full dashboard functionality at this time.  
+Currently, the KidsChores Dashboard requires a single **datetime helper** to support interactive features in the UI.
 
 You will need to add:  
-- 📂 **input_select.kc_{kid}_chore_list** — For selecting individual chores.  
-- 🗓️ **input_datetime.kc_ui_set_date_helper** — For setting custom due dates.  
-- ⚙️ **Automation: kc_ui_set_date_on_hold** — Triggers date adjustments from the UI.  
+- 🗓️ **input_datetime.kc_ui_set_date_helper** — For setting custom due dates from the dashboard. The name of the entity is critical, so enter it carefully.  To add a helper, go to Settings \ Devices & Services \ Helpers then select "+ CREATE HELPER" and choose "Date and/or time"
+
+![image](https://github.com/user-attachments/assets/a587f4d2-5875-4ff7-a69e-14d7ee1a7f5f)
+
+
+An **optional** automation can be added to continuously set the date of the date of that helper to tomorrow at 11PM.  Without this automation, the datetime will remain at whatever was last selected, which is not an issue.
+- ⚙️ **Automation: kc_ui_set_date_on_hold** — .  
 
 📄 [**kc-dashboard-uihelpers.yaml**](https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc-dashboard-uihelpers.yaml)  
 
@@ -330,4 +337,7 @@ You will need to add:
 
 Your **Kids Chore & Reward Dashboard** is now fully functional in **Home Assistant**! 🎉  
 
-📌 **Need help?** Drop a comment below! 🚀  
+If you haven't already done so, take a few minutes to look through the KidsChores integration Wiki which is loaded with helpful information as you get started.
+👉 Integration Wiki
+
+📌 **Need help?** Log and issue here or visit the thread on the Home Assistant Forum [Introducing the KidsChores and Rewards Dashboard](https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard) ! 🚀  
