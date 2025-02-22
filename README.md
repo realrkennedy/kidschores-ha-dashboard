@@ -333,6 +333,8 @@ An **optional** automation can be added to continuously set the date of the date
 - ✅ Ensure **buttons update chore statuses correctly.**  
 - 🛠 If any entities are missing, check **sensor and button names** in Developer Tools → States.  
 
+### If you are having any issues with the approval buttons working, check this post:  https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard/849869/36?u=ccpk1
+
 ---
 
 Your **Kids Chore & Reward Dashboard** is now fully functional in **Home Assistant**! 🎉  
