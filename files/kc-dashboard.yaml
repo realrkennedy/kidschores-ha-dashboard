@@ -18,12 +18,18 @@ sections:
             filter:
               template: >-
                 {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
-                points=0, points_label='', points_icon='' , overdue=0,
-                weekly_completed=0, todays_completed=0, achievements=[],
-                challenges=[]) -%}    
+                points=0, points_label='', points_icon='', overdue=0,
+                weekly_completed=0, todays_completed=0, highest_badge='',
+                highest_badge_icon='', highest_badge_normalize='',
+                highest_badge_entity='', highest_badge_multiplier='',
+                highest_badge_display_line='', achievements=[], challenges=[])
+                -%}    
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -37,13 +43,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {# -- Collect Points -- #}  {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.points =
@@ -69,30 +87,48 @@ sections:
                 -%}  {%- set ns.todays_completed = states(todays_sensor) |
                 int(default=0) -%}
 
-                {# -- Get Highest Badge Earned -- #}   {%- set
-                highest_badge_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~
-                '_highest_badge' -%}   {%- set ns.highest_badge =
-                states(highest_badge_sensor) | default('None') -%}   {%- set
-                ns.highest_badge_icon = state_attr(highest_badge_sensor, 'icon')
-                | default('mdi:medal-outline') -%}  
+                {# -- Get Highest Badge Earned -- #}   
 
-                {# -- Get Multiplier for Highest Badge -- #}   {%- set
-                highest_badge_entity = 'sensor.kc_' ~ ns.highest_badge | lower |
-                replace(' ', '_') ~ '_badge' -%}   {%- set
-                ns.highest_badge_multiplier = state_attr(highest_badge_entity,
-                'points_multiplier') | float(default=1) -%}
+                {%- set highest_badge_sensor = 'sensor.kc_' ~
+                ns.Kid_name_normalize ~ '_highest_badge' -%}    {%- set
+                ns.highest_badge = states(highest_badge_sensor) or 'None' -%}  
+                {%- set ns.highest_badge_icon = state_attr(highest_badge_sensor,
+                'icon') or 'mdi:medal-outline' -%}
 
-                {# -- Construct Badge Display Line for Markdown -- #}   {%- if
-                ns.highest_badge not in ['None', 'unknown', 'Unknown'] -%}
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.highest_badge_normalize = ns.highest_badge -%}  {%-
+                for letter, replacement in replacements.items() -%}
+                  {%- set ns.highest_badge_normalize = ns.highest_badge_normalize | replace(letter, replacement) -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.highest_badge_normalize = ns.highest_badge_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
+
+                {# -- Get Multiplier for Highest Badge -- #}
+
+                {%- set ns.highest_badge_entity = 'sensor.kc_' ~
+                ns.highest_badge_normalize ~ '_badge' -%} {%- set
+                ns.highest_badge_multiplier =
+                state_attr(ns.highest_badge_entity, 'points_multiplier') |
+                float(default=1) -%}
+
+                {# -- Construct Badge Display Line for Markdown -- #}
+
+                {%- if ns.highest_badge not in ['None', 'unknown', 'Unknown']
+                -%}
                   {%- if ns.highest_badge_multiplier > 1 -%}
-                    {%- set ns.badge_display_line = 
-                      "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " 
-                      ~ ns.highest_badge ~ " (x" ~ ns.highest_badge_multiplier|string ~ ")  \n" 
+                    {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ " (x" ~ ns.highest_badge_multiplier|string ~ ")  \n" 
                     -%}
                   {%- else -%}
-                    {%- set ns.badge_display_line = 
-                      "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " 
-                      ~ ns.highest_badge ~ "  \n" 
+                    {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n" 
                     -%}
                   {%- endif -%}
                 {%- else -%}
@@ -107,15 +143,16 @@ sections:
                 achievement_prefix ~ '.*') | list -%}   {%- for sensor in
                 achievement_list -%}
                   {%- set name = state_attr(sensor.entity_id, 'achievement_name') | default('Unknown Achievement') -%}
+                  {%- set icon = state_attr(sensor.entity_id, 'icon') or 'mdi:trophy-award' -%}
                   {%- set progress = states(sensor.entity_id) | float(default=0) -%}
                   {%- set award_status = state_attr(sensor.entity_id, 'awarded') -%}
 
                   {# -- Get Overall Sensor for Reward Points -- #}
-                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_[^_]+_', 'sensor.kc_') -%}
+                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_.*?_achievement_status_', 'sensor.kc_achievement_status_') -%}
                   {%- set reward_points = state_attr(overall_sensor, 'reward_points') | int(default=0) -%}
 
-                  {%- set status = '✔️ Completed' if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
-                  {%- set ns.achievements = ns.achievements + ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
+                  {%- set status = '✔️ Completed' if award_status == true else '⌛ ' ~ progress|round(0) ~ '%' -%}
+                  {%- set ns.achievements = ns.achievements + ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ "<ha-icon icon='" ~ icon ~ "'></ha-icon>&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
                 {%- endfor -%}
 
                 {# -- Collect Challenges with Progress and Rewards -- #} {%- set
@@ -125,18 +162,17 @@ sections:
                 challenge_prefix ~ '.*') | list -%}   {%- for sensor in
                 challenge_list -%}
                   {%- set name = state_attr(sensor.entity_id, 'challenge_name') | default('Unknown Challenge') -%}
+                  {%- set icon = state_attr(sensor.entity_id, 'icon') or 'mdi:flag-checkered' -%}
                   {%- set progress = states(sensor.entity_id) | float(default=0) -%}
                   {%- set award_status = state_attr(sensor.entity_id, 'awarded') -%}
 
                   {# -- Get Overall Sensor for Reward Points -- #}
-                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_[^_]+_', 'sensor.kc_') -%}
+                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_.*?_achievement_status_', 'sensor.kc_achievement_status_') -%}
                   {%- set reward_points = state_attr(overall_sensor, 'reward_points') | int(default=0) -%}
 
-                  {%- set status = '✔️ Completed' if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
-                  {%- set ns.challenges = ns.challenges + ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
+                  {%- set status = '✔️ Completed' if award_status == true else '⌛ ' ~ progress|round(0) ~ '%' -%}
+                  {%- set ns.challenges = ns.challenges + ["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ "<ha-icon icon='" ~ icon ~ "'></ha-icon>&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
                 {%- endfor -%}
-
-
 
                 {{
                   {
@@ -147,7 +183,7 @@ sections:
                                "**☀️ Today's Completed:** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n"
                                "**🏆 Achievements:** &nbsp;&nbsp; " ~ 
                                ("\n" ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;None") ~ "  \n"
-                               "**🔥 Challenges:** &nbsp;&nbsp; " ~ 
+                               "**🏁 Challenges:** &nbsp;&nbsp; " ~ 
                                ("\n" ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;None") ~ "  \n"
                   }
                 }},
@@ -183,9 +219,9 @@ sections:
 
                 {%- set ns.pref_exclude_approved = false -%}
 
-                {#-- Set Kid_name and normalize --#} 
+                {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kidname'-%} 
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -201,15 +237,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} 
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
 
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for letter,
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
                 replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {# -- Point Labels -- #}    {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}     {%- set
@@ -390,11 +436,15 @@ sections:
                   current_points=0,
                   points_label='',
                   points_icon='',
+                  reward_name_normalize='',
                   rewards=[]
                 ) -%}  
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -408,13 +458,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {# -- Point Labels -- #}   {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set
@@ -430,14 +492,32 @@ sections:
 
                 {%- for sensor in reward_list -%}
                   {%- set reward_name = state_attr(sensor.entity_id, 'reward_name') | default('Unknown') -%}
+                  
+                  {# -- Replace Accented Letters -- #}
+
+                  {%- set ns.reward_name_normalize = reward_name -%} 
+                  {%- for letter, replacement in replacements.items() -%}
+                    {%- set ns.reward_name_normalize = ns.reward_name_normalize | replace(letter, replacement) -%}
+                  {%- endfor -%}
+
+                  {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                  {%- set ns.reward_name_normalize = ns.reward_name_normalize
+                      | regex_replace("[^a-zA-Z0-9]", "_")
+                      | regex_replace("_+", "_")
+                      | regex_replace("^_", "")
+                      | regex_replace("_$", "")
+                      | lower
+                  -%}
+                  
                   {%- set reward_cost = state_attr(sensor.entity_id, 'cost') | int(default=0) -%}
                   {%- set reward_status = states(sensor.entity_id) | default('unknown') -%}
                   {%- set reward_icon = state_attr(sensor.entity_id, 'icon') | default('mdi:gift') -%}
 
                   {# -- Collect Approvals and Claims -- #}  
-                  {%- set approval_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_reward_approvals_' ~ reward_name | lower | replace(' ', '_') -%}
-                  {%- set claim_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_reward_claims_' ~ reward_name | lower | replace(' ', '_') -%}
-                  {%- set claim_button = 'button.kc_' ~ ns.Kid_name_normalize ~ '_reward_claim_' ~ reward_name | lower | replace(' ', '_') -%}
+                  {%- set approval_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_reward_approvals_' ~ ns.reward_name_normalize -%}
+                  {%- set claim_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_reward_claims_' ~ ns.reward_name_normalize -%}
+                  {%- set claim_button = 'button.kc_' ~ ns.Kid_name_normalize ~ '_reward_claim_' ~ ns.reward_name_normalize -%}
                   {%- set approvals = states(approval_sensor) | int(default=0) -%}
                   {%- set claims = states(claim_sensor) | int(default=0) -%}
 
@@ -478,23 +558,20 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(
-                  Kid_name='',
-                  Kid_name_normalize='',
-                  highest_badge='',
-                  highest_badge_icon='mdi:medal',
-                  highest_badge_multiplier='1',
-                  all_badges=[],
-                  badge_list='',
-                  current_points='',
-                  points_label='',
-                  points_icon='',
-                  challenges=[],
-                  achievements=[],
-                ) -%}  
+                {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
+                points=0, points_label='', points_icon='', overdue=0,
+                weekly_completed=0, todays_completed=0, all_time_completed='',
+                all_badges=[], badge_list=[], badge_name_normalize='',
+                badges_sensor='', highest_badge='', highest_badge_icon='',
+                highest_badge_normalize='', highest_badge_entity='',
+                highest_badge_multiplier='', highest_badge_display_line='',
+                achievements=[], challenges=[]) -%}    
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -508,99 +585,190 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
 
-                {# -- Point Labels -- #}     {%- set points_sensor =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
-                ns.current_points = states(points_sensor) | int(default=0) -%}
-                {%- set ns.points_label = state_attr(points_sensor,
-                'unit_of_measurement') -%}  {%- set ns.points_icon =
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
+                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
+
+                {# -- Collect Points -- #}  {%- set points_sensor = 'sensor.kc_'
+                ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.points =
+                states(points_sensor) | int(default=0) -%} {%- set
+                ns.points_label = state_attr(points_sensor,
+                'unit_of_measurement') -%} {%- set ns.points_icon =
                 state_attr(points_sensor, 'icon') -%}
 
-                {# -- Get Highest Badge and Multiplier -- #}  {%- set
-                highest_badge_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~
-                '_highest_badge' -%}  {%- set ns.highest_badge =
-                states(highest_badge_sensor) | default('None') -%}  {%- set
-                ns.highest_badge_icon = state_attr(highest_badge_sensor, 'icon')
-                | default('mdi:medal-outline') -%}
+                {# -- Collect Overdue Chores -- #}  {%- set
+                chore_sensor_id_prefix = 'sensor.kc_'~ ns.Kid_name_normalize ~
+                '_chore_status_' -%}   {%- set ns.overdue = states.sensor 
+                    | selectattr('entity_id', 'match', '^' ~ chore_sensor_id_prefix ~ '.*') 
+                    | selectattr('state', 'eq', 'overdue') 
+                    | list | length | int(default=0) -%}
 
-                {# -- Get All Earned Badges -- #}  {%- set badges_sensor =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_badges' -%}  {%- set
-                ns.all_badges = state_attr(badges_sensor, 'badges') |
-                default([]) -%}
+                {# -- Collect Weekly Completed -- #}  {%- set weekly_sensor =
+                'sensor.kc_' ~ ns.Kid_name_normalize ~
+                '_chores_completed_weekly' -%}  {%- set ns.weekly_completed =
+                states(weekly_sensor) | int(default=0) -%}
 
-                {# -- Get Multiplier for Highest Badge -- #}  {%- set
-                highest_badge_entity = 'sensor.kc_' ~ ns.highest_badge | lower |
-                replace(' ', '_') ~ '_badge' -%}  {%- set
-                ns.highest_badge_multiplier = state_attr(highest_badge_entity,
-                'points_multiplier') if state_attr(highest_badge_entity,
-                'points_multiplier') is not none else 1 -%}
+                {# -- Collect Today's Completed -- #}  {%- set todays_sensor =
+                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_chores_completed_daily'
+                -%}  {%- set ns.todays_completed = states(todays_sensor) |
+                int(default=0) -%}
 
-                {# -- Construct the Badge List with Icons -- #}   {%- set
-                ns.badge_list = "\n " -%}   {%- for badge in ns.all_badges -%}
-                  {%- set badge_sensor = 'sensor.kc_' ~ badge | lower | replace(' ', '_') ~ '_badge' -%}
+                {# -- Collect Total Completed -- #}  {%- set all_time_sensor =
+                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_chores_completed_total'
+                -%}  {%- set ns.all_time_completed = states(all_time_sensor) |
+                int(default=0) -%}
+
+                {# -- Get Highest Badge Earned -- #}   
+
+                {%- set highest_badge_sensor = 'sensor.kc_' ~
+                ns.Kid_name_normalize ~ '_highest_badge' -%}    {%- set
+                ns.highest_badge = states(highest_badge_sensor) or 'None' -%}  
+                {%- set ns.highest_badge_icon = state_attr(highest_badge_sensor,
+                'icon') or 'mdi:medal-outline' -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.highest_badge_normalize = ns.highest_badge -%}  {%-
+                for letter, replacement in replacements.items() -%}
+                  {%- set ns.highest_badge_normalize = ns.highest_badge_normalize | replace(letter, replacement) -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.highest_badge_normalize = ns.highest_badge_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
+
+                {# -- Get Multiplier for Highest Badge -- #}
+
+                {%- set ns.highest_badge_entity = 'sensor.kc_' ~
+                ns.highest_badge_normalize ~ '_badge' -%} {%- set
+                ns.highest_badge_multiplier =
+                state_attr(ns.highest_badge_entity, 'points_multiplier') |
+                float(default=1) -%}
+
+                {# -- Construct Badge Display Line for Markdown -- #}
+
+                {%- if ns.highest_badge not in ['None', 'unknown', 'Unknown']
+                -%}
+                  {%- if ns.highest_badge_multiplier > 1 -%}
+                    {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ " (x" ~ ns.highest_badge_multiplier|string ~ ")  \n" 
+                    -%}
+                  {%- else -%}
+                    {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n" 
+                    -%}
+                  {%- endif -%}
+                {%- else -%}
+                  {%- set ns.badge_display_line = "" -%}
+                {%- endif -%}
+
+
+                {# -- Get All Earned Badges -- #}  
+
+                {%- set ns.badges_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize
+                ~ '_badges' -%}   {%- set ns.all_badges =
+                state_attr(ns.badges_sensor, 'badges') | default([]) -%}
+
+                {# -- Construct the Badge List with Icons -- #}
+
+                {%- set ns.badge_list = "\n " -%} {%- for badge in ns.all_badges
+                -%}
+
+                      {# -- Replace Accented Letters -- #}
+
+                      {%- set ns.badge_name_normalize = badge -%}  {%- for
+                      letter, replacement in replacements.items() -%}
+                        {%- set ns.badge_name_normalize = ns.badge_name_normalize | replace(letter, replacement) -%}
+                      {%- endfor -%}
+
+                      {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                      {%- set ns.badge_name_normalize = ns.badge_name_normalize
+                          | regex_replace("[^a-zA-Z0-9]", "_")
+                          | regex_replace("_+", "_")
+                          | regex_replace("^_", "")
+                          | regex_replace("_$", "")
+                          | lower
+                      -%}
+
+                  {%- set badge_sensor = 'sensor.kc_' ~ ns.badge_name_normalize ~ '_badge' -%}
                   {%- set badge_icon = state_attr(badge_sensor, 'icon') | default('mdi:medal-outline') -%}
                   {%- set ns.badge_list = ns.badge_list + "- <ha-icon icon='" ~ badge_icon ~ "'></ha-icon> " ~ badge ~ "  \n" -%}
                 {%- endfor -%}
 
-                {# -- Collect Achievements with Progress, Rewards, and Icons --
-                #}   {%- set achievement_prefix = 'sensor.kc_' ~
-                ns.Kid_name_normalize ~ '_achievement_status_' -%}   {%- set
-                achievement_list = states.sensor | selectattr('entity_id',
-                'match', achievement_prefix ~ '.*') | list -%}   {%- for sensor
-                in achievement_list -%}
+
+
+                {# -- Collect Achievements with Progress and Rewards -- #} {%-
+                set achievement_prefix = 'sensor.kc_' ~ ns.Kid_name_normalize ~
+                '_achievement_status_' -%}   {%- set achievement_list =
+                states.sensor | selectattr('entity_id', 'match',
+                achievement_prefix ~ '.*') | list -%}   {%- for sensor in
+                achievement_list -%}
                   {%- set name = state_attr(sensor.entity_id, 'achievement_name') | default('Unknown Achievement') -%}
-                  {%- set achievement_icon = state_attr(sensor.entity_id, 'icon') | default('mdi:trophy-outline') -%}
+                  {%- set icon = state_attr(sensor.entity_id, 'icon') or 'mdi:trophy-award' -%}
                   {%- set progress = states(sensor.entity_id) | float(default=0) -%}
                   {%- set award_status = state_attr(sensor.entity_id, 'awarded') -%}
 
                   {# -- Get Overall Sensor for Reward Points -- #}
-                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_[^_]+_', 'sensor.kc_') -%}
+                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_.*?_achievement_status_', 'sensor.kc_achievement_status_') -%}
+
                   {%- set reward_points = state_attr(overall_sensor, 'reward_points') | int(default=0) -%}
 
                   {%- set status = '✔️ Completed' if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
-                  {%- set ns.achievements = ns.achievements + ["- <ha-icon icon='" ~ achievement_icon ~ "'></ha-icon> " ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
+                  {%- set ns.achievements = ns.achievements + ["- " ~ "<ha-icon icon='" ~ icon ~ "'></ha-icon>&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
                 {%- endfor -%}
 
-                {# -- Collect Challenges with Progress, Rewards, and Icons --
-                #}   {%- set challenge_prefix = 'sensor.kc_' ~
-                ns.Kid_name_normalize ~ '_challenge_status_' -%}   {%- set
-                challenge_list = states.sensor | selectattr('entity_id',
-                'match', challenge_prefix ~ '.*') | list -%}   {%- for sensor in
+                {# -- Collect Challenges with Progress and Rewards -- #} {%- set
+                challenge_prefix = 'sensor.kc_' ~ ns.Kid_name_normalize ~
+                '_challenge_status_' -%}   {%- set challenge_list =
+                states.sensor | selectattr('entity_id', 'match',
+                challenge_prefix ~ '.*') | list -%}   {%- for sensor in
                 challenge_list -%}
                   {%- set name = state_attr(sensor.entity_id, 'challenge_name') | default('Unknown Challenge') -%}
-                  {%- set challenge_icon = state_attr(sensor.entity_id, 'icon') | default('mdi:fire') -%}
+                  {%- set icon = state_attr(sensor.entity_id, 'icon') or 'mdi:flag-checkered' -%}
                   {%- set progress = states(sensor.entity_id) | float(default=0) -%}
                   {%- set award_status = state_attr(sensor.entity_id, 'awarded') -%}
 
                   {# -- Get Overall Sensor for Reward Points -- #}
-                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_[^_]+_', 'sensor.kc_') -%}
+                  {%- set overall_sensor = sensor.entity_id | regex_replace('^sensor\\.kc_.*?_achievement_status_', 'sensor.kc_achievement_status_') -%}
                   {%- set reward_points = state_attr(overall_sensor, 'reward_points') | int(default=0) -%}
 
                   {%- set status = '✔️ Completed' if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
-                  {%- set ns.challenges = ns.challenges + ["- <ha-icon icon='" ~ challenge_icon ~ "'></ha-icon> " ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
+                  {%- set ns.challenges = ns.challenges + ["- " ~ "<ha-icon icon='" ~ icon ~ "'></ha-icon>&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
                 {%- endfor -%}
-
 
                 {{
                   {
                     'type': 'markdown',
                     'content': "## 🏅 Kidname’s Showcase  \n"
-                                "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.current_points ~ " \n\n"          
-                               "**🏆 Highest Badge Earned:** &nbsp;&nbsp;" ~ "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n"
+                                "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.points ~ " \n\n"
+                               "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ 'Total Chores Completed' ~ ":** &nbsp;&nbsp;" ~ ns.all_time_completed ~ " \n\n"  
+                               "**🥇 Highest Badge Earned:** &nbsp;&nbsp;" ~ "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n"
                                "**💎 " ~ ns.points_label ~ " Multiplier:** &nbsp;&nbsp;x" ~ ns.highest_badge_multiplier ~ "  \n"
-                               " \n"
-                               "#### 🥇 All Earned Badges:  " ~ 
-                               (ns.badge_list if ns.all_badges | length > 0 else "&nbsp;None") ~ "  \n"
+                               "#### 🥇 All Earned Badges:  " ~ (ns.badge_list if ns.all_badges | length > 0 else "&nbsp;None") ~ "  \n"
                                "#### 🏆 Achievements: &nbsp;&nbsp; " ~ 
                                ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;None") ~ "  \n"
-                               "#### 🔥 Challenges: &nbsp;&nbsp; " ~ 
+                               "#### 🏁 Challenges: &nbsp;&nbsp; " ~ 
                                ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;None") ~ "  \n"
 
                   }
@@ -621,8 +789,11 @@ sections:
                 achievement_sensor_id_prefix='', current_points='',
                 points_label='') -%}  
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -636,13 +807,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}        
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {%- set ns.achievement_sensor_id_prefix = 'sensor.kc_' ~
                 ns.Kid_name_normalize ~ '_achievement_status_' -%} 
@@ -735,8 +918,11 @@ sections:
                   challenges=[]
                 ) -%}  
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -750,13 +936,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {# -- Point Labels -- #}      {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%}  {%- set
@@ -862,8 +1060,11 @@ sections:
                   reward_progress=[],
                 ) -%}  
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -877,13 +1078,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {# -- Collect Points Info -- #}   {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set
@@ -993,7 +1206,9 @@ sections:
                 heading_card_blank='', has_approvals='false',
                 chore_name_normalize='', reward_name_normalize='') -%}  
 
-                {%- set ns.Kid_name = 'Kidname'-%} {%- set replacements = {
+                {%- set ns.Kid_name = 'Kidname'-%} 
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -1007,13 +1222,23 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #} {%- set
+                ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #} {%-
+                set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower    
+                -%}
 
                 {%- set ns.heading_card_blank =
                   {
@@ -1025,10 +1250,10 @@ sections:
                 -%}    
 
                 {%- set pending_chore_data =
-                state_attr('sensor.kc_global_chore_pending_approvals', ns.Kid_name) |
-                default([], true) -%} {%- set pending_reward_data =
-                state_attr('sensor.kc_pending_reward_approvals', ns.Kid_name) |
-                default([], true) -%}
+                state_attr('sensor.kc_global_chore_pending_approvals',
+                ns.Kid_name) | default([], true) -%} {%- set pending_reward_data
+                = state_attr('sensor.kc_global_pending_reward_approvals',
+                ns.Kid_name) | default([], true) -%}
 
 
                 {%- if pending_chore_data | count > 0 -%}
@@ -1037,7 +1262,14 @@ sections:
                     {%- for letter, replacement in replacements.items() -%}
                       {%- set ns.chore_name_normalize = ns.chore_name_normalize | replace(letter, replacement) -%}
                     {%- endfor -%} 
-                    {%- set ns.chore_name_normalize = ns.chore_name_normalize | lower -%}
+                      {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+                      {%- set ns.chore_name_normalize = ns.chore_name_normalize
+                          | regex_replace("[^a-zA-Z0-9]", "_")
+                          | regex_replace("_+", "_")
+                          | regex_replace("^_", "")
+                          | regex_replace("_$", "")
+                          | lower    
+                      -%}
                     {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + ['button.kc_' ~ ns.Kid_name_normalize ~ '_chore_approval_' ~ ns.chore_name_normalize] + ['button.kc_' ~ ns.Kid_name_normalize ~ '_chore_disapproval_' ~ ns.chore_name_normalize]-%}
                   {%- endfor -%}
                 {%- endif -%} {%- if pending_reward_data | count > 0 -%}
@@ -1046,7 +1278,14 @@ sections:
                     {%- for letter, replacement in replacements.items() -%}
                       {%- set ns.reward_name_normalize = ns.reward_name_normalize | replace(letter, replacement) -%}
                     {%- endfor -%} 
-                    {%- set ns.reward_name_normalize = ns.reward_name_normalize | lower -%}
+                    {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+                    {%- set ns.reward_name_normalize = ns.reward_name_normalize
+                        | regex_replace("[^a-zA-Z0-9]", "_")
+                        | regex_replace("_+", "_")
+                        | regex_replace("^_", "")
+                        | regex_replace("_$", "")
+                        | lower    
+                    -%}
                     {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + ['button.kc_' ~ ns.Kid_name_normalize ~ '_reward_approval_' ~ ns.reward_name_normalize] + ['button.kc_' ~ ns.Kid_name_normalize ~ '_reward_disapproval_' ~ ns.reward_name_normalize]-%}
                   {%- endfor -%}
                 {%- endif -%}
@@ -1134,6 +1373,7 @@ sections:
                   replacements=[],
                   chore_select_entity='',
                   chore_selected='',
+                  chore_selected_normalize='',
                   chore_sensor_id_prefix='',
                   chore_sensor_id='',
                   current_status='',
@@ -1148,8 +1388,11 @@ sections:
                   points_icon=''          
                 ) -%}
 
-                {# -- Set Kid_name and normalize -- #}    {%- set ns.Kid_name =
-                'Kidname'-%}  {%- set ns.replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -1163,38 +1406,65 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for
-                letter, replacement in ns.replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}  {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
 
-                {# -- Collect Points -- #}  {%- set points_sensor = 'sensor.kc_'
-                ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.points =
-                states(points_sensor) | int(default=0) -%} {%- set
-                ns.points_label = state_attr(points_sensor,
-                'unit_of_measurement') -%} {%- set ns.points_icon =
-                state_attr(points_sensor, 'icon') -%}
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
 
-                {# -- Get Selected Chore from Input Select -- #} {%- set
-                ns.chore_select_entity = 'select.kc_' ~ ns.Kid_name_normalize ~
-                '_chore_list' -%} {%- set ns.chore_selected =
-                states(ns.chore_select_entity) -%} {%- set
-                ns.chore_sensor_id_prefix = 'sensor.kc_' ~ ns.Kid_name_normalize
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
+
+                {# -- Collect Points -- #}  
+
+                {%- set points_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~
+                '_points' -%}    {%- set ns.points = states(points_sensor) |
+                int(default=0) -%}  {%- set ns.points_label =
+                state_attr(points_sensor, 'unit_of_measurement') -%}  {%- set
+                ns.points_icon = state_attr(points_sensor, 'icon') -%}
+
+                {# -- Get Selected Chore from Input Select -- #} 
+
+                {%- set ns.chore_select_entity = 'select.kc_' ~
+                ns.Kid_name_normalize ~ '_chore_list' -%}  {%- set
+                ns.chore_selected = states(ns.chore_select_entity) -%}  {%- set
+                ns.chore_sensor_id_prefix ='sensor.kc_' ~ ns.Kid_name_normalize
                 ~ '_chore_status_' -%}
 
-                {# -- Collect Chore Status Sensor and Details -- #}          {%-
-                if ns.chore_selected | lower not in ['none', 'unknown',
+                {# -- Collect Chore Status Sensor and Details -- #}          
+
+                {%- if ns.chore_selected | lower not in ['none', 'unknown',
                 'unavailable', ''] -%}
-                  {%- set ns.chore_selected_normalize = ns.chore_selected -%} 
-                  {%- for letter, replacement in ns.replacements.items() -%}
+
+                  {# -- Replace Accented Letters -- #}
+
+                  {%- set ns.chore_selected_normalize = ns.chore_selected -%}  
+                  {%- for letter, replacement in replacements.items() -%}
                     {%- set ns.chore_selected_normalize = ns.chore_selected_normalize | replace(letter, replacement) -%}
-                  {%- endfor -%}  {%- set ns.chore_selected_normalize = ns.chore_selected_normalize |
-                  lower -%}
+                  {%- endfor -%}
+
+                  {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                  {%- set ns.chore_selected_normalize = ns.chore_selected_normalize
+                      | regex_replace("[^a-zA-Z0-9]", "_")
+                      | regex_replace("_+", "_")
+                      | regex_replace("^_", "")
+                      | regex_replace("_$", "")
+                      | lower
+                  -%}
                   
-                  {%- set ns.chore_sensor_id = ns.chore_sensor_id_prefix ~ ns.chore_selected_normalize | replace(' ', '_') -%}       
+                  {%- set ns.chore_sensor_id = ns.chore_sensor_id_prefix ~ ns.chore_selected_normalize -%}       
                   {%- set ns.current_status = states(ns.chore_sensor_id) | default('Unknown') -%}
                   {%- set ns.global_status = state_attr(ns.chore_sensor_id, 'global_state') | default('Unknown') -%}
                   {%- set ns.shared_chore = state_attr(ns.chore_sensor_id, 'shared_chore') | default('False') -%}
@@ -1412,8 +1682,11 @@ sections:
                 {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
                 prefix_pattern='', sorted_entities=[]) -%}
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -1427,13 +1700,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {{
                   {
@@ -1458,8 +1743,11 @@ sections:
                 {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
                 prefix_pattern='', sorted_entities=[]) -%}
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -1473,13 +1761,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {#-- Build a list of button entities for this kid --#}    {%-
                 set ns.prefix_pattern = 'button\\.kc_' ~ (ns.Kid_name_normalize)
@@ -1538,8 +1838,11 @@ sections:
                 {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
                 current_points='', points_label='' ) -%}  
 
-                {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kidname'-%} {%- set replacements = {
+                {# -- Set Kid_name and normalize -- #}  
+
+                {%- set ns.Kid_name = 'Kidname' -%}
+
+                {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -1553,13 +1856,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    " ": "_"
-                } -%} {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for
-                letter, replacement in replacements.items() -%}
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
+                } -%}
+
+                {# -- Replace Accented Letters -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
+                replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name_normalize | lower -%}
+                {%- endfor -%}
+
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {# -- Point Labels -- #}     {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
