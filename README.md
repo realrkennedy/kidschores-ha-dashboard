@@ -303,7 +303,6 @@ Since this YAML uses a **placeholder name**, update it to match your child's nam
 
 1. **Find and replace all instances of:**  
    - `Kidname` → (e.g., `"Payton"`)  
-   - `kidname` → (e.g., `"payton"`)  
 2. Ensure **case-sensitive replacement** to avoid errors.  
 3. Click **"Save"** to apply changes.  
 
