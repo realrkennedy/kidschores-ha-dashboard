@@ -1025,7 +1025,7 @@ sections:
                 -%}    
 
                 {%- set pending_chore_data =
-                state_attr('sensor.kc_global_pending_chore_approvals', ns.Kid_name) |
+                state_attr('sensor.kc_global_chore_pending_approvals', ns.Kid_name) |
                 default([], true) -%} {%- set pending_reward_data =
                 state_attr('sensor.kc_pending_reward_approvals', ns.Kid_name) |
                 default([], true) -%}
