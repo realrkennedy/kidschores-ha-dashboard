@@ -332,7 +332,9 @@ An **optional** automation can be added to continuously set the date of the date
 - ✅ Ensure **buttons update chore statuses correctly.**  
 - 🛠 If any entities are missing, check **sensor and button names** in Developer Tools → States.  
 
-### If you are having any issues with the approval buttons working, check this post:  https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard/849869/36?u=ccpk1
+### If you are having any issues with the approval buttons working, check these posts:  
+- https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard/849869/36?u=ccpk1
+- https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard/849869/58?u=ccpk1
 
 ---
 
@@ -340,5 +342,28 @@ Your **Kids Chore & Reward Dashboard** is now fully functional in **Home Assista
 
 If you haven't already done so, take a few minutes to look through the KidsChores integration Wiki which is loaded with helpful information as you get started.
 👉 Integration Wiki
+
+---
+
+## 🚨 **Known Issues & Workarounds**  
+
+### 🔹 **Renaming Chores and Rewards**  
+While renaming chores and rewards works correctly **within the KidsChores integration**, it does **not** update the **entity names**, which the dashboard relies on to match the **friendly_name**.  
+
+#### **Recommended Workaround:**  
+✔ **Best Option:** Delete the chore or reward and **recreate it with the new name**.  
+
+✔ **Manual Fix:** If you prefer to keep the existing entity, you can manually rename **all associated button and sensor entities** to match the new friendly name.  
+  - However, **you must account for Home Assistant's special character handling**.  
+  - **Accent characters are automatically normalized** (e.g., `"Štěpán"` → `"stepan"`).  
+  - Spaces and special characters are replaced with **underscores (`_`)**.  
+  - **Duplicate and trailing underscores are removed**.  
+  - Example:  
+    - `"Brush Teeth (Morning)"` becomes `"_brush_teeth_morning"`.  
+    - `"Šimon’s Dishes!"` becomes `"_simons_dishes"`.  
+
+If you experience issues after renaming a chore or reward, verify that the **entity names** match the expected format based on **Home Assistant’s naming conventions**.  
+
+---
 
 📌 **Need help?** Log and issue here or visit the thread on the Home Assistant Forum [Introducing the KidsChores and Rewards Dashboard](https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard) ! 🚀  
