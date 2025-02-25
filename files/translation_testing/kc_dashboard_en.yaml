@@ -1,7 +1,7 @@
 type: sections
 max_columns: 4
-title: Kaden Chores
-path: Kaden
+title: Kidname Chores
+path: Kidname
 sections:
   - type: grid
     cards:
@@ -50,7 +50,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -315,7 +315,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -550,7 +550,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -704,7 +704,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -994,7 +994,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -1180,7 +1180,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -1358,7 +1358,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -1524,7 +1524,7 @@ sections:
 
                 {#-- ************* End Translatable Text ************* --#}
 
-                {%- set ns.Kid_name = 'Kaden'-%} 
+                {%- set ns.Kid_name = 'Kidname'-%} 
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -1795,7 +1795,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -2096,7 +2096,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -2157,7 +2157,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -2265,7 +2265,7 @@ sections:
 
                 {# -- Set Kid_name and normalize -- #}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
@@ -2372,7 +2372,7 @@ sections:
                 entity_list=[]) -%}  
 
                 {# -- Set Kid_name and normalize -- #}  {%- set ns.Kid_name =
-                'Kaden'-%} {%- set replacements = {
+                'Kidname'-%} {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
                     "Ď": "d", "ď": "d",
@@ -2475,7 +2475,7 @@ sections:
 
                 {#-- Set Kid_name and normalize --#}  
 
-                {%- set ns.Kid_name = 'Kaden' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
