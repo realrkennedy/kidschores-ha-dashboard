@@ -820,9 +820,7 @@ sections:
 
                 {# -- Get All Earned Badges -- #}  
 
-                {%- set ns.badges_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize
-                ~ '_badges' -%}   {%- set ns.all_badges =
-                state_attr(ns.badges_sensor, 'badges') | default([], true) -%}
+                {%- set ns.all_badges = state_attr(highest_badge_sensor, 'all_earned_badges') | default([], true) -%}
 
                 {# -- Construct the Badge List with Icons -- #}
 
