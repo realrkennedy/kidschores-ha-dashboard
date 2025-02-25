@@ -1896,7 +1896,7 @@ sections:
                   "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
                   "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
                   "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence ~ "  \n" -%}
-                {%- set ns.content =  ns.content ~  "**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title if ns.chore_days | length > 0 else "" -%}
+                {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
                 {%- set ns.content =  ns.content
                   if ns.chore_selected not in ['None', 'unknown', 'unavailable'] 
                   else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**"
