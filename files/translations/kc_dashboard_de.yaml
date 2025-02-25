@@ -166,9 +166,7 @@ sections:
 
                 {# -- Get All Earned Badges -- #}  
 
-                {%- set ns.badges_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize
-                ~ '_badges' -%}   {%- set ns.all_badges =
-                state_attr(ns.badges_sensor, 'badges') | default([], true) -%}
+                {%- set ns.all_badges = state_attr(highest_badge_sensor, 'all_earned_badges') | default([], true) -%}
 
                 {# -- Construct the Badge List with Icons -- #}
 
@@ -804,17 +802,10 @@ sections:
 
                 {# -- Construct Badge Display Line for Markdown -- #}
 
-                {%- if ns.highest_badge not in ['None', 'unknown', 'Unknown']
-                -%}
-                  {%- if ns.highest_badge_multiplier > 1 -%}
-                    {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ " (x" ~ ns.highest_badge_multiplier|string ~ ")  \n" 
-                    -%}
-                  {%- else -%}
-                    {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n" 
-                    -%}
-                  {%- endif -%}
+                {%- if ns.highest_badge not in ['None', 'unknown', 'Unknown'] -%}
+                  {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n"  -%}
                 {%- else -%}
-                  {%- set ns.badge_display_line = "" -%}
+                  {%- set ns.badge_display_line = ns.NONE -%}
                 {%- endif -%}
 
 
@@ -896,7 +887,7 @@ sections:
                   "## 🏅 " ~ ns.Kid_name ~ "’s " ~ ns.SHOWCASE ~ "  \n"
                   "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.points ~ " \n\n"
                   "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ns.TOTAL_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.all_time_completed ~ " \n\n"  
-                  "**🥇 " ~ ns.HIGHEST_BADGE_EARNED ~ ":** &nbsp;&nbsp;" ~ "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n"
+                  "**🥇 " ~ ns.HIGHEST_BADGE_EARNED ~ ":** &nbsp;&nbsp;" ~ ns.badge_display_line ~ "  \n"
                   "**💎 " ~ ns.points_label ~ " " ~ ns.MULTIPLIER ~ ":** &nbsp;&nbsp;x" ~ ns.highest_badge_multiplier ~ "  \n\n"
                   "**🥇 " ~ ns.ALL_EARNED_BADGES ~ ":**  " ~ (ns.badge_list if ns.all_badges | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n"
                   "#### 🏆 " ~ ns.ACHIEVEMENTS ~ ": &nbsp;&nbsp; " ~ 
