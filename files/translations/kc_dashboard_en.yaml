@@ -1705,6 +1705,9 @@ sections:
                   chore_sensor_id_prefix='',
                   chore_sensor_id='',
                   current_status='',
+                  chore_description='',
+                  chore_days='',
+                  chore_allow_multiple='',
                   global_status='Unknown',
                   shared_chore='False',
                   due_date_formatted='None',
@@ -1735,6 +1738,8 @@ sections:
                   RESET_ALL='',
                   OVERDUE_CHORES='',
                   RESET_OVERDUE_STATUS='',
+                  ALLOW_MULTIPLE_CLAIMS='',
+                  APPLICABLE_DAYS=''
                 ) -%}  
 
 
@@ -1779,6 +1784,10 @@ sections:
                 {%- set ns.OVERDUE_CHORES = "Overdue Chores" -%}
 
                 {%- set ns.RESET_OVERDUE_STATUS = "Reset Overdue Status" -%}
+
+                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Allow Multiple Claims" -%}
+        
+                {%- set ns.APPLICABLE_DAYS = "Applicable Days" -%}
 
                 {#-- ************* End Translatable Text ************* --#} 
 
@@ -1865,6 +1874,9 @@ sections:
                   {%- set ns.recurrence = state_attr(ns.chore_sensor_id, 'recurring_frequency') | default('Not Recurring') -%}
                   {%- set ns.chore_value = state_attr(ns.chore_sensor_id, 'default_points') | int(default=0) -%}
                   {%- set ns.chore_icon = state_attr(ns.chore_sensor_id, 'icon') | default('mdi:clipboard-check') -%}
+                  {%- set ns.chore_description = state_attr(ns.chore_sensor_id, 'description') | default('') -%}
+                  {%- set ns.chore_days = state_attr(ns.chore_sensor_id, 'applicable_days') | default([], true)  -%}
+                  {%- set ns.chore_allow_multiple = state_attr(ns.chore_sensor_id, 'allow_multiple_claims_per_day') | default('') -%}
 
                   {# -- Convert and Format Due Date -- #}
                   {%- set due_date = state_attr(ns.chore_sensor_id, 'due_date') -%}
@@ -1876,14 +1888,18 @@ sections:
 
                 {#-- Store the Markdown content in a variable --#}
 
-                {%- set ns.content = 
-                  "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected | title) ~ "  \n"
+                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%}
+                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~ ns.chore_description ~ "  \n" if ns.chore_description else "" -%}
+                {%- set ns.content = ns.content ~ 
                   "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ ns.current_status ~ "  \n"
                   "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ ns.global_status ~ "  \n"
                   "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ ns.shared_chore ~ "  \n"
+                  "**👥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ ns.chore_allow_multiple ~ "  \n"
                   "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
                   "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
-                  "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence ~ "  \n"
+                  "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence ~ "  \n" -%}
+                {%- set ns.content =  ns.content ~  "**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title if ns.chore_days | length > 0 else "" -%}
+                {%- set ns.content =  ns.content
                   if ns.chore_selected not in ['None', 'unknown', 'unavailable'] 
                   else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**"
                 -%}
