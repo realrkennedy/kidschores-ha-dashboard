@@ -887,7 +887,7 @@ sections:
                   "## 🏅 " ~ ns.Kid_name ~ "’s " ~ ns.SHOWCASE ~ "  \n"
                   "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.points ~ " \n\n"
                   "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ns.TOTAL_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.all_time_completed ~ " \n\n"  
-                  "**🥇 " ~ ns.HIGHEST_BADGE_EARNED ~ ":** &nbsp;&nbsp;" ~ ns._badge_display_line ~ "  \n"
+                  "**🥇 " ~ ns.HIGHEST_BADGE_EARNED ~ ":** &nbsp;&nbsp;" ~ ns.badge_display_line ~ "  \n"
                   "**💎 " ~ ns.points_label ~ " " ~ ns.MULTIPLIER ~ ":** &nbsp;&nbsp;x" ~ ns.highest_badge_multiplier ~ "  \n\n"
                   "**🥇 " ~ ns.ALL_EARNED_BADGES ~ ":**  " ~ (ns.badge_list if ns.all_badges | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n"
                   "#### 🏆 " ~ ns.ACHIEVEMENTS ~ ": &nbsp;&nbsp; " ~ 
