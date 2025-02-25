@@ -1,6 +1,6 @@
 type: sections
 max_columns: 4
-title: Kidname Chores
+title: Kidname Aufgaben
 path: Kidname
 sections:
   - type: grid
@@ -263,7 +263,7 @@ sections:
         cards:
           - type: heading
             icon: mdi:broom
-            heading: Chores
+            heading: Aufgaben
             heading_style: title
           - type: custom:auto-entities
             card:
@@ -515,7 +515,7 @@ sections:
         cards:
           - type: heading
             icon: mdi:star-settings
-            heading: Rewards
+            heading: Belohnungen
             heading_style: title
           - type: custom:auto-entities
             card:
@@ -1695,7 +1695,7 @@ sections:
           - type: heading
             icon: mdi:rocket-launch
             heading_style: title
-            heading: Chore Admin Actions
+            heading: Aufgaben Admin Aktionen
           - type: custom:auto-entities
             card:
               square: false
@@ -2079,7 +2079,7 @@ sections:
         cards:
           - type: heading
             icon: mdi:plus-circle-multiple
-            heading: Pluses & Minuses
+            heading: Pluspunkte & Minuspunkte
             heading_style: title
           - type: custom:auto-entities
             card:
@@ -2356,7 +2356,7 @@ sections:
         cards:
           - type: heading
             icon: mdi:clipboard-text
-            heading: 7 Day Activity Log
+            heading: 7-Tage-Aktivitätsprotokoll
             heading_style: title
           - type: custom:auto-entities
             card:
