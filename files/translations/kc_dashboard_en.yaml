@@ -1888,8 +1888,10 @@ sections:
 
                 {#-- Store the Markdown content in a variable --#}
 
-                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%}
-                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~ ns.chore_description ~ "  \n" if ns.chore_description else "" -%}
+                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%} 
+                
+                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~ ns.chore_description ~ "  \n" if ns.chore_description else ns.content -%} 
+        
                 {%- set ns.content = ns.content ~ 
                   "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ ns.current_status ~ "  \n"
                   "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ ns.global_status ~ "  \n"
@@ -1898,9 +1900,10 @@ sections:
                   "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
                   "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
                   "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence ~ "  \n" -%}
+                
                 {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
-                {%- set ns.content =  ns.content
-                  if ns.chore_selected not in ['None', 'unknown', 'unavailable'] 
+                
+                {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable'] 
                   else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**"
                 -%}
 
