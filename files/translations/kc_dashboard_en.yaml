@@ -455,7 +455,7 @@ sections:
                       {%- set points = state_attr(chore_sensor_id, 'default_points') | string -%}
                       {%- set global_chore_state = state_attr(chore_sensor_id, 'global_state') -%}
                       {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
-                      {%- set streak = states(streak_chore_sensor_id) | string -%}              
+                      {%- set streak = state_attr(chore_sensor_id, 'chore_current_streak') | string -%}              
                       {%- set secondary_options = 'Points: ' + points + '\n' + 'Streak: ' + streak + '\n' + 'Last: ' + last_update  + '\n \n' + 'Status: ' + chore_state + '\n' + 'Due: ' + due_date_short -%}
                       {%- set secondary = ns.points_label ~ ': ' + points + '\n' + ns.STREAK + ': ' + streak + '\n \n' + ns.STATUS + ': ' + chore_state_display + '\n' + ns.DUE + ': ' + due_date_short -%}
                       {%- set icon_color = (
