@@ -533,7 +533,7 @@ sections:
         columns: 1
         cards:
           - type: heading
-            icon: mdi:star-settings
+            icon: mdi:gift-outline
             heading: Belohnungen
             heading_style: title
           - type: custom:auto-entities
