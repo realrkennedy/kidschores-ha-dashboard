@@ -321,10 +321,11 @@ sections:
         
                 {#-- ************* End Translatable Text ************* --#}
 
-
-                {#-- Set preferences --#} 
-
+                {#-- ************* Set Preferences ************* --#} 
+        
                 {%- set ns.pref_exclude_approved = false -%}
+        
+                {#-- ************* End Preferences ************* --#}
 
                 {# -- Set Kid_name and normalize -- #}  
 
@@ -459,9 +460,9 @@ sections:
                         ns.NO_DUE_DATE if not due_date 
                         else (
                           due_date.strftime('%-I:%M %p') if due_date.date() == today 
-                          else due_date.strftime('%a %b %-d')
+                          else as_timestamp(due_date) | timestamp_custom('%a %b %-d', true)
                         )
-                      -%}   
+                      -%}  
                       {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
                       {%- set chore_state = states(chore_sensor_id) -%}
                       {%- set state_map = {
@@ -1538,6 +1539,12 @@ sections:
 
                 {#-- ************* End Translatable Text ************* --#}
 
+                {#-- ************* Set Preferences ************* --#} 
+        
+                {%- set ns.pref_column_count = 2 -%} {#-- Must also set columns above --#}
+        
+                {#-- ************* End Preferences ************* --#}  
+
                 {%- set ns.Kid_name = 'Kidname'-%} 
 
                 {%- set replacements = {
@@ -1573,14 +1580,9 @@ sections:
                     | lower    
                 -%}
 
-                {%- set ns.heading_card_blank =
-                  {
-                    'type': 'heading',
-                    'icon': ' ',
-                    'heading': '',
-                    'heading_style': 'title',
-                  }
-                -%}    
+                {%- set ns.heading_card_blank = { 'type': 'heading', 'icon': ' ',
+                'heading': '', 'heading_style': 'title' } if ns.pref_column_count == 2
+                else None -%}     
 
                 {%- set pending_chore_data =
                 state_attr('sensor.kc_global_chore_pending_approvals',
