@@ -2456,24 +2456,23 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.BADGE_TITLE = "**Badge:** " -%} 
+                {%- set ns.BADGE_TITLE = "Badge" -%} 
 
-                {%- set ns.STATUS = "🏅 Status:" -%} 
+                {%- set ns.STATUS = "Status" -%} 
 
-                {%- set ns.THRESHOLD = "🎯 Threshold:" -%}
+                {%- set ns.THRESHOLD = "Threshold" -%}
 
-                {%- set ns.MULTIPLIER = "💎 Multiplier:" -%} 
+                {%- set ns.MULTIPLIER = "Multiplier" -%} 
 
-                {%- set ns.EARNED_BY = "👥 Earned By:" -%}
+                {%- set ns.EARNED_BY = "Earned By" -%}
 
-                {%- set ns.NO_BADGES_FOUND = "### 🏅 No Badges Found  \n" -%}
+                {%- set ns.NO_BADGES_FOUND = "No Badges Found" -%}
 
-                {%- set ns.BADGE_SETUP_PROMPT = "Set up badges to reward
-                milestones and keep chores fun!" -%} 
+                {%- set ns.BADGE_SETUP_PROMPT = "Set up badges to reward milestones and keep chores fun!" -%} 
 
-                {%- set ns.IN_PROGRESS = "⌛ In Progress" -%} 
+                {%- set ns.IN_PROGRESS = "In Progress" -%} 
 
-                {%- set ns.EARNED = "✔️ Earned" -%}
+                {%- set ns.EARNED = "✔Earned" -%}
 
                 {%- set ns.REMAINING = "to go!" -%}
 
@@ -2549,20 +2548,20 @@ sections:
                                              (ns.points_label if state_attr(badge_sensor.entity_id, 'threshold_type') == "points" else ns.CHORES),
                         'points_multiplier': state_attr(badge_sensor.entity_id, 'points_multiplier') | float(default=1),
                         'kids_earned': state_attr(badge_sensor.entity_id, 'kids_earned') | default([], true),
-                        'earned_text': ns.EARNED if ns.Kid_name in (state_attr(badge_sensor.entity_id, 'kids_earned') | default([], true)) else ns.IN_PROGRESS
+                        'earned_text': "✔️ " ~ ns.EARNED if ns.Kid_name in (state_attr(badge_sensor.entity_id, 'kids_earned') | default([], true)) else "⌛ " ~ ns.IN_PROGRESS
                     } -%}     
                     {%- set ns.badges = ns.badges + [badge_info] -%}
                 {%- endfor -%}
-
+        
                 {%- set sorted_badges = ns.badges | sort(reverse=true,
                 attribute='threshold') | sort(reverse=true,
                 attribute='points_multiplier') -%}
-
+        
                 {%- if sorted_badges | length == 0 -%}
                   {{
                     {
                       'type': 'markdown',
-                      'content': ns.NO_BADGES_FOUND ~ " \n" ~ ns.BADGE_SETUP_PROMPT
+                      'content': "### 🏅 " ~ ns.NO_BADGES_FOUND ~ " \n" ~ ns.BADGE_SETUP_PROMPT
                     }
                   }},  
                 {%- else -%}
@@ -2572,18 +2571,18 @@ sections:
                     {%- set earned = ns.Kid_name in badge.kids_earned -%}
                     {%- set remaining_value = (required_value - progress_value) | round(0) if required_value > progress_value and not earned else 0 -%}
                     {%- set remaining_text = " (" ~ remaining_value|string ~ " " ~ ns.REMAINING ~ ")" if remaining_value > 0 else "" -%}
-
-                    {%- set content = "## <ha-icon icon=" ~ badge.icon ~ "></ha-icon> " ~ ns.BADGE_TITLE ~ badge.name ~ "  \n" %}
+        
+                    {%- set content = "## <ha-icon icon=" ~ badge.icon ~ "></ha-icon> " ~ "**" ~ ns.BADGE_TITLE ~ ":** " ~ badge.name ~ "  \n" %}
                     {%- if badge.description -%}
                       {%- set content = content ~ "#### 📖 &nbsp;" ~ badge.description ~ "  \n" %}
                     {%- endif -%}
-                    {%- set content = content ~ "**" ~ ns.STATUS ~ "** &nbsp;" ~ badge.earned_text ~ "  \n" %}
-                    {%- set content = content ~ "**" ~ ns.THRESHOLD ~ "** &nbsp;" ~ badge.threshold_display ~ remaining_text ~ "  \n" %}
+                    {%- set content = content ~ "**" ~ "🏅 " ~ ns.STATUS ~ ":** &nbsp;" ~ badge.earned_text ~ "  \n" %}
+                    {%- set content = content ~ "**🎯 " ~ ns.THRESHOLD ~ ":** &nbsp;" ~ badge.threshold_display ~ remaining_text ~ "  \n" %}
                     {%- if badge.points_multiplier > 1 -%}
-                      {%- set content = content ~ "**" ~ ns.MULTIPLIER ~ "** &nbsp;x" ~ badge.points_multiplier|string ~ "  \n" %}
+                      {%- set content = content ~ "**💎 " ~ ns.MULTIPLIER ~ ":** &nbsp;x" ~ badge.points_multiplier|string ~ "  \n" %}
                     {%- endif -%}
                     {%- if badge.kids_earned | count > 0 -%}
-                      {%- set content = content ~ "**" ~ ns.EARNED_BY ~ "** &nbsp;" ~ badge.kids_earned | join(', ') ~ "  \n" %}
+                      {%- set content = content ~ "**👥 " ~ ns.EARNED_BY ~ ":** &nbsp;" ~ badge.kids_earned | join(', ') ~ "  \n" %}
                     {%- endif -%}
 
 
