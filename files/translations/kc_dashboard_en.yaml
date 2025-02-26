@@ -1521,11 +1521,19 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
-                approve_chore_buttons=[], approve_reward_buttons=[],
-                heading_card_blank='', has_approvals='false',
-                chore_name_normalize='', reward_name_normalize='',
-                CHORE_APPROVALS='', REWARD_APPROVALS='', OK='', NO='') -%}  
+                {%- set ns = namespace(Kid_name='', 
+                Kid_name_normalize='',
+                pref_column_count='',
+                approve_chore_buttons=[], 
+                approve_reward_buttons=[],
+                heading_card_blank='', 
+                has_approvals='false',
+                chore_name_normalize='',
+                reward_name_normalize='',
+                CHORE_APPROVALS='',
+                REWARD_APPROVALS='',
+                OK='', 
+                NO='') -%} 
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
