@@ -26,25 +26,38 @@ sections:
                 highest_badge_multiplier='', highest_badge_display_line='',
                 achievements=[], challenges=[], content='',
 
-                  WELCOME='', 
-                  ACHIEVEMENTS='', CHALLENGES='', NONE='',
-                  WEEKLY_COMPLETED='', TODAYS_COMPLETED=''
+                  OVERDUE='', THIS_MORNING='', TODAY='', BONUS='', 
+                  STREAK='', STATUS='', DUE='', MULTI_APPROVE_MARK='',
+                  SHARED_MARK='', PENDING='', CLAIMED='', APPROVED=''
                 ) -%}    
-
+        
                 {#-- ************* Set Translatable Text ************* --#}  
-
-                {%- set ns.WELCOME = "Welcome" -%} 
-
-                {%- set ns.NONE = "None" -%}
-
-                {%- set ns.WEEKLY_COMPLETED = "Weekly Completed" -%}
-
-                {%- set ns.TODAYS_COMPLETED = "Today's Completed" -%}
-
-                {%- set ns.ACHIEVEMENTS = "Achievements" -%}
-
-                {%- set ns.CHALLENGES = "Challenges" -%} 
-
+        
+                {%- set ns.OVERDUE = "!!!!!!!!!!! Overdue !!!!!!!!!!!" -%} 
+        
+                {%- set ns.THIS_MORNING = "Due This Morning" -%} 
+        
+                {%- set ns.TODAY = "Due Today" -%}
+        
+                {%- set ns.BONUS = "Upcoming & Bonus" -%} 
+        
+                {%- set ns.STREAK = "Streak" -%}
+        
+                {%- set ns.STATUS = "Status" -%}
+        
+                {%- set ns.DUE = "Due" -%}
+        
+                {%- set ns.MULTI_APPROVE_MARK = "M" -%}
+        
+                {%- set ns.SHARED_MARK = "S" -%}
+        
+                {%- set ns.PENDING = "Pending" -%}
+        
+                {%- set ns.CLAIMED = "Claimed" -%}
+        
+                {%- set ns.APPROVED = "Approved" -%}
+        
+        
                 {#-- ************* End Translatable Text ************* --#}
 
 
@@ -423,7 +436,7 @@ sections:
                     {%- for button in group.buttons -%}
                       {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_claim_', '_status_') -%}
                       {%- set streak_chore_sensor_id = chore_sensor_id | regex_replace('_status_', '_streak_') -%}
-                      {%- set primary = button.attributes.friendly_name.split(' - ')[2]~ (' (S)' if state_attr(chore_sensor_id, 'shared_chore') else '')  -%}
+                      {%- set primary = button.attributes.friendly_name.split(' - ')[2]~ (' (' ~ ns.SHARED_MARK ~ ')' if state_attr(chore_sensor_id, 'shared_chore') else '')  -%}
                       {%- if button.state not in ['unknown', 'unavailable', 'error'] -%}
                         {%- set ts_diff = (now().timestamp() - as_timestamp(button.state)) | float(0) -%}
                         {%- set last_update = (
@@ -439,7 +452,6 @@ sections:
                       {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') | string -%}
                       {%- set due_date = as_datetime(due_date_str).astimezone() if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                       {%- set today = now().astimezone().date() -%}
-                      
                       {%- set due_date_short = 
                         'No due date' if not due_date 
                         else (
@@ -449,7 +461,12 @@ sections:
                       -%}   
                       {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
                       {%- set chore_state = states(chore_sensor_id) -%}
-                      {%- set chore_state_display = states(chore_sensor_id).title() ~ ' (M)' if multi_approve == true else states(chore_sensor_id).title() -%}
+                      {%- set state_map = {
+                          'pending': ns.PENDING,
+                          'claimed': ns.CLAIMED,
+                          'approved': ns.APPROVED
+                      } -%}
+                      {%- set chore_state_display = (state_map[chore_state] if chore_state in state_map else chore_state) ~ ' (' ~ ns.MULTI_APPROVE_MARK ~ ')' if multi_approve == true else (state_map[chore_state] if chore_state in state_map else chore_state) -%}
                       {%- set points = state_attr(chore_sensor_id, 'default_points') | string -%}
                       {%- set global_chore_state = state_attr(chore_sensor_id, 'global_state') -%}
                       {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
