@@ -317,7 +317,7 @@ sections:
         
                 {%- set ns.APPROVED = "Genehmigt" -%}
 
-                {%- set ns.NO_DUE_DATE = "No Due Date" -%}
+                {%- set ns.NO_DUE_DATE = "Kein Fälligkeitsdatum" -%}
         
                 {#-- ************* End Translatable Text ************* --#}
 
