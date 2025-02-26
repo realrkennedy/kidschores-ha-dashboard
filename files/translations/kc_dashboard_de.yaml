@@ -2414,16 +2414,25 @@ sections:
                     "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
                     "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
                     "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": ""
+                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z"
                 } -%}
-
+        
                 {# -- Replace Accented Letters -- #}
-
+        
                 {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
                 replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
                 {%- endfor -%}
+        
+                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
+        
+                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
+                    | regex_replace("[^a-zA-Z0-9]", "_")
+                    | regex_replace("_+", "_")
+                    | regex_replace("^_", "")
+                    | regex_replace("_$", "")
+                    | lower
+                -%}
 
                 {#-- Build a list of entities for this kid, excluding unwanted
                 sensors --#} {%- set prefix_pattern = '(button|sensor)\\.kc_' ~
