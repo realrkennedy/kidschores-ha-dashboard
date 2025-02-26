@@ -286,7 +286,8 @@ sections:
 
                   OVERDUE='', THIS_MORNING='', TODAY='', BONUS='', 
                   STREAK='', STATUS='', DUE='', MULTI_APPROVE_MARK='',
-                  SHARED_MARK='', PENDING='', CLAIMED='', APPROVED=''
+                  SHARED_MARK='', PENDING='', CLAIMED='', APPROVED='',
+                  NO_DUE_DATE=''
                 ) -%}    
         
                 {#-- ************* Set Translatable Text ************* --#}  
@@ -314,7 +315,8 @@ sections:
                 {%- set ns.CLAIMED = "Claimed" -%}
         
                 {%- set ns.APPROVED = "Approved" -%}
-        
+
+                {%- set ns.NO_DUE_DATE = "No Due Date" -%}        
         
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -452,7 +454,7 @@ sections:
                       {%- set due_date = as_datetime(due_date_str).astimezone() if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                       {%- set today = now().astimezone().date() -%}
                       {%- set due_date_short = 
-                        'No due date' if not due_date 
+                        ns.NO_DUE_DATE if not due_date 
                         else (
                           due_date.strftime('%-I:%M %p') if due_date.date() == today 
                           else due_date.strftime('%a %b %-d')
