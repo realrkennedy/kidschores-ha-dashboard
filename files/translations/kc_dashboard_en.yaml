@@ -26,38 +26,25 @@ sections:
                 highest_badge_multiplier='', highest_badge_display_line='',
                 achievements=[], challenges=[], content='',
 
-                  OVERDUE='', THIS_MORNING='', TODAY='', BONUS='', 
-                  STREAK='', STATUS='', DUE='', MULTI_APPROVE_MARK='',
-                  SHARED_MARK='', PENDING='', CLAIMED='', APPROVED=''
+                  WELCOME='', 
+                  ACHIEVEMENTS='', CHALLENGES='', NONE='',
+                  WEEKLY_COMPLETED='', TODAYS_COMPLETED=''
                 ) -%}    
-        
+
                 {#-- ************* Set Translatable Text ************* --#}  
-        
-                {%- set ns.OVERDUE = "!!!!!!!!!!! Overdue !!!!!!!!!!!" -%} 
-        
-                {%- set ns.THIS_MORNING = "Due This Morning" -%} 
-        
-                {%- set ns.TODAY = "Due Today" -%}
-        
-                {%- set ns.BONUS = "Upcoming & Bonus" -%} 
-        
-                {%- set ns.STREAK = "Streak" -%}
-        
-                {%- set ns.STATUS = "Status" -%}
-        
-                {%- set ns.DUE = "Due" -%}
-        
-                {%- set ns.MULTI_APPROVE_MARK = "M" -%}
-        
-                {%- set ns.SHARED_MARK = "S" -%}
-        
-                {%- set ns.PENDING = "Pending" -%}
-        
-                {%- set ns.CLAIMED = "Claimed" -%}
-        
-                {%- set ns.APPROVED = "Approved" -%}
-        
-        
+
+                {%- set ns.WELCOME = "Welcome" -%} 
+
+                {%- set ns.NONE = "None" -%}
+
+                {%- set ns.WEEKLY_COMPLETED = "Weekly Completed" -%}
+
+                {%- set ns.TODAYS_COMPLETED = "Today's Completed" -%}
+
+                {%- set ns.ACHIEVEMENTS = "Achievements" -%}
+
+                {%- set ns.CHALLENGES = "Challenges" -%} 
+
                 {#-- ************* End Translatable Text ************* --#}
 
 
@@ -298,25 +285,37 @@ sections:
 
 
                   OVERDUE='', THIS_MORNING='', TODAY='', BONUS='', 
-                  STREAK='', STATUS='', DUE=''
+                  STREAK='', STATUS='', DUE='', MULTI_APPROVE_MARK='',
+                  SHARED_MARK='', PENDING='', CLAIMED='', APPROVED=''
                 ) -%}    
-
+        
                 {#-- ************* Set Translatable Text ************* --#}  
-
+        
                 {%- set ns.OVERDUE = "!!!!!!!!!!! Overdue !!!!!!!!!!!" -%} 
-
+        
                 {%- set ns.THIS_MORNING = "Due This Morning" -%} 
-
+        
                 {%- set ns.TODAY = "Due Today" -%}
-
+        
                 {%- set ns.BONUS = "Upcoming & Bonus" -%} 
-
+        
                 {%- set ns.STREAK = "Streak" -%}
-
+        
                 {%- set ns.STATUS = "Status" -%}
-
-                {%- set ns.DUE = "Due" -%} 
-
+        
+                {%- set ns.DUE = "Due" -%}
+        
+                {%- set ns.MULTI_APPROVE_MARK = "M" -%}
+        
+                {%- set ns.SHARED_MARK = "S" -%}
+        
+                {%- set ns.PENDING = "Pending" -%}
+        
+                {%- set ns.CLAIMED = "Claimed" -%}
+        
+                {%- set ns.APPROVED = "Approved" -%}
+        
+        
                 {#-- ************* End Translatable Text ************* --#}
 
 
