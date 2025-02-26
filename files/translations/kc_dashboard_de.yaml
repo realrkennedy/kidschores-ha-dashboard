@@ -816,7 +816,7 @@ sections:
 
                 {# -- Construct Badge Display Line for Markdown -- #}
 
-                {%- if ns.highest_badge not in ['None', 'unknown', 'Unknown'] -%}
+                {%- if ns.highest_badge not in ['None', 'unknown', 'Unknown', 'unavailable'] -%}
                   {%- set ns.badge_display_line = "<ha-icon icon='" ~ ns.highest_badge_icon ~ "'></ha-icon> " ~ ns.highest_badge ~ "  \n"  -%}
                 {%- else -%}
                   {%- set ns.badge_display_line = ns.NONE -%}
