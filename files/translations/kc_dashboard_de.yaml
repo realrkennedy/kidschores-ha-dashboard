@@ -530,25 +530,16 @@ sections:
                   points_icon='',
                   reward_name_normalize='',
                   rewards=[],
-
-                  COST='', NO_REWARDS=''
-                ) -%}    
+ 
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.COST = "Cost: " -%}
-
-                {%- set ns.NO_REWARDS = "No rewards available." -%} 
-
-
-
-                {#-- ************* End Translatable Text ************* --#}
-
-
-
                 {%- set ns.COST = "Kosten: " -%} 
 
-                {%- set ns.NO_REWARDS = "Keine Belohnungen verfügbar." -%}  
+                {%- set ns.NO_REWARDS = "Keine Belohnungen verfügbar." -%} 
+
+                {#-- ************* End Translatable Text ************* --#}
+ 
 
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
