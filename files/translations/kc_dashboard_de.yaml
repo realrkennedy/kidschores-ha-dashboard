@@ -315,27 +315,7 @@ sections:
         
                 {%- set ns.APPROVED = "Genehmigt" -%}
         
-        
                 {#-- ************* End Translatable Text ************* --#}
-
-                {#-- ************* Set Translatable Text ************* --#}  
-
-                {%- set ns.OVERDUE = "!!!!!!!!!!! Überfällig !!!!!!!!!!!" -%} 
-
-                {%- set ns.THIS_MORNING = "Fällig heute Morgen" -%} 
-
-                {%- set ns.TODAY = "Fällig heute" -%}
-
-                {%- set ns.BONUS = "Bevorstehend & Bonus" -%} 
-
-                {%- set ns.STREAK = "Serie" -%}
-
-                {%- set ns.STATUS = "Status" -%}
-
-                {%- set ns.DUE = "Fällig" -%}  
-
-                {#-- ************* End Translatable Text ************* --#}
-
 
                 {#-- Set preferences --#} 
 
