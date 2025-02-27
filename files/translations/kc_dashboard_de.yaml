@@ -1890,7 +1890,7 @@ sections:
                   {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else 'None' -%}        
                 {%- endif -%}
 
-                 {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + as_timestamp(states('input_datetime.kc_ui_set_date_helper')) | timestamp_custom('%a, %b %d, %Y %I:%M %p', false) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
+                 {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
 
                 {#-- Store the Markdown content in a variable --#}
 
