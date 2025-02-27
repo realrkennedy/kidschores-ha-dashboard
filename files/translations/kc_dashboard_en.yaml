@@ -974,14 +974,14 @@ sections:
             filter:
               template: >-
                 {#-- Initialize Namespace Variables --#}  
-
+        
                 {%- set ns = namespace(
                   Kid_name='',
                   Kid_name_normalize='',
                   current_points='',
                   points_label='',
                   achievements=[],
-
+        
                   NO_ACHIEVEMENTS_FOUND='',
                   START_A_ACHIEVEMENT='',
                   ACHIEVEMENT_LABEL='',
@@ -997,53 +997,56 @@ sections:
                   PROGRESS_LABEL='',
                   ASSIGNED_TO_LABEL='',
                   RELATED_CHORE_LABEL='',
-                  TOTAL_CHORES='',
-                  PER_DAY_GOAL='',
+                  STREAK_GOAL='',
+                  COMPLETION_GOAL='',
+                  DAILY_MINIMUM=''
                 ) -%}    
-
+        
                 {#-- ************* Set Translatable Text ************* --#}  
-
+        
                 {%- set ns.NO_ACHIEVEMENTS_FOUND = "No Achievements Found" -%} 
-
-                {%- set ns.START_A_ACHIEVEMENT = "Start an achievement to track
-                your progress!" -%} 
-
+        
+                {%- set ns.START_A_ACHIEVEMENT = "Start an achievement to track your
+                progress!" -%} 
+        
                 {%- set ns.ACHIEVEMENT_LABEL = "Achievement" -%} 
-
+        
                 {%- set ns.AWARD_STATUS_LABEL = "Award Status" -%}  
-
+        
                 {%- set ns.EARNED_LABEL = "Earned" -%}  
-
+        
                 {%- set ns.IN_PROCESS_LABEL = "In Process" -%}  
-
+        
                 {%- set ns.DESCRIPTION_LABEL = "Description" -%}  
-
+        
                 {%- set ns.CRITERIA_LABEL = "Criteria" -%}  
-
+        
                 {%- set ns.GOAL_LABEL = "Goal" -%}  
-
+        
                 {%- set ns.START_DATE_LABEL = "Start Date" -%}  
-
+        
                 {%- set ns.END_DATE_LABEL = "End Date" -%}  
-
+        
                 {%- set ns.REWARD_LABEL = "Reward" -%}  
-
+        
                 {%- set ns.PROGRESS_LABEL = "Progress" -%}  
-
+        
                 {%- set ns.ASSIGNED_TO_LABEL = "Assigned To" -%}  
-
+        
                 {%- set ns.RELATED_CHORE_LABEL = "Related Chore" -%}
-
+        
+                {%- set ns.STREAK_GOAL = "Streak Goal" -%}
+        
                 {%- set ns.TOTAL_CHORES = "Total Chores" -%}
-
-                {%- set ns.PER_DAY_GOAL = "Per Day Goal" -%}  
-
+        
+                {%- set ns.DAILY_MINIMUM = "Daily Minimum" -%} 
+        
                 {#-- ************* End Translatable Text ************* --#}
-
+        
                 {# -- Set Kid_name and normalize -- #}  
-
-                {%- set ns.Kid_name = 'Kidname' -%}
-
+        
+                {%- set ns.Kid_name = 'Jiří Šimon' -%}
+        
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
                     "Č": "c", "č": "c", "Ć": "c", "ć": "c",
@@ -1061,16 +1064,16 @@ sections:
                     "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
                     ",": ""
                 } -%}
-
+        
                 {# -- Replace Accented Letters -- #}
-
+        
                 {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for letter,
                 replacement in replacements.items() -%}
                   {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
                 {%- endfor -%}
-
+        
                 {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
+        
                 {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
                     | regex_replace("[^a-zA-Z0-9]", "_")
                     | regex_replace("_+", "_")
@@ -1078,20 +1081,18 @@ sections:
                     | regex_replace("_$", "")
                     | lower
                 -%}
-
-                {# -- Point Labels -- #}      {%- set points_sensor =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set
-                ns.current_points = states(points_sensor) | int(default=0) -%}  
-                {%- set ns.points_label = state_attr(points_sensor,
-                'unit_of_measurement') -%}   {%- set ns.points_icon =
-                state_attr(points_sensor, 'icon') -%}
-
+        
+                {# -- Point Labels -- #}      {%- set points_sensor = 'sensor.kc_' ~
+                ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.current_points =
+                states(points_sensor) | int(default=0) -%}   {%- set ns.points_label =
+                state_attr(points_sensor, 'unit_of_measurement') -%}   {%- set
+                ns.points_icon = state_attr(points_sensor, 'icon') -%}
+        
                 {# -- Collect Achievements -- #}  {%- set achievement_prefix =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_achievement_status_'
-                -%}  {%- set achievements = states.sensor |
-                selectattr('entity_id', 'match', achievement_prefix ~ '.*') |
-                list -%}
-
+                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_achievement_status_' -%}  {%-
+                set achievements = states.sensor | selectattr('entity_id', 'match',
+                achievement_prefix ~ '.*') | list -%}
+        
                 {%- if achievements | length == 0 -%}
                   {{
                     {
@@ -1116,10 +1117,13 @@ sections:
                     {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([]) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
-                    {%- set goal_type_label = target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' if achievement_type == 'total_within_window' else target_value ~ ' (' ~ ns.PER_DAY_GOAL ~ ')' -%}
+                    {%- set goal_type_label = 
+                      target_value ~ ' (' ~ ns.STREAK_GOAL ~ ')' if achievement_type == 'chore_streak' 
+                      else target_value ~ ' (' ~ ns.DAILY_MINIMUM ~ ')' if achievement_type == 'daily_minimum'
+                      else target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' -%}
                     {%- set kids_display = assigned_kids | join(', ') if assigned_kids | count > 0 else '' -%}
-
-
+        
+        
                     {%- set content = "## <ha-icon icon=" ~ achievement_icon ~ "></ha-icon> " ~ ns.ACHIEVEMENT_LABEL ~ ": " ~ achievement_name ~ "  \n" %}
                     {%- set content = content ~ "### 🏅 " ~ ns.AWARD_STATUS_LABEL ~ ": &nbsp;&nbsp;" ~ awarded_text ~ "  \n" %}
                     {%- if description -%}
@@ -1139,7 +1143,7 @@ sections:
                     {%- if associated_chore -%}
                       {%- set content = content ~ "**🛠 " ~ ns.RELATED_CHORE_LABEL ~ ":** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" %}
                     {%- endif -%}  
-
+        
                     {{
                       {
                         'type': 'markdown',
