@@ -971,7 +971,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                 {#-- Initialize Namespace Variables --#}  
+                {#-- Initialize Namespace Variables --#}  
 
                 {%- set ns = namespace(
                   Kid_name='',
