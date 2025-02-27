@@ -1045,7 +1045,7 @@ sections:
         
                 {# -- Set Kid_name and normalize -- #}  
         
-                {%- set ns.Kid_name = 'Jiří Šimon' -%}
+                {%- set ns.Kid_name = 'Kidname' -%}
         
                 {%- set replacements = {
                     "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
