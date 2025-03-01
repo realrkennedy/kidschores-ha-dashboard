@@ -17,6 +17,7 @@ sections:
             card_param: cards
             filter:
               template: >-
+                {#-- ************* Version KCD_0.2.7 ************* --#}
                 {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
                 points=0, points_label='', points_icon='', overdue=0,
                 weekly_completed=0, todays_completed=0, highest_badge='',
