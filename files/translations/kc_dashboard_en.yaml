@@ -16,7 +16,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- ************* Version KCD_0.3.1 ************* --#}
+                {#-- ************* Version KCD_0.3.2 ************* --#}
                 {%- set ns = namespace(Kid_name='',  Kid_name_normalize='', 
                 points=0, points_label='',  points_icon='',  overdue=0, 
                 weekly_completed=0, todays_completed=0,  all_time_completed='', 
@@ -51,40 +51,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Collect Points -- #}  {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.points =
@@ -279,40 +246,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Point Labels -- #}    {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}     {%- set
@@ -517,40 +451,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Point Labels -- #}   {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set
@@ -567,22 +468,7 @@ sections:
                 {%- for sensor in reward_list -%}
                   {%- set reward_name = state_attr(sensor.entity_id, 'reward_name') | default('Unknown') -%}
                   
-                  {# -- Replace Accented Letters -- #}
-
-                  {%- set ns.reward_name_normalize = reward_name -%} 
-                  {%- for letter, replacement in replacements.items() -%}
-                    {%- set ns.reward_name_normalize = ns.reward_name_normalize | replace(letter, replacement) -%}
-                  {%- endfor -%}
-
-                  {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                  {%- set ns.reward_name_normalize = ns.reward_name_normalize
-                      | regex_replace("[^a-zA-Z0-9]", "_")
-                      | regex_replace("_+", "_")
-                      | regex_replace("^_", "")
-                      | regex_replace("_$", "")
-                      | lower
-                  -%}
+                  {%- set ns.reward_name_normalize = reward_name | slugify() -%}
                   
                   {%- set reward_cost = state_attr(sensor.entity_id, 'cost') | int(default=0) -%}
                   {%- set reward_status = states(sensor.entity_id) | default('unknown') -%}
@@ -690,40 +576,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Collect Points -- #}  {%- set points_sensor = 'sensor.kc_'
                 ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.points =
@@ -791,22 +644,7 @@ sections:
 
                 {%- for badge in ns.all_badges -%}
 
-                      {# -- Replace Accented Letters -- #}
-
-                      {%- set ns.badge_name_normalize = badge -%}  {%- for
-                      letter, replacement in replacements.items() -%}
-                        {%- set ns.badge_name_normalize = ns.badge_name_normalize | replace(letter, replacement) -%}
-                      {%- endfor -%}
-
-                      {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                      {%- set ns.badge_name_normalize = ns.badge_name_normalize
-                          | regex_replace("[^a-zA-Z0-9]", "_")
-                          | regex_replace("_+", "_")
-                          | regex_replace("^_", "")
-                          | regex_replace("_$", "")
-                          | lower
-                      -%}
+                      {%- set ns.badge_name_normalize = badge | slugify() -%}
 
                   {%- set badge_entity = 'sensor.kc_' ~ ns.badge_name_normalize ~ '_badge' -%}
                   {%- set badge_icon = state_attr(badge_entity, 'icon') | default('mdi:medal-outline') -%}
@@ -1048,40 +886,7 @@ sections:
         
                 {%- set ns.Kid_name = 'Kidname' -%}
         
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-        
-                {# -- Replace Accented Letters -- #}
-        
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-        
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-        
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
         
                 {# -- Point Labels -- #}      {%- set points_sensor = 'sensor.kc_' ~
                 ns.Kid_name_normalize ~ '_points' -%}   {%- set ns.current_points =
@@ -1236,40 +1041,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%}  {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Point Labels -- #}      {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set
@@ -1402,40 +1174,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Collect Points Info -- #}   {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%}   {%- set
@@ -1526,38 +1265,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname'-%} 
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #} {%- set
-                ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #} {%-
-                set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower    
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {%- set ns.heading_card_blank = { 'type': 'heading', 'icon': '
                 ', 'heading': '', 'heading_style': 'title' } if
@@ -1593,34 +1301,12 @@ sections:
 
                 {%- if pending_chore_data | count > 0 -%}
                   {%- for chore in pending_chore_data | unique(attribute='chore_name') -%}
-                    {%- set ns.chore_name_normalize = chore.chore_name -%}  
-                    {%- for letter, replacement in replacements.items() -%}
-                      {%- set ns.chore_name_normalize = ns.chore_name_normalize | replace(letter, replacement) -%}
-                    {%- endfor -%} 
-                      {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-                      {%- set ns.chore_name_normalize = ns.chore_name_normalize
-                          | regex_replace("[^a-zA-Z0-9]", "_")
-                          | regex_replace("_+", "_")
-                          | regex_replace("^_", "")
-                          | regex_replace("_$", "")
-                          | lower    
-                      -%}
+                    {%- set ns.chore_name_normalize = chore.chore_name | slugify() -%} 
                     {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + ['button.kc_' ~ ns.Kid_name_normalize ~ '_chore_approval_' ~ ns.chore_name_normalize] + ['button.kc_' ~ ns.Kid_name_normalize ~ '_chore_disapproval_' ~ ns.chore_name_normalize]-%}
                   {%- endfor -%}
                 {%- endif -%} {%- if pending_reward_data | count > 0 -%}
                   {%- for reward in pending_reward_data | unique(attribute='reward_name') -%}
-                    {%- set ns.reward_name_normalize = reward.reward_name -%}  
-                    {%- for letter, replacement in replacements.items() -%}
-                      {%- set ns.reward_name_normalize = ns.reward_name_normalize | replace(letter, replacement) -%}
-                    {%- endfor -%} 
-                    {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-                    {%- set ns.reward_name_normalize = ns.reward_name_normalize
-                        | regex_replace("[^a-zA-Z0-9]", "_")
-                        | regex_replace("_+", "_")
-                        | regex_replace("^_", "")
-                        | regex_replace("_$", "")
-                        | lower    
-                    -%}
+                    {%- set ns.reward_name_normalize = reward.reward_name | slugify() -%}
                     {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + ['button.kc_' ~ ns.Kid_name_normalize ~ '_reward_approval_' ~ ns.reward_name_normalize] + ['button.kc_' ~ ns.Kid_name_normalize ~ '_reward_disapproval_' ~ ns.reward_name_normalize]-%}
                   {%- endfor -%}
                 {%- endif -%}
@@ -1807,40 +1493,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Collect Points -- #}  
 
@@ -1863,22 +1516,7 @@ sections:
                 {%- if ns.chore_selected | lower not in ['none', 'unknown',
                 'unavailable', ''] -%}
 
-                  {# -- Replace Accented Letters -- #}
-
-                  {%- set ns.chore_selected_normalize = ns.chore_selected -%}  
-                  {%- for letter, replacement in replacements.items() -%}
-                    {%- set ns.chore_selected_normalize = ns.chore_selected_normalize | replace(letter, replacement) -%}
-                  {%- endfor -%}
-
-                  {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                  {%- set ns.chore_selected_normalize = ns.chore_selected_normalize
-                      | regex_replace("[^a-zA-Z0-9]", "_")
-                      | regex_replace("_+", "_")
-                      | regex_replace("^_", "")
-                      | regex_replace("_$", "")
-                      | lower
-                  -%}
+                 {%- set ns.chore_selected_normalize = ns.chore_selected | slugify() -%}
                   
                   {%- set ns.chore_sensor_id = ns.chore_sensor_id_prefix ~ ns.chore_selected_normalize -%}       
                   {%- set ns.current_status = states(ns.chore_sensor_id) | default('Unknown') -%}
@@ -2134,40 +1772,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {{
                   {
@@ -2209,40 +1814,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Point Labels -- #}     {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
@@ -2309,40 +1881,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {#-- Build a list of button entities for this kid --#}    {%-
                 set ns.prefix_pattern = 'button\\.kc_' ~ (ns.Kid_name_normalize)
@@ -2418,40 +1957,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {# -- Point Labels -- #}     {%- set points_sensor =
                 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
@@ -2527,40 +2033,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {# -- Replace Accented Letters -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%} {%- for letter,
-                replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {# -- Convert All Non-Alphanumeric Characters to "_" -- #}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {#-- Build a list of entities for this kid, excluding unwanted
                 sensors --#} {%- set prefix_pattern = '(button|sensor)\\.kc_' ~
@@ -2645,36 +2118,7 @@ sections:
 
                 {%- set ns.Kid_name = 'Kidname' -%}
 
-                {%- set replacements = {
-                    "Á": "a", "á": "a", "Ą": "a", "ą": "a", "Ă": "a", "ă": "a", "Â": "a", "â": "a",
-                    "Č": "c", "č": "c", "Ć": "c", "ć": "c",
-                    "Ď": "d", "ď": "d",
-                    "É": "e", "é": "e", "Ě": "e", "ě": "e", "Ę": "e", "ę": "e",
-                    "Í": "i", "í": "i", "Î": "i", "î": "i",
-                    "Ł": "l", "ł": "l",
-                    "Ń": "n", "ń": "n", "Ň": "n", "ň": "n",
-                    "Ó": "o", "ó": "o", "Ő": "o", "ő": "o", "Ö": "o", "ö": "o",
-                    "Ř": "r", "ř": "r",
-                    "Š": "s", "š": "s", "Ś": "s", "ś": "s", "Ș": "s", "ș": "s",
-                    "Ț": "t", "ț": "t", "Ť": "t", "ť": "t",
-                    "Ú": "u", "ú": "u", "Ű": "u", "ű": "u", "Ů": "u", "ů": "u", "Ü": "u", "ü": "u",
-                    "Ý": "y", "ý": "y",
-                    "Ž": "z", "ž": "z", "Ź": "z", "ź": "z", "Ż": "z", "ż": "z",
-                    ",": "", "£": "ps"
-                } -%}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name -%}   {%- for
-                letter, replacement in replacements.items() -%}
-                  {%- set ns.Kid_name_normalize = ns.Kid_name_normalize | replace(letter, replacement) -%}
-                {%- endfor -%}
-
-                {%- set ns.Kid_name_normalize = ns.Kid_name_normalize
-                    | regex_replace("[^a-zA-Z0-9]", "_")
-                    | regex_replace("_+", "_")
-                    | regex_replace("^_", "")
-                    | regex_replace("_$", "")
-                    | lower
-                -%}
+                {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
                 {#-- Collect Points --#}  
 
