@@ -34,7 +34,7 @@ sections:
 
                 {%- set ns.WELCOME = "Tervetuloa" -%} 
 
-                {%- set ns.NONE = "Tyhjä" -%}
+                {%- set ns.NONE = "Ei merkintöjä" -%}
 
                 {%- set ns.WEEKLY_COMPLETED = "Viikon aikana suoritetut askareet" -%}
 
@@ -1002,7 +1002,7 @@ sections:
 
                 {%- set ns.NO_CHALLENGES_FOUND = "Ei haasteita" -%} 
 
-                {%- set ns.START_A_CHALLENGE = "Kokeile rajojasi haasteen kautta!" -%} 
+                {%- set ns.START_A_CHALLENGE = "Kokeile rajojasi haasteiden kautta" -%} 
 
                 {%- set ns.CHALLENGE_LABEL = "Haaste" -%} 
 
@@ -1440,7 +1440,7 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Valitse askare eräpäivän muokkausta varten" -%}
+                {%- set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Eräpäivän muokkaus" -%}
 
                 {%- set ns.CHORE_DETAIL_LABEL = "Askareen tiedot" -%} 
 
@@ -1468,8 +1468,7 @@ sections:
 
                 {%- set ns.CLEAR_DATE = "Poista eräpäivä" -%}  
 
-                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Valitse uusi päivä ja aika"
-                -%}  
+                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Valitse uusi päivä ja aika" -%}  
 
                 {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Napauta muuttaaksesi / Paina pitkään asettaaksesi)" -%}
 
@@ -2097,8 +2096,7 @@ sections:
 
                 {%- set ns.NO_BADGES_FOUND = "Ei kunniamerkkejä" -%}
 
-                {%- set ns.BADGE_SETUP_PROMPT = "Set up badges to reward
-                milestones and keep chores fun!" -%} 
+                {%- set ns.BADGE_SETUP_PROMPT = "Kunniamerkit tekevät askareiden suorituksesta hauskaa ja palkitsevaa." -%} 
 
                 {%- set ns.IN_PROGRESS = "Käynnissä" -%} 
 
