@@ -546,7 +546,7 @@ sections:
 
                 {%- set ns.ALL_EARNED_BADGES = "Kunniamerkit" -%} 
 
-                {%- set ns.NONE = "Ei suorituksia" -%}
+                {%- set ns.NONE = "Ei merkintöjä" -%}
 
                 {%- set ns.COMPLETED = 'Valmis' -%}
 
