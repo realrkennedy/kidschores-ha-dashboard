@@ -503,7 +503,7 @@ sections:
 
                 {%- set ns.COST = "Kustannus" -%}
 
-                {%- set ns.NEED = "Tarvitaan" -%} 
+                {%- set ns.NEED = "Tarvitset" -%} 
 
                 {%- set ns.MORE = "lisää" -%}  
 
@@ -651,7 +651,7 @@ sections:
 
                 {%- set ns.SHOWCASE = "näkymä" -%} 
 
-                {%- set ns.TOTAL_COMPLETED = "Askareita suoritettu yhteensä" -%} 
+                {%- set ns.TOTAL_COMPLETED = "Askareita yhteensä" -%} 
 
                 {%- set ns.HIGHEST_BADGE_EARNED = "Korkein kunniamerkki" -%} 
 
@@ -677,7 +677,7 @@ sections:
 
                 {%- set ns.CHALLENGES = "Haasteet" -%}  
 
-                {%- set ns.APPLIED = "Haettu" -%}                
+                {%- set ns.APPLIED = "Saatu" -%}                
 
                 {#-- ************* End Translatable Text ************* --#}
 
