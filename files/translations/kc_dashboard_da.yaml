@@ -490,7 +490,7 @@ sections:
                   temp_label_sensor_group=[],
                   group_cards=[],
 
-                  COST='', REWARDS='', NO_REWARDS=''
+                  COST='', REWARDS='', NO_REWARDS='', NEED='', MORE=''
                 ) -%}    
 
                 {#-- ************* Set Translatable Text ************* --#}  
@@ -500,6 +500,10 @@ sections:
                 {%- set ns.NO_REWARDS = "Ingen belønninger tilgængelig." -%} 
 
                 {%- set ns.COST = "Pris" -%}
+                
+                {%- set ns.NEED = "Skal bruge" -%} 
+
+                {%- set ns.MORE = "mere" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
                 
@@ -579,7 +583,7 @@ sections:
             
                       {#-- Check Points Availability --#}  
                       {%- set points_needed = reward_cost - ns.current_points if reward_cost > ns.current_points else 0 -%}
-                      {%- set can_claim = "✅" if points_needed == 0 else "❌ Need " ~ points_needed ~ " more" -%}
+                      {%- set can_claim = "✅" if points_needed == 0 else "❌ " ~ ns.NEED ~ " " ~ points_needed ~ " " ~ ns.MORE -%}
             
                       {#-- Add Reward Card to the list --#}  
                       {%- set ns.group_cards = ns.group_cards + [{
@@ -637,7 +641,8 @@ sections:
                 TOTAL_BONUS_LABEL='', PENALTIES_APPLIED_LABEL='',
                 TOTAL_PENALTY_LABEL='', SHOWCASE='',  TOTAL_COMPLETED='', 
                 HIGHEST_BADGE_EARNED='', ACHIEVEMENTS='',  CHALLENGES='', 
-                MULTIPLIER='',  NONE='', ALL_EARNED_BADGES='',  COMPLETED='' )
+                MULTIPLIER='',  NONE='', ALL_EARNED_BADGES='',  COMPLETED='',
+                APPLIED='' )
                 -%}    
 
                 {#-- ************* Set Translatable Text ************* --#}  
@@ -668,7 +673,9 @@ sections:
 
                 {%- set ns.ACHIEVEMENTS = "Bedrifter" -%}
 
-                {%- set ns.CHALLENGES = "Udfordringer" -%} 
+                {%- set ns.CHALLENGES = "Udfordringer" -%}
+
+                {%- set ns.APPLIED = "Anvendt" -%} 
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -797,8 +804,8 @@ sections:
                   {%- if bonus_count > 0 -%}
                     {%- set ns.total_bonus_points = ns.total_bonus_points + (bonus_points * bonus_count) -%}
                     {%- set ns.bonuses = ns.bonuses + [
-                      "- <ha-icon icon='" ~ bonus_icon ~ "'></ha-icon> **" ~ bonus_name ~ ":** Applied " 
-                      ~ bonus_count ~ " times (💰 " ~ (bonus_points * bonus_count) ~ " " ~ ns.points_label ~ ")"
+                      "- <ha-icon icon='" ~ bonus_icon ~ "'></ha-icon> **" ~ bonus_name ~ ":** " ~ ns.APPLIED ~ " " 
+                      ~ bonus_count ~ " (💰 " ~ (bonus_points * bonus_count) ~ " " ~ ns.points_label ~ ")"
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
@@ -818,8 +825,8 @@ sections:
                   {%- if penalty_count > 0 -%}
                     {%- set ns.total_penalty_points = ns.total_penalty_points + (-penalty_points * penalty_count) -%}
                     {%- set ns.penalties = ns.penalties + [
-                      "- <ha-icon icon='" ~ penalty_icon ~ "'></ha-icon> **" ~ penalty_name ~ ":** Applied " 
-                      ~ penalty_count ~ " times (💥 " ~ (-penalty_points * penalty_count) ~ " " ~ ns.points_label ~ ")"
+                      "- <ha-icon icon='" ~ penalty_icon ~ "'></ha-icon> **" ~ penalty_name ~ ":** " ~ ns.APPLIED ~ " " 
+                      ~ penalty_count ~ " (💥 " ~ (-penalty_points * penalty_count) ~ " " ~ ns.points_label ~ ")"
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
