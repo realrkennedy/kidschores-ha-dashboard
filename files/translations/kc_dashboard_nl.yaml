@@ -1255,7 +1255,7 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-               {%- set ns.NO_CHALLENGES_FOUND = "Geen uitdagingen gevonden" -%} 
+                {%- set ns.NO_CHALLENGES_FOUND = "Geen uitdagingen gevonden" -%} 
 
                 {%- set ns.START_A_CHALLENGE = "Start een uitdaging om je te grenzen te zoeken!" -%} 
 
