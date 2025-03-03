@@ -677,7 +677,7 @@ sections:
 
                 {%- set ns.CHALLENGES = "Haasteet" -%}  
 
-                {%- set ns.APPLIED = "Käytetty" -%}                
+                {%- set ns.APPLIED = "Haettu" -%}                
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1253,7 +1253,7 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.NO_CHALLENGES_FOUND = "Ei haasteita" -%} 
+                {%- set ns.NO_CHALLENGES_FOUND = "Ei avoimia haasteita" -%} 
 
                 {%- set ns.START_A_CHALLENGE = "Kokeile rajojasi haasteiden kautta" -%} 
 
@@ -2057,7 +2057,7 @@ sections:
 
                 {%- set ns.BONUS_LABEL = 'Bonus' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Käytetty' -%} 
+                {%- set ns.APPLIED_LABEL = 'Annettu' -%} 
 
                 {%- set ns.APPLIED_TIMES = 'kertaa' -%}  
 
@@ -2196,7 +2196,7 @@ sections:
 
                 {%- set ns.PENALTY_LABEL = 'Sakko' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Käytetty' -%} 
+                {%- set ns.APPLIED_LABEL = 'Annettu' -%} 
 
                 {%- set ns.APPLIED_TIMES = 'kertaa' -%}   
 
