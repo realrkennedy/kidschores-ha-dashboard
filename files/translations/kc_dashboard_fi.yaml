@@ -503,9 +503,9 @@ sections:
 
                 {%- set ns.COST = "Kustannus" -%}
 
-                {%- set ns.NEED = "Tarvita" -%} 
+                {%- set ns.NEED = "Tarvitaan" -%} 
 
-                {%- set ns.MORE = "mLisää" -%}  
+                {%- set ns.MORE = "lisää" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
                 
@@ -1406,19 +1406,19 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PARENT_DASHBOARD_LABEL = "Parent Dashboard for" -%} 
+                {%- set ns.PARENT_DASHBOARD_LABEL = "Vanhemman näkymä:" -%} 
 
-                {%- set ns.CHORES_COMPLETED_LABEL = "Chores Completed" -%} 
+                {%- set ns.CHORES_COMPLETED_LABEL = "Valmiit askareet" -%} 
 
-                {%- set ns.TODAY_LABEL = "Today" -%} 
+                {%- set ns.TODAY_LABEL = "Päivä" -%} 
 
-                {%- set ns.WEEK_LABEL = "Week" -%}  
+                {%- set ns.WEEK_LABEL = "Viikko" -%}  
 
-                {%- set ns.MONTH_LABEL = "Month" -%}  
+                {%- set ns.MONTH_LABEL = "Kuukausi" -%}  
 
-                {%- set ns.OVERDUE_CHORES_LABEL = "Overdue Chores" -%}  
+                {%- set ns.OVERDUE_CHORES_LABEL = "Erääntyneet askareet" -%}  
 
-                {%- set ns.NONE = "None" -%}  
+                {%- set ns.NONE = "Ei merkintöjä" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
