@@ -1,5 +1,5 @@
 max_columns: 4
-title: Kidname Chores
+title: Kidname Taken
 path: Kidname
 sections:
   - type: grid
@@ -2265,7 +2265,7 @@ sections:
         cards:
           - type: heading
             icon: mdi:clipboard-text
-            heading: 7 Day Activity Log
+            heading: 7-daags activiteitenlogboek
             heading_style: title
           - type: custom:auto-entities
             card:
