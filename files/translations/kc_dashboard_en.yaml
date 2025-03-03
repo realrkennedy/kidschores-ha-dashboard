@@ -287,25 +287,29 @@ sections:
                   {%- set sensor_state = states(chore_sensor_id) -%}
                   {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') -%}
                   {%- set chore_labels = state_attr(chore_sensor_id, 'labels') -%}
-                  {%- if sensor_state == 'overdue' and ns.pref_use_overdue_grouping -%}
-                    {%- set ns.overdue_buttons = ns.overdue_buttons + [button] -%}
-                  {%- elif sensor_state == 'approved' and state_attr(chore_sensor_id,'allow_multiple_claims_per_day') == false and ns.pref_exclude_approved -%}
-                    {#-- Do nothing so they don't get added to a list --#}
-                  {%- elif ns.pref_use_label_grouping and chore_labels is iterable and chore_labels | length > 0 -%}
-                    {#-- Process label and button list creation --#}
-                    {%- for label in chore_labels -%}
-                      {%- set ns.all_chore_labels = (ns.all_chore_labels | list + [label]) -%}
-                      {%- set ns.all_label_buttons = ns.all_label_buttons + [(label, [button])] -%}
-                    {%- endfor -%}
-                  {%- elif ns.pref_use_today_grouping -%}
-                    {#-- Calculate Due this Morning and Due Today button groups--#}
-                    {%- if due_date_str is not none and due_date_str != 'unknown' -%}
-                      {%- set due_date_ts = as_timestamp(due_date_str) -%}
-                      {%- if ns.today_00 <= due_date_ts < ns.today_24 -%}
-                        {%- if due_date_ts < ns.today_12 -%}
-                          {%- set ns.am_buttons = ns.am_buttons + [button] -%}
-                        {%- elif due_date_ts < ns.today_24 -%}
-                          {%- set ns.pm_buttons = ns.pm_buttons + [button] -%}
+                  {%- if not (chore_labels | select('in', ns.pref_exclude_label_list) | list | count > 0) -%}
+                    {%- if sensor_state == 'overdue' and ns.pref_use_overdue_grouping -%}
+                      {%- set ns.overdue_buttons = ns.overdue_buttons + [button] -%}
+                    {%- elif sensor_state == 'approved' and state_attr(chore_sensor_id,'allow_multiple_claims_per_day') == false and ns.pref_exclude_approved -%}
+                      {#-- Do nothing --#}
+                    {%- elif ns.pref_use_label_grouping and chore_labels is iterable and chore_labels | length > 0 -%}
+                      {#-- Process label and button sorting --#}
+                      {%- for label in chore_labels -%}
+                        {%- set ns.all_chore_labels = (ns.all_chore_labels | list + [label]) -%}
+                        {%- set ns.all_label_buttons = ns.all_label_buttons + [(label, [button])] -%}
+                      {%- endfor -%}
+                    {%- elif ns.pref_use_today_grouping -%}
+                      {#-- Calculate Due this Morning and Due Today --#}
+                      {%- if due_date_str is not none and due_date_str != 'unknown' -%}
+                        {%- set due_date_ts = as_timestamp(due_date_str) -%}
+                        {%- if ns.today_00 <= due_date_ts < ns.today_24 -%}
+                          {%- if due_date_ts < ns.today_12 -%}
+                            {%- set ns.am_buttons = ns.am_buttons + [button] -%}
+                          {%- elif due_date_ts < ns.today_24 -%}
+                            {%- set ns.pm_buttons = ns.pm_buttons + [button] -%}
+                          {%- endif -%}
+                        {%- else -%}
+                          {%- set ns.other_buttons = ns.other_buttons + [button] -%}
                         {%- endif -%}
                       {%- else -%}
                         {%- set ns.other_buttons = ns.other_buttons + [button] -%}
@@ -313,8 +317,6 @@ sections:
                     {%- else -%}
                       {%- set ns.other_buttons = ns.other_buttons + [button] -%}
                     {%- endif -%}
-                  {%- else -%}
-                    {%- set ns.other_buttons = ns.other_buttons + [button] -%}
                   {%- endif -%}
                 {%- endfor -%}
 
