@@ -281,7 +281,7 @@ sections:
                 {%- set ns.today_24 = ns.today_00 + (24 * 60 * 60) -%}
 
                 {%- for button in buttons -%}
-                  {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_claim_', '_status_') -%}
+                  {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_chore_claim_', '_chore_status_') -%}
                   {%- set sensor_state = states(chore_sensor_id) -%}
                   {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') -%}
                   {%- set chore_labels = state_attr(chore_sensor_id, 'labels') -%}
@@ -373,7 +373,7 @@ sections:
                     {{- heading_card -}},         
 
                     {%- for button in group.buttons -%}
-                      {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_claim_', '_status_') -%}
+                      {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_chore_claim_', '_chore_status_') -%}
                       {%- set streak_chore_sensor_id = chore_sensor_id | regex_replace('_status_', '_streak_') -%}
                       {%- set primary = state_attr(chore_sensor_id, 'chore_name') ~ (' (' ~ ns.SHARED_MARK ~ ')' if state_attr(chore_sensor_id, 'shared_chore') else '')  -%}
                       {%- if button.state not in ['unknown', 'unavailable', 'error'] -%}

@@ -203,7 +203,7 @@ sections:
                   {%- set today_00 = as_timestamp(now().date()) -%}
                   {%- set today_12 = today_00 + (12 * 60 * 60) -%}
                   {%- set today_24 = today_00 + ((24 * 60 * 60) - 1) -%}
-                  {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_claim_', '_status_') -%}
+                  {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_chore_claim_', '_chore_status_') -%}
                   {%- set sensor_state = states(chore_sensor_id) -%}
                   {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') -%}
                   {%- if sensor_state == 'overdue' -%}
@@ -251,7 +251,7 @@ sections:
                     {{- ns.heading_card_blank -}},          
 
                     {%- for button in group.buttons -%}
-                      {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_claim_', '_status_') -%}
+                      {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_chore_claim_', '_chore_status_') -%}
                       {%- set streak_chore_sensor_id = chore_sensor_id | regex_replace('_status_', '_streak_') -%}
                       {%- set primary = button.attributes.friendly_name.split(' - ')[2]~ (' (S)' if state_attr(chore_sensor_id, 'shared_chore') else '')  -%}
                       {%- if button.state not in ['unknown', 'unavailable', 'error'] -%}
