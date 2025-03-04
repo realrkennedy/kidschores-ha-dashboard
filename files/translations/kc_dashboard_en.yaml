@@ -16,7 +16,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- ************* Version KCD_0.3.3 ************* --#}
+                {#-- ************* Version KCD_0.3.4 ************* --#}
                 {%- set ns = namespace(Kid_name='',  Kid_name_normalize='', 
                 points=0, points_label='',  points_icon='',  overdue=0, 
                 weekly_completed=0, todays_completed=0,  all_time_completed='', 
@@ -218,7 +218,7 @@ sections:
 
                 {%- set ns.CHORES = "Chores" -%} 
 
-                {%- set ns.OVERDUE = "!!!!!!!!!!! Overdue !!!!!!!!!!!" -%} 
+                {%- set ns.OVERDUE = "Overdue" -%} 
 
                 {%- set ns.THIS_MORNING = "Due This Morning" -%} 
 
@@ -337,7 +337,7 @@ sections:
 
                 {#-- Build the button groups --#} 
                 {%- set button_groups = [
-                    {'name': ns.OVERDUE, 'buttons': ns.overdue_buttons, 'icon': 'mdi:alert-octagon'},
+                    {'name': "!!!!!!!!!!! " ~ ns.OVERDUE ~ " !!!!!!!!!!!", 'buttons': ns.overdue_buttons, 'icon': 'mdi:alert-octagon'},
                     {'name': ns.THIS_MORNING, 'buttons': ns.am_buttons, 'icon': 'mdi:alarm'},
                     {'name': ns.TODAY, 'buttons': ns.pm_buttons, 'icon': 'mdi:calendar-today'}
                 ] -%}
@@ -403,7 +403,8 @@ sections:
                       {%- set state_map = {
                           'pending': ns.PENDING,
                           'claimed': ns.CLAIMED,
-                          'approved': ns.APPROVED
+                          'approved': ns.APPROVED,
+                          'overdue': ns.OVERDUE
                       } -%}
                       {%- set chore_state_display = (state_map[chore_state] if chore_state in state_map else chore_state) ~ ' (' ~ ns.MULTI_APPROVE_MARK ~ ')' if multi_approve == true else (state_map[chore_state] if chore_state in state_map else chore_state) -%}
                       {%- set points = state_attr(chore_sensor_id, 'default_points') | string -%}
@@ -1462,7 +1463,7 @@ sections:
 
                 {#-- Store the Markdown content in a variable --#} {%- set
                 content = 
-                  "## 👨‍👩‍👧 " ~ ns.PARENT_DASHBOARD_LABEL ~ " " ~ ns.Kid_name ~ "  \n"
+                  "## 👨‍👩‍👧 " ~ ns.PARENT_DASHBOARD_LABEL ~ ": " ~ ns.Kid_name ~ "  \n"
                   "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon> **" ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.points ~ "  \n"
                   "#### 📅 " ~ ns.CHORES_COMPLETED_LABEL ~ ":  \n"
                   "- ☀️ " ~ ns.TODAY_LABEL ~ ": &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n"
@@ -1683,7 +1684,14 @@ sections:
                   OVERDUE_CHORES='',
                   RESET_OVERDUE_STATUS='',
                   ALLOW_MULTIPLE_CLAIMS='',
-                  APPLICABLE_DAYS=''
+                  APPLICABLE_DAYS='',
+                  OVERDUE='', 
+                  PENDING='', 
+                  CLAIMED='', 
+                  APPROVED='',
+                  TRUE='',
+                  FALSE='',
+                  NONE=''
                 ) -%}  
 
 
@@ -1733,6 +1741,20 @@ sections:
 
                 {%- set ns.CHORE_ADMIN_ACTIONS = "Chore Admin Actions" -%}
 
+                {%- set ns.OVERDUE = "Overdue" -%}
+
+                {%- set ns.PENDING = "Pending" -%}
+
+                {%- set ns.CLAIMED = "Claimed" -%}
+
+                {%- set ns.APPROVED = "Approved" -%}
+
+                {%- set ns.TRUE = "True" -%}
+
+                {%- set ns.FALSE = "False" -%}
+
+                {%- set ns.NONE = "None" -%}
+
                 {#-- ************* End Translatable Text ************* --#} 
 
                 {#-- Set Kid_name and normalize --#}  
@@ -1763,9 +1785,23 @@ sections:
                   {%- set ns.chore_sensor_id = ns.chore_sensor_id_prefix ~ ns.chore_selected_normalize -%}       
                   {%- set ns.current_status = states(ns.chore_sensor_id) | default('Unknown') -%}
                   {%- set ns.global_status = state_attr(ns.chore_sensor_id, 'global_state') | default('Unknown') -%}
-                  {%- set ns.shared_chore = state_attr(ns.chore_sensor_id, 'shared_chore') | default('False') -%}
-                  {%- set ns.chore_allow_multiple = state_attr(ns.chore_sensor_id, 'allow_multiple_claims_per_day') | default('False') -%}
-                  {%- set ns.recurrence = state_attr(ns.chore_sensor_id, 'recurring_frequency') | default('Not Recurring') -%}
+                  {%- set state_map = {
+                      'pending': ns.PENDING,
+                      'claimed': ns.CLAIMED,
+                      'approved': ns.APPROVED,
+                      'overdue': ns.OVERDUE
+                  } -%}
+                  {%- set current_status_display = state_map[ns.current_status] if ns.current_status in state_map else ns.current_status -%}
+                  {%- set global_status_display = state_map[ns.global_status] if ns.global_status in state_map else ns.global_status -%}
+                  {%- set ns.shared_chore = state_attr(ns.chore_sensor_id, 'shared_chore') | string | default('False') -%}
+                  {%- set ns.chore_allow_multiple = state_attr(ns.chore_sensor_id, 'allow_multiple_claims_per_day') | string | default('False') -%}
+                  {%- set state_map_tf = {
+                      'False': ns.FALSE,
+                      'True': ns.TRUE
+                  } -%}
+                  {%- set shared_chore_display = state_map_tf[ns.shared_chore] if ns.shared_chore in state_map_tf else ns.shared_chore -%}
+                  {%- set chore_allow_multiple_display = state_map_tf[ ns.chore_allow_multiple] if  ns.chore_allow_multiple in state_map_tf else  ns.chore_allow_multiple -%} 
+                  {%- set ns.recurrence = state_attr(ns.chore_sensor_id, 'recurring_frequency') if state_attr(ns.chore_sensor_id, 'recurring_frequency') != 'none' else ns.NONE -%}
                   {%- set ns.chore_value = state_attr(ns.chore_sensor_id, 'default_points') | int(default=0) -%}
                   {%- set ns.chore_icon = state_attr(ns.chore_sensor_id, 'icon') | default('mdi:clipboard-check') -%}
                   {%- set ns.chore_description = state_attr(ns.chore_sensor_id, 'description') | default('') -%}
@@ -1776,22 +1812,26 @@ sections:
                   {#-- Convert and Format Due Date --#}
                   {%- set due_date_str = state_attr(ns.chore_sensor_id, 'due_date') | string-%}
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
-                  {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else 'None' -%}        
+                  {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ns.NONE -%}        
                 {%- endif -%}
 
-                 {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
+                {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
 
                 {#-- Store the Markdown content in a variable --#}
 
-                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%} 
+                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
+                "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
+                title) ~ "  \n" -%} 
 
-                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~ ns.chore_description ~ "  \n" if ns.chore_description else ns.content -%} 
+                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
+                ns.chore_description ~ "  \n" if ns.chore_description else ns.content
+                -%} 
 
                 {%- set ns.content = ns.content ~ 
-                  "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ ns.current_status ~ "  \n"
-                  "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ ns.global_status ~ "  \n"
-                  "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ ns.shared_chore ~ "  \n"
-                  "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ ns.chore_allow_multiple ~ "  \n"
+                  "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
+                  "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
+                  "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
+                  "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
                   "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
                   "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
                   "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
