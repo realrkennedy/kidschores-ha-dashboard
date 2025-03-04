@@ -503,9 +503,9 @@ sections:
 
                 {%- set ns.COST = "Kustannus" -%}
 
-                {%- set ns.NEED = "Tarvita" -%} 
+                {%- set ns.NEED = "Tarvitset" -%} 
 
-                {%- set ns.MORE = "mLisää" -%}  
+                {%- set ns.MORE = "lisää" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
                 
@@ -651,7 +651,7 @@ sections:
 
                 {%- set ns.SHOWCASE = "näkymä" -%} 
 
-                {%- set ns.TOTAL_COMPLETED = "Askareita suoritettu yhteensä" -%} 
+                {%- set ns.TOTAL_COMPLETED = "Askareita yhteensä" -%} 
 
                 {%- set ns.HIGHEST_BADGE_EARNED = "Korkein kunniamerkki" -%} 
 
@@ -677,7 +677,7 @@ sections:
 
                 {%- set ns.CHALLENGES = "Haasteet" -%}  
 
-                {%- set ns.APPLIED = "Käytetty" -%}                
+                {%- set ns.APPLIED = "Saatu" -%}                
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1099,7 +1099,7 @@ sections:
         
                 {%- set ns.NO_ACHIEVEMENTS_FOUND = "Saavutuksia ei löytynyt" -%} 
         
-                {%- set ns.START_A_ACHIEVEMENT = "Start an achievement to track your progress!" -%} 
+                {%- set ns.START_A_ACHIEVEMENT = "Saavutukset auttavat edistymisen seurannassa" -%} 
         
                 {%- set ns.ACHIEVEMENT_LABEL = "Saavutus" -%} 
         
@@ -1253,7 +1253,7 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.NO_CHALLENGES_FOUND = "Ei haasteita" -%} 
+                {%- set ns.NO_CHALLENGES_FOUND = "Ei avoimia haasteita" -%} 
 
                 {%- set ns.START_A_CHALLENGE = "Kokeile rajojasi haasteiden kautta" -%} 
 
@@ -1406,19 +1406,19 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PARENT_DASHBOARD_LABEL = "Parent Dashboard for" -%} 
+                {%- set ns.PARENT_DASHBOARD_LABEL = "Vanhemman näkymä:" -%} 
 
-                {%- set ns.CHORES_COMPLETED_LABEL = "Chores Completed" -%} 
+                {%- set ns.CHORES_COMPLETED_LABEL = "Valmiit askareet" -%} 
 
-                {%- set ns.TODAY_LABEL = "Today" -%} 
+                {%- set ns.TODAY_LABEL = "Päivä" -%} 
 
-                {%- set ns.WEEK_LABEL = "Week" -%}  
+                {%- set ns.WEEK_LABEL = "Viikko" -%}  
 
-                {%- set ns.MONTH_LABEL = "Month" -%}  
+                {%- set ns.MONTH_LABEL = "Kuukausi" -%}  
 
-                {%- set ns.OVERDUE_CHORES_LABEL = "Overdue Chores" -%}  
+                {%- set ns.OVERDUE_CHORES_LABEL = "Erääntyneet askareet" -%}  
 
-                {%- set ns.NONE = "None" -%}  
+                {%- set ns.NONE = "Ei merkintöjä" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -2057,7 +2057,7 @@ sections:
 
                 {%- set ns.BONUS_LABEL = 'Bonus' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Käytetty' -%} 
+                {%- set ns.APPLIED_LABEL = 'Annettu' -%} 
 
                 {%- set ns.APPLIED_TIMES = 'kertaa' -%}  
 
@@ -2196,7 +2196,7 @@ sections:
 
                 {%- set ns.PENALTY_LABEL = 'Sakko' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Käytetty' -%} 
+                {%- set ns.APPLIED_LABEL = 'Annettu' -%} 
 
                 {%- set ns.APPLIED_TIMES = 'kertaa' -%}   
 
