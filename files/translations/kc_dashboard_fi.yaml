@@ -1099,7 +1099,7 @@ sections:
         
                 {%- set ns.NO_ACHIEVEMENTS_FOUND = "Saavutuksia ei löytynyt" -%} 
         
-                {%- set ns.START_A_ACHIEVEMENT = "Start an achievement to track your progress!" -%} 
+                {%- set ns.START_A_ACHIEVEMENT = "Saavutukset auttavat edistymisen seurannassa" -%} 
         
                 {%- set ns.ACHIEVEMENT_LABEL = "Saavutus" -%} 
         
