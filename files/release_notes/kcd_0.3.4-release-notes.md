@@ -107,7 +107,7 @@ Easily customize **how chores, rewards, and approvals are displayed** by changin
 
 ---
 ## 🔤 Improved Special Character Handling
-Uses a **built-in Home Assistant function** for better name normalization across languages.
+Found a **built-in Home Assistant function** that could be used for better name normalization across languages rather than the prior regex replacements approach I was trying to use.
 
 ---
 
