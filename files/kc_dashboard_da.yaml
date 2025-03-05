@@ -642,13 +642,24 @@ sections:
                 penalties=[],  achievements=[],  challenges=[], content='',
                 pref_show_penalties='',
 
-                REWARDS_LABEL='', BONUSES_APPLIED_LABEL='',
-                TOTAL_BONUS_LABEL='', PENALTIES_APPLIED_LABEL='',
-                TOTAL_PENALTY_LABEL='', SHOWCASE='',  TOTAL_COMPLETED='', 
-                HIGHEST_BADGE_EARNED='', ACHIEVEMENTS='',  CHALLENGES='', 
-                MULTIPLIER='',  NONE='', ALL_EARNED_BADGES='',  COMPLETED='',
-                APPLIED='' )
-                -%}    
+                REWARDS_LABEL='', 
+                BONUSES_APPLIED_LABEL='',
+                TOTAL_BONUS_LABEL='', 
+                PENALTIES_APPLIED_LABEL='',
+                TOTAL_PENALTY_LABEL='', 
+                SHOWCASE='',  
+                TOTAL_COMPLETED='', 
+                HIGHEST_BADGE_EARNED='', 
+                ACHIEVEMENTS='',  
+                CHALLENGES='', 
+                MULTIPLIER='',  
+                NONE='', 
+                ALL_EARNED_BADGES='',  
+                COMPLETED='',
+                APPLIED='',
+                CLAIMS='',
+                APPROVALS=''
+                 ) -%}      
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
@@ -681,6 +692,10 @@ sections:
                 {%- set ns.CHALLENGES = "Udfordringer" -%}
 
                 {%- set ns.APPLIED = "Anvendt" -%} 
+
+                {%- set ns.CLAIMS = "Krav" -%}
+
+                {%- set ns.APPROVALS = "Godkendelser" -%}
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -787,8 +802,8 @@ sections:
 
                   {%- if claim_count > 0 or approval_count > 0 -%}
                     {%- set ns.reward_progress = ns.reward_progress + [
-                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; Claims: &nbsp;" 
-                      ~ claim_count ~ "&nbsp; |&nbsp; Approvals: &nbsp;" ~ approval_count
+                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; " ~ ns.CLAIMS ~ ": &nbsp;" 
+                      ~ claim_count ~ "&nbsp; |&nbsp; " ~ ns.APPROVALS ~ ": &nbsp;" ~ approval_count
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
@@ -1176,7 +1191,7 @@ sections:
                     {%- set associated_chore = state_attr(achievement_sensor.entity_id, 'associated_chore') | default('') -%}
                     {%- set description = state_attr(achievement_sensor.entity_id, 'description') | default('') -%}
                     {%- set criteria = state_attr(achievement_sensor.entity_id, 'criteria') | default('') -%}
-                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([], true) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
                     {%- set goal_type_label = 
@@ -1331,7 +1346,7 @@ sections:
                     {%- set associated_chore = state_attr(challenge_sensor.entity_id, 'associated_chore') | default('') -%}
                     {%- set description = state_attr(challenge_sensor.entity_id, 'description') | default('') -%}
                     {%- set criteria = state_attr(challenge_sensor.entity_id, 'criteria') | default('') -%}
-                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([], true) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
                     {%- set goal_type_label = target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' if challenge_type == 'total_within_window' else target_value ~ ' (' ~ ns.PER_DAY_GOAL ~ ')' -%}
