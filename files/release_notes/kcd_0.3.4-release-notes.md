@@ -71,6 +71,16 @@ A special shout-out to **@kolossboss**, who originally submitted a translated ve
 
 ---
 
+## 🖥️ **Easily Adjust Column Width for Chores, Rewards, and Approvals**  
+
+The column layout for **chores, rewards, and approvals** can now be adjusted in the **preferences**, allowing for a **customizable display**. Whether you're using a **phone, tablet, or larger screen**, you can configure it to show **a single column for compact views** or **multiple columns for a broader layout**.  Thank you @knotquiteawake for the suggestions.
+
+📌 **Note:** Column width settings may require adjustments to **UI layout settings** to ensure proper display on wider screens.  
+
+![image](https://github.com/user-attachments/assets/d0449400-207d-4b4d-8cf1-f9f76c6aa9b8)
+
+---
+
 ## ⚙️ **New Configuration Options (`pref_`)**
 Easily customize **how chores, rewards, and approvals are displayed** by changing preference settings in the dashboard yaml.
 
@@ -92,8 +102,6 @@ Easily customize **how chores, rewards, and approvals are displayed** by changin
 
 ### **Showcase Card**
 - `pref_show_penalties` → **Toggles penalty visibility**.
-
-Note that column width may require you to adjust to UI layout settings to show wider
 
 ![image](https://github.com/user-attachments/assets/5561d523-a259-434e-ad09-33d030be02f1)
 
