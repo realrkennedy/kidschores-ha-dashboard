@@ -1830,37 +1830,38 @@ sections:
                   {%- set due_date_str = state_attr(ns.chore_sensor_id, 'due_date') | string-%}
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                   {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ns.NONE -%}        
+
+                  {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
+
+                  {#-- Store the Markdown content in a variable --#}
+
+                  {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
+                  "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
+                  title) ~ "  \n" -%} 
+
+                  {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
+                  ns.chore_description ~ "  \n" if ns.chore_description else ns.content
+                  -%} 
+
+                  {%- set ns.content = ns.content ~ 
+                    "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
+                    "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
+                    "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
+                    "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
+                    "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
+                    "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
+                    "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
+
+                  {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) 
+                    if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
+
+                  {%- set ns.content = ns.content ~ ("**🔵 " ~ ns.CUSTOM_INTERVAL ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title 
+                    if ns.recurrence == 'custom' else "" ) -%}
+
+                  {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
+
                 {%- endif -%}
-
-                {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
-
-                {#-- Store the Markdown content in a variable --#}
-
-                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
-                "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
-                title) ~ "  \n" -%} 
-
-                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
-                ns.chore_description ~ "  \n" if ns.chore_description else ns.content
-                -%} 
-
-                {%- set ns.content = ns.content ~ 
-                  "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
-                  "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
-                  "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
-                  "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
-                  "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
-                  "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
-                  "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
-
-                {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) 
-                  if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
-
-                {%- set ns.content = ns.content ~ ("**🔵 " ~ ns.CUSTOM_INTERVAL ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title 
-                  if ns.recurrence == 'custom' else "" ) -%}
-
-                {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
-
+                
                 {#-- Construct Overdue chore reset, chore dropdown, Markdown Card for Chore Details, and chore actions --#} 
                 {{
                   {
