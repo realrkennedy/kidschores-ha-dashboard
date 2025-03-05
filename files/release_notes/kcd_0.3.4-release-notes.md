@@ -4,7 +4,7 @@
 Now available in **English, Danish, Dutch, Finnish, and German**. A huge thank you to:
 - **Danish**: @dehoej 🇩🇰  
 - **Dutch**: @WilbertVerhoeff 🇳🇱  
-- **Finnish**: @mikkomakipaa & @dehoej 🇫🇮  
+- **Finnish**: @mikkomakipaa 🇫🇮  
 - **German**: @kolossboss 🇩🇪  
 
 A special shout-out to **@kolossboss**, who originally submitted a translated version of the dashboard. While reviewing it, I realized that for long-term support of multiple languages, the dashboard needed a complete rework. **@kolossboss** assisted in testing the first version, and thanks to this effort, it's now possible to quickly add new languages for anyone interested in contributing a translation! ✨
