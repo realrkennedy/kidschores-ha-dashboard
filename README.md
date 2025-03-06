@@ -434,7 +434,7 @@ The column layout for **chores, rewards, and approvals** can now be adjusted in 
 📌 **Note:** Column width settings may require adjustments to **UI layout settings** to ensure proper display on wider screens.  
 
 <p align="left">
-  <img src="https://github.com/user-attachments/assets/d0449400-207d-4b4d-8cf1-f9f76c6aa9b8" width="60%">
+  <img src="https://github.com/user-attachments/assets/d0449400-207d-4b4d-8cf1-f9f76c6aa9b8" width="40%">
 </p>
 
 ---
@@ -463,7 +463,7 @@ Easily customize **how chores, rewards, and approvals are displayed** by changin
 - `pref_show_penalties` → **Toggles penalty visibility**.  
 
 <p align="left">
-  <img src="https://github.com/user-attachments/assets/5561d523-a259-434e-ad09-33d030be02f1" width="60%">
+  <img src="https://github.com/user-attachments/assets/5561d523-a259-434e-ad09-33d030be02f1" width="40%">
 </p>
 
 ---
