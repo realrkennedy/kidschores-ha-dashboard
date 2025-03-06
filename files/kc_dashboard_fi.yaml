@@ -1764,11 +1764,11 @@ sections:
 
                 {%- set ns.APPROVED = "Hyväksytty" -%}
 
-                {%- set ns.TRUE = "Tosi" -%}
+                {%- set ns.TRUE = "Kyllä" -%}
 
-                {%- set ns.FALSE = "Epätosi" -%}
+                {%- set ns.FALSE = "Ei" -%}
 
-                {%- set ns.NONE = "Ei merkintöjä" -%}
+                {%- set ns.NONE = "Ei asetettu" -%}
 
                 {#-- ************* End Translatable Text ************* --#} 
 
