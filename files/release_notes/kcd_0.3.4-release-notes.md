@@ -13,7 +13,7 @@ This release **leverages many of the powerful new features in the newly released
 ✅ **Multi-Language Support** – Now available in **5 languages**! 🌍  
 ✅ **Chore & Reward Labels** – Group or exclude tasks effortlessly.  
 ✅ **Bonus System Integration** – Easily track & apply bonuses.  
-✅ **🏅 New Badge Cards** – Displays **earned and upcoming badges** with progress tracking.  
+✅ **New Badge Cards** – Displays **earned and upcoming badges** with progress tracking.  
 ✅ **Reworked Showcase** – All key stats in one place!  
 ✅ **Parent Dashboard Enhancements** – Cleaner, more intuitive.  
 ✅ **Column Width Controls** – Adjust layouts for any screen.  
