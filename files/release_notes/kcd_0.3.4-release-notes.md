@@ -1,4 +1,26 @@
-# 🚀 Kids Chore Dashboard - Feature Enhancements KCD_0.3.4
+# 🎉 **Biggest KidsChores Dashboard Update Yet!** 🚀  
+
+The latest **KidsChores Dashboard (KCD_0.3.4)** is here, bringing **major enhancements** that make managing chores more **powerful, customizable, and engaging** than ever!  
+
+This release **fully integrates with the new KidsChores Integration 0.3.0 just released**, unlocking even more capabilities. **This version of the integration is packed with improvements**, so be sure to check out the latest updates!  Be sure to give **@VaReTaS** some praise for all the effort in improving the integration! 🙌  
+
+---
+
+## 🚀 **What's New in KCD_0.3.4?**  
+
+✅ **Multi-Language Support** – Now available in **5 languages**! 🌍  
+✅ **Chore & Reward Labels** – Group or exclude tasks effortlessly.  
+✅ **Bonus System Integration** – Easily track & apply bonuses.  
+✅ **🏅 New Badge Cards** – Displays **earned and upcoming badges** with progress tracking.  
+✅ **Reworked Showcase** – All key stats in one place!  
+✅ **Parent Dashboard Enhancements** – Cleaner, more intuitive.  
+✅ **Column Width Controls** – Adjust layouts for any screen.  
+✅ **New Customization Options** – More flexibility in chore displays.  
+✅ **Better Special Character Handling** – Improved name support across languages.  
+
+📖 **Check out the full release details below!**  
+
+---
 
 ## 🌍 Multi-Lingual Support
 Now available in **English, Danish, Dutch, Finnish, and German**. A huge thank you to:
@@ -113,4 +135,5 @@ Found a **built-in Home Assistant function** that could be used for better name 
 
 This update makes the **Kids Chore Dashboard** **more customizable and user-friendly**, while keeping it **powerful and engaging**! 🚀😊
 
+<a href="https://www.buymeacoffee.com/shillingcll" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
