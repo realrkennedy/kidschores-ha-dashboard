@@ -2,7 +2,9 @@
 
 The latest **KidsChores Dashboard (KCD_0.3.4)** is here, bringing **major enhancements** that make managing chores more **powerful, customizable, and engaging** than ever!  
 
-This release **fully integrates with the new KidsChores Integration 0.3.0 just released**, unlocking even more capabilities. **This version of the integration is packed with improvements**, so be sure to check out the latest updates!  Be sure to give **@VaReTaS** some praise for all the effort in improving the integration! 🙌  
+This release **leverages many of the powerful new features in the newly released [KidsChores Integration 0.3.0](https://github.com/ad-ha/kidschores-ha).** The latest integration update is **packed with improvements and new capabilities**, so be sure to check it out!  A huge shout-out to **@ad-ha** for all the hard work he's been putting into the integration! 🙌
+
+📖 We've worked to **significantly enhance the integration's README and Wiki**, now providing **more in-depth details** on how it works, along with expanded **FAQs, Best Practices, Tips & Tricks, and Troubleshooting Guides** to help you maximize everything KidsChores has to offer.  
 
 ---
 
@@ -20,6 +22,7 @@ This release **fully integrates with the new KidsChores Integration 0.3.0 just r
 
 📖 **Check out the full release details below!**  
 
+<a href="https://www.buymeacoffee.com/shillingcll" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 ---
 
 ## 🌍 Multi-Lingual Support
