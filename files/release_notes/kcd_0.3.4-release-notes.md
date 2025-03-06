@@ -4,7 +4,7 @@ The latest **KidsChores Dashboard (KCD_0.3.4)** is here, bringing **major enhanc
 
 This release **leverages many of the powerful new features in the newly released [KidsChores Integration 0.3.0](https://github.com/ad-ha/kidschores-ha).** The latest integration update is **packed with improvements and new capabilities**, so be sure to check it out!  A huge shout-out to **@ad-ha** for all the hard work he's been putting into the integration! 🙌
 
-📖 We've worked to **significantly enhance the integration's [README](https://github.com/ad-ha/kidschores-ha) and [Wiki](https://github.com/ad-ha/kidschores-ha/wiki)**, now providing **more in-depth details** on how it works, along with expanded **FAQs, Best Practices, Tips & Tricks, and Troubleshooting Guides** to help you maximize everything KidsChores has to offer.  
+📖 We've worked to **significantly enhance the [integration's README](https://github.com/ad-ha/kidschores-ha) and [Wiki](https://github.com/ad-ha/kidschores-ha/wiki)**, now providing **more in-depth details** on how it works, along with expanded **FAQs, Best Practices, Tips & Tricks, and Troubleshooting Guides** to help you maximize everything KidsChores has to offer.  
 
 ---
 
