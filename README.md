@@ -1,44 +1,49 @@
 # 🏡 Kids Chores and Rewards Dashboard  
-A fully automated **UI dashboard** designed for the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha) by **VaReTaS**, seamlessly integrating with Home Assistant. This dashboard provides a **front-end interface** for interacting with the KidsChores system, which manages all backend logic for chores, points, rewards, and penalties. No custom buttons or manual dashboards are needed—just install, configure, and enjoy a fully featured interface in minutes.  
+A fully automated **UI dashboard** built specifically for the [**KidsChores Integration**](https://github.com/ad-ha/kidschores-ha), seamlessly integrating with Home Assistant. Designed to provide a **complete front-end experience**, this dashboard makes it easy to interact with the KidsChores system—allowing kids to claim chores, track progress, and redeem rewards while giving parents full control over approvals and management.  
 
-## 🌟 Overview  
-The **KidsChores Dashboard** is a **front-end UI** built on top of the **KidsChores Integration**, which handles all chore tracking, reward management, and point calculations in the background. The dashboard provides a user-friendly interface to interact with those features, giving kids a fun, engaging experience and parents a complete management view without any manual setup.  
+No custom buttons or manual dashboard setup required—just install, configure, and enjoy a **fully featured, ready-to-use interface** in minutes!
 
 ![image](https://github.com/user-attachments/assets/e684f032-ab47-44c0-98fa-1df4431d2a7e)
 
 <a href="https://www.buymeacoffee.com/shillingcll" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-### What This UI Provides:  
-✅ **A fully automated, kid-friendly interface** for viewing and claiming tasks.  
-✅ **A comprehensive parent control panel** for reviewing and approving chore completions and rewards.  
-✅ **Automatic categorization** of chores based on their due dates and statuses.  
-✅ **Built-in gamification** with badges, streaks, challenges, and rewards.  
-✅ **Real-time tracking of achievements and challenges** in easy-to-read cards.  
-✅ **Designed to work well on mobile screen size but also works great on desktop, and tablets** 
+---
 
+## 🌟 **Why Use the KidsChores Dashboard?**  
 
-### What the KidsChores Integration Handles (Backend):  
-🔹 **Chore state management** (e.g., overdue, claimed, completed).  
-🔹 **Point calculations and balances.**  
-🔹 **Badge, challenge, and reward logic.**  
-🔹 **Approvals and penalties tracking.**  
+✅ **A fully automated, mobile-friendly interface** for kids to view and claim tasks.  
+✅ **Comprehensive parent control panel** for reviewing and approving chores & rewards.  
+✅ **Built-in gamification** – Badges, streaks, rewards, penalities, bonuses, challenges, and achievement tracking.  
+✅ **Multi-Language Support** – Now available in **5 languages**, and it only take 30 minutes to add a new one! 🌍   
+✅ **Automatic chore categorization** based on due dates and statuses or custom grouping by label.  
+✅ **Real-time updates** on chore approvals, penalties, and rewards.  
+✅ **Optimized for all devices** – Works seamlessly on **mobile, desktop, and tablets**.  
+
+### What is the KidsChores Integration by **@ad-ha (VaReTaS)**?: 
+ The **KidsChores Integration** handles all chore tracking, point management, and automation in the background, while the **KidsChores Dashboard** provides a **user-friendly front-end UI** for kids and parents to interact with those features.
+
+  
+ 🔹 **Chore state management** (e.g., overdue, claimed, completed).  
+ 🔹 **Point calculations and balances.**  
+ 🔹 **Badge, challenge, and reward logic.**  
+ 🔹 **Approvals and penalties tracking.**  
 
 ---
 
 ## 📌 **Features at a Glance**  
 
 ### 🧒 **For Kids**  
-✅ **Chores organized by category:** Overdue, Morning, Daily, and Anytime.  
+✅ **Chores organized by category or custom label:** Overdue, Morning, Daily, Upcoming, or Custom.
 ✅ **Track progress** with badges earned, streak counts, and points.  
-✅ **Redeem rewards** quickly with an interactive button system.  
-✅ **View achievements and challenges** with clear progress indicators and rewards.  
+✅ **Redeem rewards** quickly with an interactive button system.
+✅ **View bonuses, penalties, achievements and challenges** with clear progress indicators and rewards.  
 
 ### 👩‍👦 **For Parents**  
 ✅ **Chore Approvals:** Instantly approve or deny completed chores with a simple hold action.  
 ✅ **Reward Approvals:** Quickly review and approve claimed rewards.  
 ✅ **Overdue Chore Management:** Reset all overdue chores or individual chore statuses with one tap.  
 ✅ **Due Date Adjustments:** Change the due date of any chore, including adding or clearing dates.  
-✅ **Penalties:** Apply deductions for missed or overdue tasks.  
+✅ **Bonuses & Penalties:** Apply Bonuses to reward good behaviors or deductions for accountability.  
 ✅ **Manual Points Adjustments:** Add or remove points for corrections or bonuses.  
 ✅ **7-Day Activity Log:** View a complete history of chore claims, approvals, penalties, and rewards.  
  
@@ -56,8 +61,9 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
 ---
 
 ### 📌 **Example Kids Dashboard UI:** 
-![image](https://github.com/user-attachments/assets/654c9046-afdf-49f8-bda7-75eff5459cc3) 
-
+  <p align="left">
+    <img src="https://github.com/user-attachments/assets/654c9046-afdf-49f8-bda7-75eff5459cc3" width="30%">
+  </p>
 
 ---
 
@@ -78,7 +84,8 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
   - 🛑 **Overdue** — Chores past their due date  
   - ☀️ **Due this Morning** — Chores due before noon  
   - 🌞 **Due Today** — Chores due between noon and midnight  
-  - 🗓️ **Upcoming & Bonus** — Future chores or those without a set date  
+  - 🗓️ **Upcoming & Bonus** — Future chores or those without a set date
+  - 🏷️ **Custom Labels** — Create and assign labels in the integration to **group, filter, or exclude chores** based on category, difficulty, or any custom criteria.  
 
 - Each chore card displays:  
   - 💎 **Points earned**  
@@ -97,8 +104,9 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
  
 - All chores are claimed with a **single click**—no extra actions needed.  
 - Completion is indicated by icon color and a badge overlay (no separate “Completed” category).  
-
-![image](https://github.com/user-attachments/assets/73897ced-0199-46d0-8fbf-151b13a9e5c8)
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/73897ced-0199-46d0-8fbf-151b13a9e5c8" width="30%">
+</p>
 
 ---
 
@@ -110,7 +118,8 @@ The **Kids Dashboard** is designed to give kids a simple, fun, and engaging way 
   - ✅ **Approval status** (if needed)  
   - 🟢 **Can be redeemed now** — clearly indicates if the child has enough points  
 - Rewards are automatically listed from the integration—**no manual setup required**.  
-- Simple **one-click redemption** makes rewards easy to claim and enjoy.  
+- Simple **one-click redemption** makes rewards easy to claim and enjoy.
+- **Reward Categories** — Organize rewards into **custom groups**, by using labels in the integration making it easier manage or filter different types of incentives.   
 
 ---
 
@@ -120,16 +129,21 @@ The **Kids Showcase** section is a dedicated dashboard celebrating the child’s
 **Showcase Highlights:**  
 - 🏅 **Badges Earned:** Displays all collected badges with icons and descriptions.  
 - 🌟 **Highest Badge and Multiplier:** Shows the child’s highest badge and its impact on their points earnings.  
+- ⭐ **Bonuses:** Tracks extra points awarded for exceptional effort.  
+- ❌ **Penalties:** Displays applied point deductions for missed chores or rule-breaking.  
 - 🏆 **Achievements:** Lists completed and in-progress achievement goals, including total points earned from each.  
 - 🔥 **Challenges:** Provides detailed tracking of current challenges, progress percentages, and remaining goals.  
 - 💎 **Point Multipliers:** Highlights how badges increase points earned for completing chores.  
+
 
 The Kids Showcase offers a **fun and motivational way** for kids to see their hard work pay off, track their goals, and stay excited about their progress. 🚀  
 
 ---
 
 ### 📌 **Example Kids Showcase Dashboard UI:** 
-![image](https://github.com/user-attachments/assets/ba63fc0a-5449-4f81-accf-1da602413ba5)
+  <p align="left">
+    <img src="https://github.com/user-attachments/assets/f1ac0c6a-1dc1-4b23-a21a-83d9adabb15b" width="30%">
+  </p>
 
 ---
 
@@ -155,13 +169,15 @@ The **Parent Dashboard** is a fully automated control panel for managing chore a
 - ✅ **Approve or deny chores and rewards** with a simple hold action.  
 - ✅ **Reset overdue chores** individually or all at once.  
 - ✅ **Adjust individual chore due dates** quickly.  
-- ✅ **Manage points and penalties under “Pluses & Minuses.”**  
+- ✅ **Manage points, bonuses, and penalties under “Pluses & Minuses.”**  
 - ✅ **Monitor all activity** with a 7-day activity log.  
 
 ---
 
 ### 📌 **Example Parents Dashboard UI:** 
-![image](https://github.com/user-attachments/assets/730a7869-e29e-433b-9f3d-0ffbca3bc220)
+  <p align="left">
+    <img src="https://github.com/user-attachments/assets/d3628304-ef3d-4c5c-8796-b1d221b5d7e7" width="30%">
+  </p>
 
 ---
 
@@ -171,10 +187,7 @@ The **Parent Dashboard** is a fully automated control panel for managing chore a
 The **Parent Dashboard Overview Card** provides a quick snapshot of the child's progress and current status:  
 - 📊 **Current Points Total** with point label and icon.  
 - 📅 **Chores Completed:** Today, This Week, and This Month.  
-- 🚨 **Number of Overdue Chores**, if any.  
-- 💎 **Reward Activity:** Recent claims and approvals.  
-- ⚠️ **Penalties Applied:** Number of penalties and total points lost.  
-- 📈 **Total Penalty Points** deducted to date.  
+- 🚨 **Number of Overdue Chores**, if any.   
 
 ---
 
@@ -185,8 +198,10 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
   - 🎁 **Pending Rewards**  
 - Displays important details like points earned and completion status.  
 
-![image](https://github.com/user-attachments/assets/6ef975ea-d2e3-44e1-9872-6ac3b7029d80)
-
+ <p align="left">
+   <img src="https://github.com/user-attachments/assets/6ef975ea-d2e3-44e1-9872-6ac3b7029d80" width="30%">
+ </p>
+  
 ---
 
 ### **3️⃣ Overdue Chores Management**  
@@ -195,7 +210,9 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
   - 🛑 **Reset All Overdue Chores** for the child.  
   - 📌 **Reset Individual Chores** with due date and status shown.  
 
-![image](https://github.com/user-attachments/assets/e2b1807b-b957-49c7-9d83-d9df78f74cb5)
+ <p align="left">
+   <img src="https://github.com/user-attachments/assets/e2b1807b-b957-49c7-9d83-d9df78f74cb5" width="30%">
+ </p>
 
 ---
 
@@ -210,30 +227,40 @@ The **Parent Dashboard Overview Card** provides a quick snapshot of the child's 
 
 - Before selecting a chore:
   
-![image](https://github.com/user-attachments/assets/ba74677c-fb94-41cf-b125-7a5eaa1d2015)
+ <p align="left">
+   <img src="https://github.com/user-attachments/assets/ba74677c-fb94-41cf-b125-7a5eaa1d2015" width="30%">
+ </p>
 
 - Options appear after chore is selected:
 
-![image](https://github.com/user-attachments/assets/0e7c400c-3866-444e-a1b6-0ca2b2a0d0c0)
-
+ <p align="left">
+   <img src="https://github.com/user-attachments/assets/0e7c400c-3866-444e-a1b6-0ca2b2a0d0c0" width="30%">
+ </p>
  
 ---
 
 ### **4️⃣ Pluses & Minuses**  
-The **Pluses & Minuses** section combines **Manual Points Adjustments** and **Penalties**, providing an all-in-one interface for point management.  
+The **Pluses & Minuses** section combines **Bonuses,** **Manual Points Adjustments,** and **Penalties**, providing an all-in-one interface for point management.  
 
 #### ➕ **Manual Points Adjustment**  
 - Displays easy-access buttons to:  
   - ➕ **Add points** (e.g., for extra chores or positive behavior).  
   - ➖ **Remove points** (e.g., corrections or adjustments).  
-- Shows the child's current point total and updates immediately.   
+- Shows the child's current point total and updates immediately.
+
+#### ⭐ **Bonus Management**  
+- Allows parents to **apply custom bonuses** as extra rewards.  
+- Each bonus button shows:  
+  - ⭐ **Bonus name & point value**  
+  - 📊 **Times the bonus has been applied**  
+- Applied bonuses are reflected in the **Showcase Overview** and **Point Totals**. 
 
 #### 💥 **Penalties Management**  
 - Displays penalty options to deduct points for missed chores or behavior issues.  
 - Each penalty button shows:  
   - 💥 **Points deducted**  
   - 📊 **Times penalty was applied**  
-- Total penalty points applied are shown in the Parent Overview.  
+- Applied penalties are reflected in the **Showcase Overview** and **Point Totals**. 
 
 ---
 
@@ -287,24 +314,42 @@ To keep the dashboard organized, create a **separate section for chore tracking*
 ---
 
 ## 📌 Step 3: Add the Dashboard YAML  
+
 1. **Open your new dashboard.**  
-2. Click **"Edit Dashboard" → "Manage Dashboard" 
-3. Click the **"Edit Pencil"** next to the view name and select **"Edit Yaml"**  
-4. **Copy and paste the Kids Chore Dashboard YAML** into the view.  
+2. Click **"Edit Dashboard" → "Manage Dashboard"**  
+3. Click the **"Edit Pencil"** next to the view name and select **"Edit YAML"**  
+4. **Copy and paste the correct Kids Chores Dashboard YAML** file into the view.
 
-![image](https://github.com/user-attachments/assets/21fe22b0-26d8-4031-a1f9-005f10d4f2ad)
+ <p align="left">
+  <img src="https://github.com/user-attachments/assets/21fe22b0-26d8-4031-a1f9-005f10d4f2ad" width="50%">
+</p>
 
-https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc-dashboard.yaml
+### 🌍 **Selecting dashboard with the correct language**  
+The dashboard files are available in multiple languages. Choose the correct file based on the **2-letter ISO language code** at the end of the filename:  
 
----
+| Language  | File Name |
+|-----------|----------------|
+| 🇩🇰 Danish  | `kc_dashboard_da.yaml` |
+| 🇩🇪 German  | `kc_dashboard_de.yaml` |
+| 🇬🇧 English | `kc_dashboard_en.yaml` |
+| 🇫🇮 Finnish | `kc_dashboard_fi.yaml` |
+| 🇳🇱 Dutch   | `kc_dashboard_nl.yaml` |
+
+📌 **Find the latest files here:**  
+🔗 [KidsChores Dashboard YAML Files](https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files)  
 
 ## 📌 Step 4: Find and Replace "Kidname"  
 Since this YAML uses a **placeholder name**, update it to match your child's name.
 
 1. **Find and replace all instances of:**  
    - `Kidname` → (e.g., `"Payton"`)  
-2. Ensure **case-sensitive replacement** to avoid errors.  
-3. Click **"Save"** to apply changes.  
+2. After you paste the YAML file in, **Press \<CTRL\> F** to bring up Find/Replace
+3. Ensure **case-sensitive replacement** to avoid errors.  
+4. Click **"Save"** to apply changes.  
+
+ <p align="left">
+  <img src="https://github.com/user-attachments/assets/9413ff96-02a5-453b-bb17-c4a4eed758e4" width="50%">
+</p>
 
 Note - No longer required to change the "points" text, the new dashboard dynamically grabs the point label from the integration.
 
@@ -331,10 +376,6 @@ An **optional** automation can be added to continuously set the date of the date
 - 🚀 **Exit edit mode** and test the new chore tracking system!  
 - ✅ Ensure **buttons update chore statuses correctly.**  
 - 🛠 If any entities are missing, check **sensor and button names** in Developer Tools → States.  
-
-### If you are having any issues with the approval buttons working, check these posts:  
-- https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard/849869/36?u=ccpk1
-- https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard/849869/58?u=ccpk1
 
 ---
 
