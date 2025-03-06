@@ -26,7 +26,7 @@ This release **leverages many of the powerful new features in the newly released
 ---
 
 ## 🌍 Multi-Lingual Support
-Now available in **English, Danish, Dutch, Finnish, and German**. A huge thank you to:
+Now available in **English, Danish, Dutch, Finnish, and German**, and it's quick and easy to add more. A huge thank you to:
 - **Danish**: @dehoej 🇩🇰  
 - **Dutch**: @WilbertVerhoeff 🇳🇱  
 - **Finnish**: @mikkomakipaa 🇫🇮  
