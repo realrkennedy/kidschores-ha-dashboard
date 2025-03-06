@@ -513,13 +513,13 @@ Want to help expand KidsChores to more languages? Follow these steps to **submit
   **`kc_dashboard_xx.yaml`** *(where `xx` is the two-letter ISO 639-1 language code)*.  
 
 ✅ **Example Language Codes:**  
-- 🇬🇧 `en` → English  
-- 🇩🇪 `de` → German  
-- 🇫🇷 `fr` → French  
-- 🇪🇸 `es` → Spanish  
-- 🇵🇹 `pt` → Portuguese  
-- 🇮🇹 `it` → Italian  
-- 🇳🇱 `nl` → Dutch  
+ - 🇬🇧 `en` → English  
+ - 🇩🇪 `de` → German  
+ - 🇫🇷 `fr` → French  
+ - 🇪🇸 `es` → Spanish  
+ - 🇵🇹 `pt` → Portuguese  
+ - 🇮🇹 `it` → Italian  
+ - 🇳🇱 `nl` → Dutch  
 
 - **Test the dashboard to ensure everything looks and functions as expected.**  
 - **Submit a pull request** to add the translated file to the **translations folder** in the repository on GitHub.  
