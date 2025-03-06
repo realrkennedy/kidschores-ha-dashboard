@@ -526,7 +526,7 @@ Want to help expand KidsChores to more languages? Follow these steps to **submit
 
 ---
 
-## **📌 Example Translatable Section**  
+### **📌 Example Translatable Section**  
 
 Below is an example of a **small translatable section** using the new structure:  
 
@@ -546,7 +546,6 @@ Below is an example of a **small translatable section** using the new structure:
 
 {#-- ************* End Translatable Text ************* --#}
 ```
-
 ---
 
 📌 **Need help?** Log and issue here or visit the thread on the Home Assistant Forum [Introducing the KidsChores and Rewards Dashboard](https://community.home-assistant.io/t/introducing-the-kidschores-and-rewards-dashboard) ! 🚀  
