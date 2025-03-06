@@ -147,8 +147,37 @@ The Kids Showcase offers a **fun and motivational way** for kids to see their ha
 
 ---
 
-The **KidsChores Dashboard** is designed with kids in mind—**simple, fun, and automatic.** Everything is generated directly from the integration, so kids can focus on achieving their goals and earning rewards without any confusion or extra steps. 🚀  
+### 🏅 Badge Cards: Track & Celebrate Progress  
 
+The **Badge Cards** provide a **visual way** to track earned badges, upcoming milestones, and point multipliers. These cards make it easy for kids to see their progress and stay motivated.  
+
+### **📌 What Badge Cards Show:**  
+✅ **Earned Badges** – Displays all badges the child has unlocked.  
+✅ **Next Badge Progress** – Shows how many more points or completed chores are needed for the next badge.  
+✅ **Point Multipliers** – Indicates if a badge boosts future points for completing chores.  
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/dbfaddca-b2a1-4081-8607-554e318307c3" width="30%">
+</p>
+
+---
+
+### 🏆 Achievements & Challenges: Long-Term Goals  
+
+The **Achievements & Challenges Cards** provide a structured way to set **long-term goals** beyond daily chores. These cards help reinforce positive habits, encourage consistency, and introduce friendly competition.  
+
+### **📌 What These Cards Show:**  
+✅ **Achievements** – Earned when kids reach specific milestones (e.g., 100 chores completed).  
+✅ **Challenges** – Time-based tasks that must be completed within a set period (e.g., 50 chores in one month).  
+✅ **Progress Tracking** – Real-time updates on achievement completion and challenge goals.  
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/b529805b-aa3b-489e-b9b7-dc29f29216d1" width="30%"><br><br>
+</p> 
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/b1ca8ef2-2ed2-4fdf-a2d3-7f66b00ee0c4" width="30%"> 
+</p>
 
 ---
 
@@ -321,7 +350,7 @@ To keep the dashboard organized, create a **separate section for chore tracking*
 4. **Copy and paste the correct Kids Chores Dashboard YAML** file into the view.
 
  <p align="left">
-  <img src="https://github.com/user-attachments/assets/21fe22b0-26d8-4031-a1f9-005f10d4f2ad" width="50%">
+  <img src="https://github.com/user-attachments/assets/21fe22b0-26d8-4031-a1f9-005f10d4f2ad" width="40%">
 </p>
 
 ### 🌍 **Selecting dashboard with the correct language**  
@@ -348,7 +377,7 @@ Since this YAML uses a **placeholder name**, update it to match your child's nam
 4. Click **"Save"** to apply changes.  
 
  <p align="left">
-  <img src="https://github.com/user-attachments/assets/9413ff96-02a5-453b-bb17-c4a4eed758e4" width="50%">
+  <img src="https://github.com/user-attachments/assets/9413ff96-02a5-453b-bb17-c4a4eed758e4" width="40%">
 </p>
 
 Note - No longer required to change the "points" text, the new dashboard dynamically grabs the point label from the integration.
