@@ -13,8 +13,8 @@ A special shout-out to **@kolossboss**, who originally submitted a translated ve
 
 ---
 
-## 📌 **Chore & Reward Categories**
-- Chores and rewards can now be **grouped** or **excluded** by category, a new feature in the **[KidsChores Integration 0.3.0](https://github.com/ad-ha/kidschores-ha)**
+## 📌 **Chore & Reward Labels**
+- Chores and rewards can now be **grouped** or **excluded** by label.  This is using a new feature in the **[KidsChores Integration 0.3.0](https://github.com/ad-ha/kidschores-ha)**
 
 ![image](https://github.com/user-attachments/assets/dda5c0ed-f5cd-4404-bce7-9530b104d2a9)
 
@@ -112,3 +112,5 @@ Found a **built-in Home Assistant function** that could be used for better name 
 ---
 
 This update makes the **Kids Chore Dashboard** **more customizable and user-friendly**, while keeping it **powerful and engaging**! 🚀😊
+
+
