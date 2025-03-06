@@ -363,6 +363,7 @@ The dashboard files are available in multiple languages. Choose the correct file
 | 🇬🇧 English | `kc_dashboard_en.yaml` |
 | 🇫🇮 Finnish | `kc_dashboard_fi.yaml` |
 | 🇳🇱 Dutch   | `kc_dashboard_nl.yaml` |
+| 🇫🇷 French   | `kc_dashboard_fr.yaml` |
 
 📌 **Find the latest files here:**  
 🔗 [KidsChores Dashboard YAML Files](https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files)  
