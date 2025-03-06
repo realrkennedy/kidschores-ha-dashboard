@@ -390,14 +390,14 @@ Currently, the KidsChores Dashboard requires a single **datetime helper** to sup
 You will need to add:  
 - 🗓️ **input_datetime.kc_ui_set_date_helper** — For setting custom due dates from the dashboard. The name of the entity is critical, so enter it carefully.  To add a helper, go to Settings \ Devices & Services \ Helpers then select "+ CREATE HELPER" and choose "Date and/or time"
 
-![image](https://github.com/user-attachments/assets/a587f4d2-5875-4ff7-a69e-14d7ee1a7f5f)
-
+ <p align="left">
+  <img src="https://github.com/user-attachments/assets/a587f4d2-5875-4ff7-a69e-14d7ee1a7f5f" width="40%">
+</p>
 
 An **optional** automation can be added to continuously set the date of the date of that helper to tomorrow at 11PM.  Without this automation, the datetime will remain at whatever was last selected, which is not an issue.
 - ⚙️ **Automation: kc_ui_set_date_on_hold** — .  
 
 📄 [**kc-dashboard-uihelpers.yaml**](https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc-dashboard-uihelpers.yaml)  
-
 
 ---
 
@@ -412,6 +412,59 @@ Your **Kids Chore & Reward Dashboard** is now fully functional in **Home Assista
 
 If you haven't already done so, take a few minutes to look through the KidsChores integration Wiki which is loaded with helpful information as you get started.
 👉 Integration Wiki
+
+---
+
+## 🎨 **Want Even More Customization?**  
+
+The **KidsChores Dashboard** is designed to be **fully dynamic**, offering a rich feature set that works right out of the box. For most users, the default layout will be more than enough, but if you want to **tailor it further**, anythings possible:  
+
+✅ **Move Cards to Other Dashboard Pages** – Reorganize components to fit your layout preferences.  
+✅ **Remove Cards You Don’t Need** – Keep only what’s relevant to your family.  
+✅ **Use Built-in Card Logic** – Customize individual elements while leveraging existing automation.  
+
+The flexibility is built-in, allowing you to make it **as custom as you want** without breaking core functionality! 🚀  
+
+---
+
+### 🖥️ **Built-in Easily Adjust Column Width for Chores, Rewards, and Approvals**  
+
+The column layout for **chores, rewards, and approvals** can now be adjusted in the **preferences**, allowing for a **customizable display**. Whether you're using a **phone, tablet, or larger screen**, you can configure it to show **a single column for compact views** or **multiple columns for a broader layout**.  
+
+📌 **Note:** Column width settings may require adjustments to **UI layout settings** to ensure proper display on wider screens.  
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/d0449400-207d-4b4d-8cf1-f9f76c6aa9b8" width="60%">
+</p>
+
+---
+
+### ⚙️ **Built-in Configuration Options (`pref_`)**  
+
+Easily customize **how chores, rewards, and approvals are displayed** by changing preference settings in the dashboard YAML.
+
+### **Chore Card**
+- `pref_column_count` → Adjusts the number of columns.  
+- `pref_use_today_grouping` → Groups chores by **due morning** & **due today**.  
+- `pref_use_overdue_grouping` → Groups **overdue chores** separately.  
+- `pref_exclude_approved` → Excludes **approved** chores from showing.  
+- `pref_use_label_grouping` → Groups chores by **category**.  
+- `pref_exclude_label_list` → Allows **excluding specific chore categories**.  
+
+### **Reward Card**
+- `pref_column_count` → Adjusts the number of columns.  
+- `pref_use_label_grouping` → Groups rewards by **category**.  
+- `pref_exclude_label_list` → Allows **excluding specific reward categories**.  
+
+### **Approval Card**
+- `pref_column_count` → Adjusts the number of columns.  
+
+### **Showcase Card**
+- `pref_show_penalties` → **Toggles penalty visibility**.  
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/5561d523-a259-434e-ad09-33d030be02f1" width="60%">
+</p>
 
 ---
 
@@ -433,6 +486,66 @@ While renaming chores and rewards works correctly **within the KidsChores integr
     - `"Šimon’s Dishes!"` becomes `"_simons_dishes"`.  
 
 If you experience issues after renaming a chore or reward, verify that the **entity names** match the expected format based on **Home Assistant’s naming conventions**.  
+
+---
+
+## 🌍 **How to Contribute Translations**  
+
+Want to help expand KidsChores to more languages? Follow these steps to **submit a new translation**:  
+
+### **1️⃣ Only Modify the Translated Section & Update Headings Where Needed**  
+- Get a copy of the **"Translation-friendly"** dashboard from [kc_dashboard_en.yaml](https://github.com/ccpk1/kidschores-ha-dashboard/blob/main/files/kc_dashboard_en.yaml). 
+- The **translatable text** is stored in a **dedicated section** within the dashboard configuration.  
+- **Additionally, update any heading values** in the heading cards that are currently displayed in English.  
+- **⚠️ Do not modify any logic, formatting, or structure—only update the text values inside the designated translation section.**  
+
+---
+
+### **2️⃣ Complete All Translatable Text Entries**  
+- Ensure that **all translation text variables** have been updated with the correct translations.  
+- **Search through the full dashboard** to find all the translation sections.  
+- **Leave formatting, icons, and any surrounding Markdown or HTML unchanged.**  
+
+---
+
+### **3️⃣ Submit a Pull Request**  
+- Once all translation sections have been updated, save your file as:  
+  **`kc_dashboard_xx.yaml`** *(where `xx` is the two-letter ISO 639-1 language code)*.  
+
+✅ **Example Language Codes:**  
+- 🇬🇧 `en` → English  
+- 🇩🇪 `de` → German  
+- 🇫🇷 `fr` → French  
+- 🇪🇸 `es` → Spanish  
+- 🇵🇹 `pt` → Portuguese  
+- 🇮🇹 `it` → Italian  
+- 🇳🇱 `nl` → Dutch  
+
+- **Test the dashboard to ensure everything looks and functions as expected.**  
+- **Submit a pull request** to add the translated file to the **translations folder** in the repository on GitHub.  
+
+---
+
+## **📌 Example Translatable Section**  
+
+Below is an example of a **small translatable section** using the new structure:  
+
+```jinja
+{#-- ************* Set Translatable Text ************* --#}  
+
+{%- set ns.PARENT_DASHBOARD_LABEL = "Parent Dashboard for" -%}  
+{%- set ns.CHORES_COMPLETED_LABEL = "Chores Completed" -%}  
+{%- set ns.TODAY_LABEL = "Today" -%}  
+{%- set ns.WEEK_LABEL = "Week" -%}  
+{%- set ns.MONTH_LABEL = "Month" -%}  
+{%- set ns.OVERDUE_CHORES_LABEL = "Overdue Chores" -%}  
+{%- set ns.REWARDS_LABEL = "Rewards" -%}  
+{%- set ns.PENALTIES_APPLIED_LABEL = "Penalties Applied" -%}  
+{%- set ns.TOTAL_PENALTY_LABEL = "Total Penalty" -%}  
+{%- set ns.NONE_LABEL = "None" -%}  
+
+{#-- ************* End Translatable Text ************* --#}
+```
 
 ---
 
