@@ -1,5 +1,5 @@
 max_columns: 4
-title: Kidname Taken
+title: Kidname Chores
 path: Kidname
 sections:
   - type: grid
@@ -32,17 +32,17 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.WELCOME = "Welkom" -%} 
+                {%- set ns.WELCOME = "Velkommen" -%} 
 
-                {%- set ns.NONE = "Geen" -%}
+                {%- set ns.NONE = "Ingen" -%}
 
-                {%- set ns.WEEKLY_COMPLETED = "Wekelijks Voltooid" -%}
+                {%- set ns.WEEKLY_COMPLETED = "Ugens Fuldførte" -%}
 
-                {%- set ns.TODAYS_COMPLETED = "Dagelijks Voltooid" -%}
+                {%- set ns.TODAYS_COMPLETED = "Dagens Fuldførte" -%}
 
-                {%- set ns.ACHIEVEMENTS = "Prestaties" -%}
+                {%- set ns.ACHIEVEMENTS = "Bedrifter" -%}
 
-                {%- set ns.CHALLENGES = "Uitdagingen" -%} 
+                {%- set ns.CHALLENGES = "Udfordringer" -%} 
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -216,33 +216,33 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.CHORES = "Taken" -%} 
+                {%- set ns.CHORES = "Opgaver" -%} 
 
-                {%- set ns.OVERDUE = "Verlopen" -%} 
+                {%- set ns.OVERDUE = "Forfalden" -%} 
 
-                {%- set ns.THIS_MORNING = "Deze Morgen Verwacht" -%} 
+                {%- set ns.THIS_MORNING = "Gøres Denne Morgen" -%} 
 
-                {%- set ns.TODAY = "Vandaag Verwacht" -%}
+                {%- set ns.TODAY = "Gøres I Dag" -%}
 
-                {%- set ns.BONUS = "Aankomend en bonus" -%} 
+                {%- set ns.BONUS = "Senere & Bonus" -%} 
 
-                {%- set ns.STREAK = "Aantal" -%}
+                {%- set ns.STREAK = "Stime" -%}
 
                 {%- set ns.STATUS = "Status" -%}
 
-                {%- set ns.DUE = "Vervallen" -%}
+                {%- set ns.DUE = "Due" -%}
 
-                {%- set ns.MULTI_APPROVE_MARK = "M" -%}
+                {%- set ns.MULTI_APPROVE_MARK = "F" -%}
 
-                {%- set ns.SHARED_MARK = "S" -%}
+                {%- set ns.SHARED_MARK = "D" -%}
 
-                {%- set ns.PENDING = "In behandeling" -%}
+                {%- set ns.PENDING = "Undervejs" -%}
 
-                {%- set ns.CLAIMED = "Geclaimd" -%}
+                {%- set ns.CLAIMED = "Anmodet" -%}
 
-                {%- set ns.APPROVED = "Goedgekeurd" -%}
+                {%- set ns.APPROVED = "Godkendt" -%}
 
-                {%- set ns.NO_DUE_DATE = "Geen Verval Datum" -%}                
+                {%- set ns.NO_DUE_DATE = "Ingen Forfaldsdato" -%}        
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -500,15 +500,15 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.REWARDS = "Beloningen" -%} 
+                {%- set ns.REWARDS = "Belønninger" -%} 
 
-                {%- set ns.NO_REWARDS = "Geen beloningen beschikbaar." -%} 
+                {%- set ns.NO_REWARDS = "Ingen belønninger tilgængelig." -%} 
 
-                {%- set ns.COST = "Kosten" -%}
+                {%- set ns.COST = "Pris" -%}
+                
+                {%- set ns.NEED = "Skal bruge" -%} 
 
-                {%- set ns.NEED = "Nodig" -%} 
-
-                {%- set ns.MORE = "Meer" -%}  
+                {%- set ns.MORE = "mere" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
                 
@@ -642,45 +642,60 @@ sections:
                 penalties=[],  achievements=[],  challenges=[], content='',
                 pref_show_penalties='',
 
-                REWARDS_LABEL='', BONUSES_APPLIED_LABEL='',
-                TOTAL_BONUS_LABEL='', PENALTIES_APPLIED_LABEL='',
-                TOTAL_PENALTY_LABEL='', SHOWCASE='',  TOTAL_COMPLETED='', 
-                HIGHEST_BADGE_EARNED='', ACHIEVEMENTS='',  CHALLENGES='', 
-                MULTIPLIER='',  NONE='', ALL_EARNED_BADGES='',  COMPLETED='',
-                APPLIED='' )
-                -%}    
+                REWARDS_LABEL='', 
+                BONUSES_APPLIED_LABEL='',
+                TOTAL_BONUS_LABEL='', 
+                PENALTIES_APPLIED_LABEL='',
+                TOTAL_PENALTY_LABEL='', 
+                SHOWCASE='',  
+                TOTAL_COMPLETED='', 
+                HIGHEST_BADGE_EARNED='', 
+                ACHIEVEMENTS='',  
+                CHALLENGES='', 
+                MULTIPLIER='',  
+                NONE='', 
+                ALL_EARNED_BADGES='',  
+                COMPLETED='',
+                APPLIED='',
+                CLAIMS='',
+                APPROVALS=''
+                 ) -%}      
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.SHOWCASE = "Showcase" -%} 
+                {%- set ns.SHOWCASE = "Oversigt" -%} 
 
-                {%- set ns.TOTAL_COMPLETED = "Totaal aantal taken voltooid" -%} 
+                {%- set ns.TOTAL_COMPLETED = "Alle fuldførte" -%} 
 
-                {%- set ns.HIGHEST_BADGE_EARNED = "Hoogst verdiende badge" -%} 
+                {%- set ns.HIGHEST_BADGE_EARNED = "Højest Optjente Mærke" -%} 
 
-                {%- set ns.MULTIPLIER = "Vermenigvuldiger" -%}
+                {%- set ns.MULTIPLIER = "Multiplikator" -%}
 
-                {%- set ns.ALL_EARNED_BADGES = "Alle verdiende badges" -%} 
+                {%- set ns.ALL_EARNED_BADGES = "Optjente Mærker" -%} 
 
-                {%- set ns.NONE = "Geen" -%}
+                {%- set ns.NONE = "Ingen" -%}
 
-                {%- set ns.COMPLETED = 'Voltooid' -%}
+                {%- set ns.COMPLETED = 'Udførte' -%}
 
-                {%- set ns.REWARDS_LABEL = "Beloningen" -%}
+                {%- set ns.REWARDS_LABEL = "Belønninger" -%}
 
-                {%- set ns.BONUSES_APPLIED_LABEL = "Bonussen toegepast" -%}  
+                {%- set ns.BONUSES_APPLIED_LABEL = "Bonusser Anvendt " -%}  
 
-                {%- set ns.TOTAL_BONUS_LABEL = "Totale bonus" -%}  
+                {%- set ns.TOTAL_BONUS_LABEL = "Total Bonus" -%}  
 
-                {%- set ns.PENALTIES_APPLIED_LABEL = "Straffen toegepast" -%}  
+                {%- set ns.PENALTIES_APPLIED_LABEL = "Tildelt straf" -%}  
 
-                {%- set ns.TOTAL_PENALTY_LABEL = "Totale straf" -%} 
+                {%- set ns.TOTAL_PENALTY_LABEL = "Straf I Alt" -%} 
 
-                {%- set ns.ACHIEVEMENTS = "Prestaties" -%}
+                {%- set ns.ACHIEVEMENTS = "Bedrifter" -%}
 
-                {%- set ns.CHALLENGES = "Uitdagingen" -%} 
+                {%- set ns.CHALLENGES = "Udfordringer" -%}
 
-                {%- set ns.APPLIED = "Toegepast" -%}                
+                {%- set ns.APPLIED = "Anvendt" -%} 
+
+                {%- set ns.CLAIMS = "Krav" -%}
+
+                {%- set ns.APPROVALS = "Godkendelser" -%}
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -787,8 +802,8 @@ sections:
 
                   {%- if claim_count > 0 or approval_count > 0 -%}
                     {%- set ns.reward_progress = ns.reward_progress + [
-                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; Claims: &nbsp;" 
-                      ~ claim_count ~ "&nbsp; |&nbsp; Approvals: &nbsp;" ~ approval_count
+                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; " ~ ns.CLAIMS ~ ": &nbsp;" 
+                      ~ claim_count ~ "&nbsp; |&nbsp; " ~ ns.APPROVALS ~ ": &nbsp;" ~ approval_count
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
@@ -949,27 +964,27 @@ sections:
 
             {#-- ************* Set Translatable Text ************* --#}  
 
-            {%- set ns.BADGE_TITLE = "Badge" -%} 
+            {%- set ns.BADGE_TITLE = "Mærke" -%} 
 
             {%- set ns.STATUS = "Status" -%} 
 
-            {%- set ns.THRESHOLD = "Drempelwaarde" -%}
+            {%- set ns.THRESHOLD = "Tærskel" -%}
 
-            {%- set ns.MULTIPLIER = "Vermenigvuldiger" -%} 
+            {%- set ns.MULTIPLIER = "Multiplikator" -%} 
 
-            {%- set ns.EARNED_BY = "Verdiend door" -%}
+            {%- set ns.EARNED_BY = "Optjent af" -%}
 
-            {%- set ns.NO_BADGES_FOUND = "Geen badges gevonden" -%}
+            {%- set ns.NO_BADGES_FOUND = "Ingen mærker fundet" -%}
 
-            {%- set ns.BADGE_SETUP_PROMPT = "Stel badges in om mijlpalen te belonen en taken leuk te houden!" -%} 
-            
-            {%- set ns.IN_PROGRESS = "In uitvoering" -%} 
+            {%- set ns.BADGE_SETUP_PROMPT = "Opsæt mærker for at belønne milepæle og gøre opgaver sjove!" -%} 
 
-            {%- set ns.EARNED = "Verdiend" -%}
+            {%- set ns.IN_PROGRESS = "I Gang" -%} 
 
-            {%- set ns.REMAINING = "Te gaan!" -%}
+            {%- set ns.EARNED = "Optjent" -%}
 
-            {%- set ns.CHORES = "Taken" -%}
+            {%- set ns.REMAINING = "tilbage" -%}
+
+            {%- set ns.CHORES = "Opgaver" -%}
 
             {#-- ************* End Translatable Text ************* --#}
 
@@ -1100,41 +1115,41 @@ sections:
         
                 {#-- ************* Set Translatable Text ************* --#}  
         
-                {%- set ns.NO_ACHIEVEMENTS_FOUND = "Geen prestaties gevonden" -%} 
+                {%- set ns.NO_ACHIEVEMENTS_FOUND = "Ingen bedrifter fundet" -%} 
         
-                {%- set ns.START_A_ACHIEVEMENT = "Start een prestatie om uw voortgang bij te houden!" -%} 
+                {%- set ns.START_A_ACHIEVEMENT = "Start en bedrift for at følge din fremgang!" -%} 
         
-                {%- set ns.ACHIEVEMENT_LABEL = "Prestatie" -%} 
+                {%- set ns.ACHIEVEMENT_LABEL = "Bedrift" -%} 
         
-                {%- set ns.AWARD_STATUS_LABEL = "Status Toegekend" -%}  
+                {%- set ns.AWARD_STATUS_LABEL = "Status" -%}  
         
-                {%- set ns.EARNED_LABEL = "Verdiend" -%}  
+                {%- set ns.EARNED_LABEL = "Optjent" -%}  
         
-                {%- set ns.IN_PROCESS_LABEL = "In behandeling" -%}  
+                {%- set ns.IN_PROCESS_LABEL = "I Gang" -%}  
         
-                {%- set ns.DESCRIPTION_LABEL = "Beschrijving" -%}  
+                {%- set ns.DESCRIPTION_LABEL = "Beskrivelse" -%}  
         
-                {%- set ns.CRITERIA_LABEL = "Criteria" -%}  
+                {%- set ns.CRITERIA_LABEL = "Kriterier" -%}  
         
-                {%- set ns.GOAL_LABEL = "Doel" -%}  
+                {%- set ns.GOAL_LABEL = "Mål" -%}  
         
-                {%- set ns.START_DATE_LABEL = "Start Datum" -%}  
+                {%- set ns.START_DATE_LABEL = "Start Dato" -%}  
         
-                {%- set ns.END_DATE_LABEL = "Eind Datum" -%}  
+                {%- set ns.END_DATE_LABEL = "Slut Dato" -%}  
         
-                {%- set ns.REWARD_LABEL = "Beloning" -%}  
+                {%- set ns.REWARD_LABEL = "Belønning" -%}  
         
-                {%- set ns.PROGRESS_LABEL = "Voortgang" -%}  
+                {%- set ns.PROGRESS_LABEL = "Fremskridt" -%}  
         
-                {%- set ns.ASSIGNED_TO_LABEL = "Toegewezen aan" -%}  
+                {%- set ns.ASSIGNED_TO_LABEL = "Tildelt" -%}  
         
-                {%- set ns.RELATED_CHORE_LABEL = "Gerelateerde Taak" -%}
+                {%- set ns.RELATED_CHORE_LABEL = "Relateret Opgave" -%}
         
-                {%- set ns.STREAK_GOAL = "Doel Aantal achter elkaar" -%}
+                {%- set ns.STREAK_GOAL = "Stime Mål" -%}
         
-                {%- set ns.TOTAL_CHORES = "Totaal aantal taken" -%}
+                {%- set ns.TOTAL_CHORES = "Totale Opgaver" -%}
         
-                {%- set ns.DAILY_MINIMUM = "Dagelijks Minimum" -%}  
+                {%- set ns.DAILY_MINIMUM = "Dagligt Minimum" -%} 
         
                 {#-- ************* End Translatable Text ************* --#}
         
@@ -1176,7 +1191,7 @@ sections:
                     {%- set associated_chore = state_attr(achievement_sensor.entity_id, 'associated_chore') | default('') -%}
                     {%- set description = state_attr(achievement_sensor.entity_id, 'description') | default('') -%}
                     {%- set criteria = state_attr(achievement_sensor.entity_id, 'criteria') | default('') -%}
-                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([], true) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
                     {%- set goal_type_label = 
@@ -1256,39 +1271,39 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.NO_CHALLENGES_FOUND = "Geen uitdagingen gevonden" -%} 
+                {%- set ns.NO_CHALLENGES_FOUND = "Ingen udfordringer fundet" -%} 
 
-                {%- set ns.START_A_CHALLENGE = "Start een uitdaging om je te grenzen te zoeken!" -%} 
+                {%- set ns.START_A_CHALLENGE = "Tag udfordringen op og se, hvad du kan opnå!" -%} 
 
-                {%- set ns.CHALLENGE_LABEL = "Uitdagingen" -%} 
+                {%- set ns.CHALLENGE_LABEL = "Udfordring" -%} 
 
-                {%- set ns.AWARD_STATUS_LABEL = "Status Toegekend" -%}  
+                {%- set ns.AWARD_STATUS_LABEL = "Status" -%}  
 
-                {%- set ns.EARNED_LABEL = "Verdiend" -%}  
+                {%- set ns.EARNED_LABEL = "Optjent" -%}  
 
-                {%- set ns.IN_PROCESS_LABEL = "In behandeling" -%}  
+                {%- set ns.IN_PROCESS_LABEL = "In Gang" -%}  
 
-                {%- set ns.DESCRIPTION_LABEL = "Beschrijving" -%}  
+                {%- set ns.DESCRIPTION_LABEL = "Beskrivelse" -%}  
 
-                {%- set ns.CRITERIA_LABEL = "Criteria" -%}  
+                {%- set ns.CRITERIA_LABEL = "Kriterier" -%}  
 
-                {%- set ns.GOAL_LABEL = "Doel" -%}  
+                {%- set ns.GOAL_LABEL = "Mål" -%}  
 
-                {%- set ns.START_DATE_LABEL = "Start Datum" -%}  
+                {%- set ns.START_DATE_LABEL = "Start Dato" -%}  
 
-                {%- set ns.END_DATE_LABEL = "Eind Datum" -%}  
+                {%- set ns.END_DATE_LABEL = "Slut Dato" -%}  
 
-                {%- set ns.REWARD_LABEL = "Beloning" -%}  
+                {%- set ns.REWARD_LABEL = "Belønning" -%}  
 
-                {%- set ns.PROGRESS_LABEL = "Voortgang" -%}  
+                {%- set ns.PROGRESS_LABEL = "Fremskridt" -%}  
 
-                {%- set ns.ASSIGNED_TO_LABEL = "Toegewezen aan" -%}  
+                {%- set ns.ASSIGNED_TO_LABEL = "Tildelt" -%}  
 
-                {%- set ns.RELATED_CHORE_LABEL = "Gerelateerde Taak" -%}
+                {%- set ns.RELATED_CHORE_LABEL = "Relateret Opgave" -%}
 
-                {%- set ns.TOTAL_CHORES = "Totaal aantal taken" -%}
+                {%- set ns.TOTAL_CHORES = "Totale Opgaver" -%}
 
-                {%- set ns.PER_DAY_GOAL = "Doel per dag" -%}  
+                {%- set ns.PER_DAY_GOAL = "Dagligt Mål" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1331,7 +1346,7 @@ sections:
                     {%- set associated_chore = state_attr(challenge_sensor.entity_id, 'associated_chore') | default('') -%}
                     {%- set description = state_attr(challenge_sensor.entity_id, 'description') | default('') -%}
                     {%- set criteria = state_attr(challenge_sensor.entity_id, 'criteria') | default('') -%}
-                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([], true) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
                     {%- set goal_type_label = target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' if challenge_type == 'total_within_window' else target_value ~ ' (' ~ ns.PER_DAY_GOAL ~ ')' -%}
@@ -1409,19 +1424,19 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PARENT_DASHBOARD_LABEL = "Ouder Dashboard Voor" -%} 
+                {%- set ns.PARENT_DASHBOARD_LABEL = "Forældreoversigt for" -%} 
 
-                {%- set ns.CHORES_COMPLETED_LABEL = "Taken Voltooid" -%} 
+                {%- set ns.CHORES_COMPLETED_LABEL = "Udførte Opgaver" -%} 
 
-                {%- set ns.TODAY_LABEL = "Vandaag" -%} 
+                {%- set ns.TODAY_LABEL = "I Dag" -%} 
 
-                {%- set ns.WEEK_LABEL = "Week" -%}  
+                {%- set ns.WEEK_LABEL = "Uge" -%}  
 
-                {%- set ns.MONTH_LABEL = "Maand" -%}  
+                {%- set ns.MONTH_LABEL = "Måned" -%}  
 
-                {%- set ns.OVERDUE_CHORES_LABEL = "Achterstallige taken" -%}  
+                {%- set ns.OVERDUE_CHORES_LABEL = "Forfaldne Opgaver" -%}  
 
-                {%- set ns.NONE = "Geen" -%}   
+                {%- set ns.NONE = "Ingen" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1511,13 +1526,13 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.CHORE_APPROVALS = "Goedgekeurde taken" -%} 
+                {%- set ns.CHORE_APPROVALS = "Godkendte Opgaver" -%} 
 
-                {%- set ns.REWARD_APPROVALS = "Goedgekeurde beloningen" -%} 
+                {%- set ns.REWARD_APPROVALS = "Godkendte Belønninger" -%} 
 
                 {%- set ns.OK = "OK" -%} 
 
-                {%- set ns.NO = "Nee" -%}  
+                {%- set ns.NO = "NEJ" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1697,63 +1712,65 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Selecteer taak om veraldatum te bewerken." -%}
+                {%- set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Vælg opgave at redigere
+                Due Date" -%}
 
-                {%- set ns.CHORE_DETAIL_LABEL = "Taak detail" -%} 
+                {%- set ns.CHORE_DETAIL_LABEL = "Opgavedetaljer" -%} 
 
-                {%- set ns.CURRENT_STATUS_LABEL = "Huidige status" -%} 
+                {%- set ns.CURRENT_STATUS_LABEL = "Nuværende Status" -%} 
 
-                {%- set ns.GLOBAL_STATUS_LABEL = "Globale status" -%} 
+                {%- set ns.GLOBAL_STATUS_LABEL = "Global Status" -%} 
 
-                {%- set ns.SHARED_CHORE_LABEL = "Gedeelde taak" -%}  
+                {%- set ns.SHARED_CHORE_LABEL = "Deleopgave" -%}  
 
-                {%- set ns.VALUE_LABEL = "Waarden" -%}  
+                {%- set ns.VALUE_LABEL = "Værdi" -%}  
 
-                {%- set ns.DUE_DATE_LABEL = "Vervaldatum" -%}  
+                {%- set ns.DUE_DATE_LABEL = "Forfaldsdato" -%}  
 
-                {%- set ns.RECURRENCE_LABEL = "Herhaling" -%}
+                {%- set ns.RECURRENCE_LABEL = "Gentagelser" -%}
 
                 {%- set ns.CUSTOM_INTERVAL = "Interval" -%} 
 
-                {%- set ns.NO_CHORE_SELECTED_LABEL = "Geen taak geselecteerd of status niet beschikbaar" -%} 
+                {%- set ns.NO_CHORE_SELECTED_LABEL = "Ingen opgave valgt eller status ikke tilgængelig" -%} 
 
-                {%- set ns.PLUS_NEXT_DUE = "+Volgende vervaldatum" -%}  
+                {%- set ns.PLUS_NEXT_DUE = "+Næste forfaldsdato" -%}  
 
                 {%- set ns.PLUS_1_DAY = "+1 Dag" -%}  
 
-                {%- set ns.PLUS_1_WEEK = "+1 Week" -%}  
+                {%- set ns.PLUS_1_WEEK = "+1 Uge" -%}  
 
-                {%- set ns.CLEAR_DATE = "Datum wissen" -%}  
+                {%- set ns.CLEAR_DATE = "Ryd Dato" -%}  
 
-                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Selecteer nieuwe datum en tijd" -%}  
+                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Vælg ny dato og tid"
+                -%}  
 
-                {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Tik om te wijzigen / Vasthouden om in te stellen)" -%}
+                {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Tryk for at ændre / Hold for at indstille)" -%}
 
-                {%- set ns.RESET_ALL = "Alles resetten" -%}
+                {%- set ns.RESET_ALL = "Nulstil Alle" -%}
 
-                {%- set ns.OVERDUE_CHORES = "Achterstallige taken" -%}
+                {%- set ns.OVERDUE_CHORES = "Forfaldne Opgaver" -%}
 
-                {%- set ns.RESET_OVERDUE_STATUS = "Status achterstallig resetten" -%}
+                {%- set ns.RESET_OVERDUE_STATUS = "Nulstil Forfaldstatus" -%}
 
-                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Meerdere claims toestaan" -%}
+                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Tillad flere indløsninger" -%}
 
-                {%- set ns.APPLICABLE_DAYS = "Toepasbare dagen" -%}
+                {%- set ns.APPLICABLE_DAYS = "Relevante Dage" -%}
 
-                {%- set ns.CHORE_ADMIN_ACTIONS = "Acties om taken te beheren" -%}
+                {%- set ns.CHORE_ADMIN_ACTIONS = "Handlinger for pligtadministrator" -%}
 
-                {%- set ns.OVERDUE = "Verlopen" -%}
+                {%- set ns.OVERDUE = "Forfalden" -%}
 
-                {%- set ns.PENDING = "In behandeling" -%}
+                {%- set ns.PENDING = "Undervejs" -%}
 
-                {%- set ns.CLAIMED = "Geclaimd" -%}
+                {%- set ns.CLAIMED = "Anmodet" -%}
 
-                {%- set ns.APPROVED = "Goedgekeurd" -%}
+                {%- set ns.APPROVED = "Godkendt" -%}
 
-                {%- set ns.TRUE = "Waar" -%}
+                {%- set ns.TRUE = "Sand" -%}
 
-                {%- set ns.FALSE = "Onwaar" -%}
+                {%- set ns.FALSE = "Falsk" -%}
 
-                {%- set ns.NONE = "Geen" -%}
+                {%- set ns.NONE = "None" -%}
 
                 {#-- ************* End Translatable Text ************* --#} 
 
@@ -1813,37 +1830,38 @@ sections:
                   {%- set due_date_str = state_attr(ns.chore_sensor_id, 'due_date') | string-%}
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                   {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ns.NONE -%}        
+
+                  {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
+
+                  {#-- Store the Markdown content in a variable --#}
+
+                  {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
+                  "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
+                  title) ~ "  \n" -%} 
+
+                  {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
+                  ns.chore_description ~ "  \n" if ns.chore_description else ns.content
+                  -%} 
+
+                  {%- set ns.content = ns.content ~ 
+                    "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
+                    "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
+                    "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
+                    "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
+                    "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
+                    "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
+                    "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
+
+                  {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) 
+                    if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
+
+                  {%- set ns.content = ns.content ~ ("**🔵 " ~ ns.CUSTOM_INTERVAL ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title 
+                    if ns.recurrence == 'custom' else "" ) -%}
+
+                  {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
+
                 {%- endif -%}
-
-                {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
-
-                {#-- Store the Markdown content in a variable --#}
-
-                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
-                "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
-                title) ~ "  \n" -%} 
-
-                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
-                ns.chore_description ~ "  \n" if ns.chore_description else ns.content
-                -%} 
-
-                {%- set ns.content = ns.content ~ 
-                  "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
-                  "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
-                  "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
-                  "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
-                  "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
-                  "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
-                  "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
-
-                {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) 
-                  if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
-
-                {%- set ns.content = ns.content ~ ("**🔵 " ~ ns.CUSTOM_INTERVAL ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title 
-                  if ns.recurrence == 'custom' else "" ) -%}
-
-                {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
-
+                
                 {#-- Construct Overdue chore reset, chore dropdown, Markdown Card for Chore Details, and chore actions --#} 
                 {{
                   {
@@ -2049,7 +2067,7 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PLUSES_AND_MINUSES = 'Plussen & Minnen' -%}  
+                {%- set ns.PLUSES_AND_MINUSES = 'Plusser og minusser' -%}  
 
                 {#-- ************* End Translatable Text ************* --#}  
 
@@ -2099,11 +2117,11 @@ sections:
 
                 {%- set ns.BONUS_LABEL = 'Bonus' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Toegepast' -%} 
+                {%- set ns.APPLIED_LABEL = 'Anvendt' -%} 
 
-                {%- set ns.APPLIED_TIMES = 'Tijden' -%}  
+                {%- set ns.APPLIED_TIMES = 'gange' -%}  
 
-                {#-- ************* End Translatable Text ************* --#}  
+                {#-- ************* End Translatable Text ************* --#}
 
                 {#-- Set Kid_name and normalize --#}  
 
@@ -2238,9 +2256,9 @@ sections:
 
                 {%- set ns.PENALTY_LABEL = 'Straf' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Toegepast' -%} 
+                {%- set ns.APPLIED_LABEL = 'Tildelt' -%} 
 
-                {%- set ns.APPLIED_TIMES = 'Tijden' -%}  
+                {%- set ns.APPLIED_TIMES = 'gange' -%}  
 
                 {#-- ************* End Translatable Text ************* --#}  
 
@@ -2305,7 +2323,7 @@ sections:
         cards:
           - type: heading
             icon: mdi:clipboard-text
-            heading: 7-daags activiteitenlogboek
+            heading: 7 Day Activity Log
             heading_style: title
           - type: custom:auto-entities
             card:

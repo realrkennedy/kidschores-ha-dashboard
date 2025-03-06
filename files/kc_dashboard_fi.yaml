@@ -32,17 +32,17 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.WELCOME = "Welcome" -%} 
+                {%- set ns.WELCOME = "Tervetuloa" -%} 
 
-                {%- set ns.NONE = "None" -%}
+                {%- set ns.NONE = "Ei merkintöjä" -%}
 
-                {%- set ns.WEEKLY_COMPLETED = "Weekly Completed" -%}
+                {%- set ns.WEEKLY_COMPLETED = "Viikon aikana suoritetut askareet" -%}
 
-                {%- set ns.TODAYS_COMPLETED = "Today's Completed" -%}
+                {%- set ns.TODAYS_COMPLETED = "Tänään suoritetut askareet" -%}
 
-                {%- set ns.ACHIEVEMENTS = "Achievements" -%}
+                {%- set ns.ACHIEVEMENTS = "Saavutukset" -%}
 
-                {%- set ns.CHALLENGES = "Challenges" -%} 
+                {%- set ns.CHALLENGES = "Haasteet" -%} 
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -216,33 +216,33 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.CHORES = "Chores" -%} 
+                {%- set ns.CHORES = "Askareet" -%} 
 
-                {%- set ns.OVERDUE = "Overdue" -%} 
+                {%- set ns.OVERDUE = "Myöhässä" -%} 
 
-                {%- set ns.THIS_MORNING = "Due This Morning" -%} 
+                {%- set ns.THIS_MORNING = "Erääntyy aamulla" -%} 
 
-                {%- set ns.TODAY = "Due Today" -%}
+                {%- set ns.TODAY = "Erääntyy tänään" -%}
 
-                {%- set ns.BONUS = "Upcoming & Bonus" -%} 
+                {%- set ns.BONUS = "Tulevat askareet ja bonukset" -%} 
 
-                {%- set ns.STREAK = "Streak" -%}
+                {%- set ns.STREAK = "Pisteputki" -%}
 
-                {%- set ns.STATUS = "Status" -%}
+                {%- set ns.STATUS = "Tilanne" -%}
 
-                {%- set ns.DUE = "Due" -%}
+                {%- set ns.DUE = "Erääntyy" -%}
 
                 {%- set ns.MULTI_APPROVE_MARK = "M" -%}
 
                 {%- set ns.SHARED_MARK = "S" -%}
 
-                {%- set ns.PENDING = "Pending" -%}
+                {%- set ns.PENDING = "Avoin" -%}
 
-                {%- set ns.CLAIMED = "Claimed" -%}
+                {%- set ns.CLAIMED = "Haettu" -%}
 
-                {%- set ns.APPROVED = "Approved" -%}
+                {%- set ns.APPROVED = "Hyväksytty" -%}
 
-                {%- set ns.NO_DUE_DATE = "No Due Date" -%}        
+                {%- set ns.NO_DUE_DATE = "Ei eräpäivää" -%}        
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -500,15 +500,15 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.REWARDS = "Rewards" -%} 
+                {%- set ns.REWARDS = "Palkinnot" -%} 
 
-                {%- set ns.NO_REWARDS = "No rewards available." -%} 
+                {%- set ns.NO_REWARDS = "Palkintoja ei saatavilla." -%} 
 
-                {%- set ns.COST = "Cost" -%}
+                {%- set ns.COST = "Kustannus" -%}
 
-                {%- set ns.NEED = "Need" -%} 
+                {%- set ns.NEED = "Tarvitset" -%} 
 
-                {%- set ns.MORE = "more" -%}  
+                {%- set ns.MORE = "lisää" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
                 
@@ -642,45 +642,60 @@ sections:
                 penalties=[],  achievements=[],  challenges=[], content='',
                 pref_show_penalties='',
 
-                REWARDS_LABEL='', BONUSES_APPLIED_LABEL='',
-                TOTAL_BONUS_LABEL='', PENALTIES_APPLIED_LABEL='',
-                TOTAL_PENALTY_LABEL='', SHOWCASE='',  TOTAL_COMPLETED='', 
-                HIGHEST_BADGE_EARNED='', ACHIEVEMENTS='',  CHALLENGES='', 
-                MULTIPLIER='',  NONE='', ALL_EARNED_BADGES='',  COMPLETED='',
-                APPLIED='' )
-                -%}    
+                REWARDS_LABEL='', 
+                BONUSES_APPLIED_LABEL='',
+                TOTAL_BONUS_LABEL='', 
+                PENALTIES_APPLIED_LABEL='',
+                TOTAL_PENALTY_LABEL='', 
+                SHOWCASE='',  
+                TOTAL_COMPLETED='', 
+                HIGHEST_BADGE_EARNED='', 
+                ACHIEVEMENTS='',  
+                CHALLENGES='', 
+                MULTIPLIER='',  
+                NONE='', 
+                ALL_EARNED_BADGES='',  
+                COMPLETED='',
+                APPLIED='',
+                CLAIMS='',
+                APPROVALS=''
+                 ) -%}      
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.SHOWCASE = "Showcase" -%} 
+                {%- set ns.SHOWCASE = "näkymä" -%} 
 
-                {%- set ns.TOTAL_COMPLETED = "Total Chores Completed" -%} 
+                {%- set ns.TOTAL_COMPLETED = "Askareita yhteensä" -%} 
 
-                {%- set ns.HIGHEST_BADGE_EARNED = "Highest Badge Earned" -%} 
+                {%- set ns.HIGHEST_BADGE_EARNED = "Korkein kunniamerkki" -%} 
 
-                {%- set ns.MULTIPLIER = "Multiplier" -%}
+                {%- set ns.MULTIPLIER = "Kerroin" -%}
 
-                {%- set ns.ALL_EARNED_BADGES = "All Earned Badges" -%} 
+                {%- set ns.ALL_EARNED_BADGES = "Kunniamerkit" -%} 
 
-                {%- set ns.NONE = "None" -%}
+                {%- set ns.NONE = "Ei merkintöjä" -%}
 
-                {%- set ns.COMPLETED = 'Completed' -%}
+                {%- set ns.COMPLETED = 'Valmis' -%}
 
-                {%- set ns.REWARDS_LABEL = "Rewards" -%}
+                {%- set ns.REWARDS_LABEL = "Palkinnot" -%}
 
-                {%- set ns.BONUSES_APPLIED_LABEL = "Bonuses Applied" -%}  
+                {%- set ns.BONUSES_APPLIED_LABEL = "Bonukset" -%}  
 
-                {%- set ns.TOTAL_BONUS_LABEL = "Total Bonus" -%}  
+                {%- set ns.TOTAL_BONUS_LABEL = "Bonukset yhteensä" -%}  
 
-                {%- set ns.PENALTIES_APPLIED_LABEL = "Penalties Applied" -%}  
+                {%- set ns.PENALTIES_APPLIED_LABEL = "Sakot" -%}  
 
-                {%- set ns.TOTAL_PENALTY_LABEL = "Total Penalty" -%} 
+                {%- set ns.TOTAL_PENALTY_LABEL = "Sakot yhteensä:" -%} 
 
-                {%- set ns.ACHIEVEMENTS = "Achievements" -%}
+                {%- set ns.ACHIEVEMENTS = "Saavutukset" -%}
 
-                {%- set ns.CHALLENGES = "Challenges" -%} 
+                {%- set ns.CHALLENGES = "Haasteet" -%}  
 
-                {%- set ns.APPLIED = "Applied" -%}                
+                {%- set ns.APPLIED = "Saatu" -%}
+
+                {%- set ns.CLAIMS = "Vaatimukset" -%}
+
+                {%- set ns.APPROVALS = "Hyväksynnät" -%}                
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -787,8 +802,8 @@ sections:
 
                   {%- if claim_count > 0 or approval_count > 0 -%}
                     {%- set ns.reward_progress = ns.reward_progress + [
-                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; Claims: &nbsp;" 
-                      ~ claim_count ~ "&nbsp; |&nbsp; Approvals: &nbsp;" ~ approval_count
+                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; " ~ ns.CLAIMS ~ ": &nbsp;" 
+                      ~ claim_count ~ "&nbsp; |&nbsp; " ~ ns.APPROVALS ~ ": &nbsp;" ~ approval_count
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
@@ -949,27 +964,27 @@ sections:
 
             {#-- ************* Set Translatable Text ************* --#}  
 
-            {%- set ns.BADGE_TITLE = "Badge" -%} 
+            {%- set ns.BADGE_TITLE = "Kunniamerkki" -%} 
 
-            {%- set ns.STATUS = "Status" -%} 
+            {%- set ns.STATUS = "Tila" -%} 
 
-            {%- set ns.THRESHOLD = "Threshold" -%}
+            {%- set ns.THRESHOLD = "Tavoite" -%}
 
-            {%- set ns.MULTIPLIER = "Multiplier" -%} 
+            {%- set ns.MULTIPLIER = "Kerroin" -%} 
 
-            {%- set ns.EARNED_BY = "Earned By" -%}
+            {%- set ns.EARNED_BY = "Suorittaja" -%}
 
-            {%- set ns.NO_BADGES_FOUND = "No Badges Found" -%}
+            {%- set ns.NO_BADGES_FOUND = "Ei kunniamerkkejä" -%}
 
-            {%- set ns.BADGE_SETUP_PROMPT = "Set up badges to reward milestones and keep chores fun!" -%} 
+            {%- set ns.BADGE_SETUP_PROMPT = "Kunniamerkit tekevät askareiden suorituksesta hauskaa ja palkitsevaa." -%} 
 
-            {%- set ns.IN_PROGRESS = "In Progress" -%} 
+            {%- set ns.IN_PROGRESS = "Käynnissä" -%} 
 
-            {%- set ns.EARNED = "Earned" -%}
+            {%- set ns.EARNED = "Ansaittu" -%}
 
-            {%- set ns.REMAINING = "to go!" -%}
+            {%- set ns.REMAINING = "jäljellä" -%}
 
-            {%- set ns.CHORES = "Chores" -%}
+            {%- set ns.CHORES = "Askareet" -%}
 
             {#-- ************* End Translatable Text ************* --#}
 
@@ -1100,41 +1115,41 @@ sections:
         
                 {#-- ************* Set Translatable Text ************* --#}  
         
-                {%- set ns.NO_ACHIEVEMENTS_FOUND = "No Achievements Found" -%} 
+                {%- set ns.NO_ACHIEVEMENTS_FOUND = "Saavutuksia ei löytynyt" -%} 
         
-                {%- set ns.START_A_ACHIEVEMENT = "Start an achievement to track your progress!" -%} 
+                {%- set ns.START_A_ACHIEVEMENT = "Saavutukset auttavat edistymisen seurannassa" -%} 
         
-                {%- set ns.ACHIEVEMENT_LABEL = "Achievement" -%} 
+                {%- set ns.ACHIEVEMENT_LABEL = "Saavutus" -%} 
         
-                {%- set ns.AWARD_STATUS_LABEL = "Award Status" -%}  
+                {%- set ns.AWARD_STATUS_LABEL = "Palkinnon tilanne" -%}  
         
-                {%- set ns.EARNED_LABEL = "Earned" -%}  
+                {%- set ns.EARNED_LABEL = "Ansaittu" -%}  
         
-                {%- set ns.IN_PROCESS_LABEL = "In Process" -%}  
+                {%- set ns.IN_PROCESS_LABEL = "Käynnissä" -%}  
         
-                {%- set ns.DESCRIPTION_LABEL = "Description" -%}  
+                {%- set ns.DESCRIPTION_LABEL = "Kuvaus" -%}  
         
-                {%- set ns.CRITERIA_LABEL = "Criteria" -%}  
+                {%- set ns.CRITERIA_LABEL = "Kriteerit" -%}  
         
-                {%- set ns.GOAL_LABEL = "Goal" -%}  
+                {%- set ns.GOAL_LABEL = "Tavoite" -%}  
         
-                {%- set ns.START_DATE_LABEL = "Start Date" -%}  
+                {%- set ns.START_DATE_LABEL = "Aloituspäivä" -%}  
         
-                {%- set ns.END_DATE_LABEL = "End Date" -%}  
+                {%- set ns.END_DATE_LABEL = "Päättymispäivä" -%}  
         
-                {%- set ns.REWARD_LABEL = "Reward" -%}  
+                {%- set ns.REWARD_LABEL = "Palkinto" -%}  
         
-                {%- set ns.PROGRESS_LABEL = "Progress" -%}  
+                {%- set ns.PROGRESS_LABEL = "Edistyminen" -%}  
         
-                {%- set ns.ASSIGNED_TO_LABEL = "Assigned To" -%}  
+                {%- set ns.ASSIGNED_TO_LABEL = "Suorittaja" -%}  
         
-                {%- set ns.RELATED_CHORE_LABEL = "Related Chore" -%}
+                {%- set ns.RELATED_CHORE_LABEL = "Saavutukseen liitetty askare" -%}
         
-                {%- set ns.STREAK_GOAL = "Streak Goal" -%}
+                {%- set ns.STREAK_GOAL = "Pisteputken tavoite" -%}
         
-                {%- set ns.TOTAL_CHORES = "Total Chores" -%}
+                {%- set ns.TOTAL_CHORES = "Kaikki askareet" -%}
         
-                {%- set ns.DAILY_MINIMUM = "Daily Minimum" -%} 
+                {%- set ns.DAILY_MINIMUM = "Minimitavoite" -%} 
         
                 {#-- ************* End Translatable Text ************* --#}
         
@@ -1176,7 +1191,7 @@ sections:
                     {%- set associated_chore = state_attr(achievement_sensor.entity_id, 'associated_chore') | default('') -%}
                     {%- set description = state_attr(achievement_sensor.entity_id, 'description') | default('') -%}
                     {%- set criteria = state_attr(achievement_sensor.entity_id, 'criteria') | default('') -%}
-                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                    {%- set assigned_kids = state_attr(achievement_sensor.entity_id, 'assigned_kids') | default([], true) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
                     {%- set goal_type_label = 
@@ -1256,39 +1271,39 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.NO_CHALLENGES_FOUND = "No Challenges Found" -%} 
+                {%- set ns.NO_CHALLENGES_FOUND = "Ei avoimia haasteita" -%} 
 
-                {%- set ns.START_A_CHALLENGE = "Start a challenge to push your limits!" -%} 
+                {%- set ns.START_A_CHALLENGE = "Kokeile rajojasi haasteiden kautta" -%} 
 
-                {%- set ns.CHALLENGE_LABEL = "Challenge" -%} 
+                {%- set ns.CHALLENGE_LABEL = "Haaste" -%} 
 
-                {%- set ns.AWARD_STATUS_LABEL = "Award Status" -%}  
+                {%- set ns.AWARD_STATUS_LABEL = "Haasteen tilanne" -%}  
 
-                {%- set ns.EARNED_LABEL = "Earned" -%}  
+                {%- set ns.EARNED_LABEL = "Ansaittu" -%}  
 
-                {%- set ns.IN_PROCESS_LABEL = "In Process" -%}  
+                {%- set ns.IN_PROCESS_LABEL = "Käynnissä" -%}  
 
-                {%- set ns.DESCRIPTION_LABEL = "Description" -%}  
+                {%- set ns.DESCRIPTION_LABEL = "Kuvaus" -%}  
 
-                {%- set ns.CRITERIA_LABEL = "Criteria" -%}  
+                {%- set ns.CRITERIA_LABEL = "Kriteerit" -%}  
 
-                {%- set ns.GOAL_LABEL = "Goal" -%}  
+                {%- set ns.GOAL_LABEL = "Tavoite" -%}  
 
-                {%- set ns.START_DATE_LABEL = "Start Date" -%}  
+                {%- set ns.START_DATE_LABEL = "Aloituspäivä" -%}  
 
-                {%- set ns.END_DATE_LABEL = "End Date" -%}  
+                {%- set ns.END_DATE_LABEL = "Päättymispäivä" -%}  
 
-                {%- set ns.REWARD_LABEL = "Reward" -%}  
+                {%- set ns.REWARD_LABEL = "Palkinto" -%}  
 
-                {%- set ns.PROGRESS_LABEL = "Progress" -%}  
+                {%- set ns.PROGRESS_LABEL = "Edistyminen" -%}  
 
-                {%- set ns.ASSIGNED_TO_LABEL = "Assigned To" -%}  
+                {%- set ns.ASSIGNED_TO_LABEL = "Suorittaja" -%}  
 
-                {%- set ns.RELATED_CHORE_LABEL = "Related Chore" -%}
+                {%- set ns.RELATED_CHORE_LABEL = "Haasteeseen liitetty askare" -%}
 
-                {%- set ns.TOTAL_CHORES = "Total Chores" -%}
+                {%- set ns.TOTAL_CHORES = "Kaikki askareet" -%}
 
-                {%- set ns.PER_DAY_GOAL = "Per Day Goal" -%}  
+                {%- set ns.PER_DAY_GOAL = "Päivän tavoite" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1331,7 +1346,7 @@ sections:
                     {%- set associated_chore = state_attr(challenge_sensor.entity_id, 'associated_chore') | default('') -%}
                     {%- set description = state_attr(challenge_sensor.entity_id, 'description') | default('') -%}
                     {%- set criteria = state_attr(challenge_sensor.entity_id, 'criteria') | default('') -%}
-                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([]) -%}
+                    {%- set assigned_kids = state_attr(challenge_sensor.entity_id, 'assigned_kids') | default([], true) -%}
                   
                     {%- set awarded_text = "✔️ " ~ ns.EARNED_LABEL if awarded else "⌛ " ~ ns.IN_PROCESS_LABEL -%}
                     {%- set goal_type_label = target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' if challenge_type == 'total_within_window' else target_value ~ ' (' ~ ns.PER_DAY_GOAL ~ ')' -%}
@@ -1409,19 +1424,19 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PARENT_DASHBOARD_LABEL = "Parent Dashboard for" -%} 
+                {%- set ns.PARENT_DASHBOARD_LABEL = "Vanhemman näkymä" -%} 
 
-                {%- set ns.CHORES_COMPLETED_LABEL = "Chores Completed" -%} 
+                {%- set ns.CHORES_COMPLETED_LABEL = "Valmiit askareet" -%} 
 
-                {%- set ns.TODAY_LABEL = "Today" -%} 
+                {%- set ns.TODAY_LABEL = "Päivä" -%} 
 
-                {%- set ns.WEEK_LABEL = "Week" -%}  
+                {%- set ns.WEEK_LABEL = "Viikko" -%}  
 
-                {%- set ns.MONTH_LABEL = "Month" -%}  
+                {%- set ns.MONTH_LABEL = "Kuukausi" -%}  
 
-                {%- set ns.OVERDUE_CHORES_LABEL = "Overdue Chores" -%}  
+                {%- set ns.OVERDUE_CHORES_LABEL = "Erääntyneet askareet" -%}  
 
-                {%- set ns.NONE = "None" -%}  
+                {%- set ns.NONE = "Ei merkintöjä" -%}  
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1511,13 +1526,13 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.CHORE_APPROVALS = "Chore Approvals" -%} 
+                {%- set ns.CHORE_APPROVALS = "Askereiden hyväksyntä" -%} 
 
-                {%- set ns.REWARD_APPROVALS = "Reward Approvals" -%} 
+                {%- set ns.REWARD_APPROVALS = "Palkintojen hyväksyntä" -%} 
 
-                {%- set ns.OK = "OK" -%} 
+                {%- set ns.OK = "KYLLÄ" -%} 
 
-                {%- set ns.NO = "NO" -%}  
+                {%- set ns.NO = "EI" -%} 
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -1697,63 +1712,63 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Select Chore to Edit Due Date" -%}
+                {%- set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Eräpäivän muokkaus" -%}
 
-                {%- set ns.CHORE_DETAIL_LABEL = "Chore Detail" -%} 
+                {%- set ns.CHORE_DETAIL_LABEL = "Askareen tiedot" -%} 
 
-                {%- set ns.CURRENT_STATUS_LABEL = "Current Status" -%} 
+                {%- set ns.CURRENT_STATUS_LABEL = "Nykyinen tila" -%} 
 
-                {%- set ns.GLOBAL_STATUS_LABEL = "Global Status" -%} 
+                {%- set ns.GLOBAL_STATUS_LABEL = "Yleinen tila" -%} 
 
-                {%- set ns.SHARED_CHORE_LABEL = "Shared Chore" -%}  
+                {%- set ns.SHARED_CHORE_LABEL = "Jaettu askare" -%}  
 
-                {%- set ns.VALUE_LABEL = "Value" -%}  
+                {%- set ns.VALUE_LABEL = "Arvo" -%}  
 
-                {%- set ns.DUE_DATE_LABEL = "Due Date" -%}  
+                {%- set ns.DUE_DATE_LABEL = "Eräpäivä" -%}  
 
-                {%- set ns.RECURRENCE_LABEL = "Recurrence" -%}
+                {%- set ns.RECURRENCE_LABEL = "Toistuminen" -%}
 
-                {%- set ns.CUSTOM_INTERVAL = "Interval" -%} 
+                {%- set ns.CUSTOM_INTERVAL = "Intervalli" -%} 
 
-                {%- set ns.NO_CHORE_SELECTED_LABEL = "No Chore Selected or Status Unavailable" -%} 
+                {%- set ns.NO_CHORE_SELECTED_LABEL = "Askaretta ei valittu tai ei saatavissa" -%} 
 
-                {%- set ns.PLUS_NEXT_DUE = "+Next Due" -%}  
+                {%- set ns.PLUS_NEXT_DUE = "+Seuraavat erääntyvät" -%}  
 
-                {%- set ns.PLUS_1_DAY = "+1 Day" -%}  
+                {%- set ns.PLUS_1_DAY = "+1 Päivä" -%}  
 
-                {%- set ns.PLUS_1_WEEK = "+1 Week" -%}  
+                {%- set ns.PLUS_1_WEEK = "+1 Viikko" -%}  
 
-                {%- set ns.CLEAR_DATE = "Clear Date" -%}  
+                {%- set ns.CLEAR_DATE = "Poista eräpäivä" -%}  
 
-                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Select New Date & Time" -%}  
+                {%- set ns.SELECT_NEW_DATE_AND_TIME = "Valitse uusi päivä ja aika" -%}  
 
-                {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Tap to Change / Hold to Set)" -%}
+                {%- set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Napauta muuttaaksesi / Paina pitkään asettaaksesi)" -%}
 
-                {%- set ns.RESET_ALL = "Reset All" -%}
+                {%- set ns.RESET_ALL = "Resetoi kaikki" -%}
 
-                {%- set ns.OVERDUE_CHORES = "Overdue Chores" -%}
+                {%- set ns.OVERDUE_CHORES = "Erääntyvät askareet" -%}
 
-                {%- set ns.RESET_OVERDUE_STATUS = "Reset Overdue Status" -%}
+                {%- set ns.RESET_OVERDUE_STATUS = "Resetoi erääntyneet" -%}
 
-                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Allow Multiple Claims" -%}
+                {%- set ns.ALLOW_MULTIPLE_CLAIMS = "Salli toistuvat suoritukset" -%}
 
-                {%- set ns.APPLICABLE_DAYS = "Applicable Days" -%}
+                {%- set ns.APPLICABLE_DAYS = "Päivärajaukset" -%}
 
-                {%- set ns.CHORE_ADMIN_ACTIONS = "Chore Admin Actions" -%}
+                {%- set ns.CHORE_ADMIN_ACTIONS = "Askareiden ylläpito" -%}
 
-                {%- set ns.OVERDUE = "Overdue" -%}
+                {%- set ns.OVERDUE = "Myöhässä" -%} 
 
-                {%- set ns.PENDING = "Pending" -%}
+                {%- set ns.PENDING = "Avoin" -%}
 
-                {%- set ns.CLAIMED = "Claimed" -%}
+                {%- set ns.CLAIMED = "Haettu" -%}
 
-                {%- set ns.APPROVED = "Approved" -%}
+                {%- set ns.APPROVED = "Hyväksytty" -%}
 
-                {%- set ns.TRUE = "True" -%}
+                {%- set ns.TRUE = "Kyllä" -%}
 
-                {%- set ns.FALSE = "False" -%}
+                {%- set ns.FALSE = "Ei" -%}
 
-                {%- set ns.NONE = "None" -%}
+                {%- set ns.NONE = "Ei asetettu" -%}
 
                 {#-- ************* End Translatable Text ************* --#} 
 
@@ -1813,37 +1828,38 @@ sections:
                   {%- set due_date_str = state_attr(ns.chore_sensor_id, 'due_date') | string-%}
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                   {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ns.NONE -%}        
+
+                  {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
+
+                  {#-- Store the Markdown content in a variable --#}
+
+                  {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
+                  "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
+                  title) ~ "  \n" -%} 
+
+                  {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
+                  ns.chore_description ~ "  \n" if ns.chore_description else ns.content
+                  -%} 
+
+                  {%- set ns.content = ns.content ~ 
+                    "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
+                    "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
+                    "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
+                    "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
+                    "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
+                    "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
+                    "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
+
+                  {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) 
+                    if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
+
+                  {%- set ns.content = ns.content ~ ("**🔵 " ~ ns.CUSTOM_INTERVAL ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title 
+                    if ns.recurrence == 'custom' else "" ) -%}
+
+                  {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
+
                 {%- endif -%}
-
-                {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
-
-                {#-- Store the Markdown content in a variable --#}
-
-                {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
-                "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
-                title) ~ "  \n" -%} 
-
-                {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
-                ns.chore_description ~ "  \n" if ns.chore_description else ns.content
-                -%} 
-
-                {%- set ns.content = ns.content ~ 
-                  "**📌 " ~ ns.CURRENT_STATUS_LABEL ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
-                  "**🌍 " ~ ns.GLOBAL_STATUS_LABEL ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
-                  "**👥 " ~ ns.SHARED_CHORE_LABEL ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
-                  "**📥 " ~ ns.ALLOW_MULTIPLE_CLAIMS ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
-                  "**💎 " ~ ns.VALUE_LABEL ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
-                  "**📅 " ~ ns.DUE_DATE_LABEL ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
-                  "**🔁 " ~ ns.RECURRENCE_LABEL ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
-
-                {%- set ns.content = ns.content ~ (("**🔵 " ~ ns.APPLICABLE_DAYS ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title) 
-                  if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
-
-                {%- set ns.content = ns.content ~ ("**🔵 " ~ ns.CUSTOM_INTERVAL ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title 
-                  if ns.recurrence == 'custom' else "" ) -%}
-
-                {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
-
+                
                 {#-- Construct Overdue chore reset, chore dropdown, Markdown Card for Chore Details, and chore actions --#} 
                 {{
                   {
@@ -2049,7 +2065,7 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PLUSES_AND_MINUSES = 'Pluses & Minuses' -%}  
+                {%- set ns.PLUSES_AND_MINUSES = 'Plussat & Miinukset' -%}  
 
                 {#-- ************* End Translatable Text ************* --#}  
 
@@ -2099,9 +2115,9 @@ sections:
 
                 {%- set ns.BONUS_LABEL = 'Bonus' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Applied' -%} 
+                {%- set ns.APPLIED_LABEL = 'Annettu' -%} 
 
-                {%- set ns.APPLIED_TIMES = 'times' -%}  
+                {%- set ns.APPLIED_TIMES = 'kertaa' -%}  
 
                 {#-- ************* End Translatable Text ************* --#}  
 
@@ -2236,11 +2252,11 @@ sections:
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
-                {%- set ns.PENALTY_LABEL = 'Penalty' -%}  
+                {%- set ns.PENALTY_LABEL = 'Sakko' -%}  
 
-                {%- set ns.APPLIED_LABEL = 'Applied' -%} 
+                {%- set ns.APPLIED_LABEL = 'Annettu' -%} 
 
-                {%- set ns.APPLIED_TIMES = 'times' -%}  
+                {%- set ns.APPLIED_TIMES = 'kertaa' -%}   
 
                 {#-- ************* End Translatable Text ************* --#}  
 
