@@ -16,7 +16,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- ************* Version KCD_0.3.5 ************* --#}
+                {#-- ************* Version KCD_0.3.5.1 ************* --#}
                 {%- set ns = namespace(Kid_name='',  Kid_name_normalize='', 
                 points=0, points_label='',  points_icon='',  overdue=0, 
                 weekly_completed=0, todays_completed=0,  all_time_completed='', 
@@ -691,7 +691,11 @@ sections:
 
                 {%- set ns.CHALLENGES = "Défis" -%} 
 
-                {%- set ns.APPLIED = "Appliqué" -%}                
+                {%- set ns.APPLIED = "Appliqué" -%}
+
+                {%- set ns.APPROVALS = "Validations" -%}
+
+                {%- set ns.CLAIMS = "Demandes" -%}              
 
                 {#-- ************* End Translatable Text ************* --#}
 
