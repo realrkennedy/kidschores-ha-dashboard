@@ -158,12 +158,18 @@ sections:
                   "## 👋 " ~ ns.WELCOME ~ ", " ~ ns.Kid_name ~ "! \n"
                   "#### " ~ "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;" ~ ns.points_label ~ ": &nbsp;&nbsp;" ~ ns.points ~ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ ns.badge_display_line ~ " \n"
                   "**📅 " ~ ns.WEEKLY_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.weekly_completed ~ "  \n"
-                  "**☀️ " ~ ns.TODAYS_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n"
-                  "**🏆 " ~ ns.ACHIEVEMENTS ~ ":** &nbsp;&nbsp; " ~ 
-                  ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n"
-                  "**🏁 " ~ ns.CHALLENGES ~ ":** &nbsp;&nbsp; " ~ 
-                  ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n"
+                  "**☀️ " ~ ns.TODAYS_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n" 
                 -%}
+                {%- if ns.achievements | length > 0 -%}
+                  {%- set ns.content = ns.content ~
+                    "**🏆 " ~ ns.ACHIEVEMENTS ~ ":** &nbsp;&nbsp; " ~ 
+                    ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n" -%}
+                {%- endif -%}
+                {%- if ns.challenges | length > 0 -%}
+                  {%- set ns.content = ns.content ~
+                    "**🏁 " ~ ns.CHALLENGES ~ ":** &nbsp;&nbsp; " ~ 
+                    ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n" -%}
+                {%- endif -%}
 
                 {{
                   {
