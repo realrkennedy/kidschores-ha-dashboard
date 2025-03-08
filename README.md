@@ -14,7 +14,7 @@ No custom buttons or manual dashboard setup required—just install, configure, 
 ✅ **A fully automated, mobile-friendly interface** for kids to view and claim tasks.  
 ✅ **Comprehensive parent control panel** for reviewing and approving chores & rewards.  
 ✅ **Built-in gamification** – Badges, streaks, rewards, penalities, bonuses, challenges, and achievement tracking.  
-✅ **Multi-Language Support** – Now available in **5 languages**, and it only take 30 minutes to add a new one! 🌍   
+✅ **Multi-Language Support** – Now available in **5 languages**, and it only takes 30 minutes to add a new one! 🌍   
 ✅ **Automatic chore categorization** based on due dates and statuses or custom grouping by label.  
 ✅ **Real-time updates** on chore approvals, penalties, and rewards.  
 ✅ **Optimized for all devices** – Works seamlessly on **mobile, desktop, and tablets**.  
