@@ -33,10 +33,10 @@ No custom buttons or manual dashboard setup required—just install, configure, 
 ## 📌 **Features at a Glance**  
 
 ### 🧒 **For Kids**  
-✅ **Chores organized by category or custom label:** Overdue, Morning, Daily, Upcoming, or Custom.
-✅ **Track progress** with badges earned, streak counts, and points.  
-✅ **Redeem rewards** quickly with an interactive button system.
-✅ **View bonuses, penalties, achievements and challenges** with clear progress indicators and rewards.  
+✅ **Chores organized by category or custom label:** Overdue, Morning, Daily, Upcoming, or Custom.  
+✅ **Track progress** with badges earned, streak counts, and points.    
+✅ **Redeem rewards** quickly with an interactive button system.  
+✅ **View bonuses, penalties, achievements and challenges** with clear progress indicators and rewards.    
 
 ### 👩‍👦 **For Parents**  
 ✅ **Chore Approvals:** Instantly approve or deny completed chores with a simple hold action.  
