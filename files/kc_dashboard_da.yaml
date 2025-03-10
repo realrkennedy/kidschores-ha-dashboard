@@ -16,7 +16,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- ************* Version KCD_0.3.5 ************* --#}
+                {#-- ************* Version KCD_0.3.6 ************* --#}
                 {%- set ns = namespace(Kid_name='',  Kid_name_normalize='', 
                 points=0, points_label='',  points_icon='',  overdue=0, 
                 weekly_completed=0, todays_completed=0,  all_time_completed='', 
@@ -158,12 +158,18 @@ sections:
                   "## 👋 " ~ ns.WELCOME ~ ", " ~ ns.Kid_name ~ "! \n"
                   "#### " ~ "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;" ~ ns.points_label ~ ": &nbsp;&nbsp;" ~ ns.points ~ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ ns.badge_display_line ~ " \n"
                   "**📅 " ~ ns.WEEKLY_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.weekly_completed ~ "  \n"
-                  "**☀️ " ~ ns.TODAYS_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n"
-                  "**🏆 " ~ ns.ACHIEVEMENTS ~ ":** &nbsp;&nbsp; " ~ 
-                  ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n"
-                  "**🏁 " ~ ns.CHALLENGES ~ ":** &nbsp;&nbsp; " ~ 
-                  ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n"
+                  "**☀️ " ~ ns.TODAYS_COMPLETED ~ ":** &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n\n" 
                 -%}
+                {%- if ns.achievements | length > 0 -%}
+                  {%- set ns.content = ns.content ~
+                    "**🏆 " ~ ns.ACHIEVEMENTS ~ ":** &nbsp;&nbsp; " ~ 
+                    ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n" -%}
+                {%- endif -%}
+                {%- if ns.challenges | length > 0 -%}
+                  {%- set ns.content = ns.content ~
+                    "**🏁 " ~ ns.CHALLENGES ~ ":** &nbsp;&nbsp; " ~ 
+                    ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;" ~ ns.NONE) ~ "  \n" -%}
+                {%- endif -%}
 
                 {{
                   {
@@ -188,17 +194,22 @@ sections:
                   pref_column_count='',
                   pref_use_overdue_grouping='',
                   pref_use_today_grouping='',
+                  pref_include_daily_recurring_in_today='',
+                  pref_use_weekly_grouping='',
+                  pref_include_weekly_recurring_in_weekly='',
                   pref_exclude_approved='',
                   pref_use_label_grouping='',
                   pref_exclude_label_list=[],
                   overdue_buttons=[], 
                   am_buttons=[],
                   pm_buttons=[],
+                  weekly_buttons=[],
                   other_buttons=[],
                   complete_buttons=[],
                   today_00='',
                   today_12='',
                   today_24='',
+                  next_week_00='',
                   points_label='', 
                   points_icon='',
                   label_button_groups=[],
@@ -211,8 +222,8 @@ sections:
                   CHORES='',OVERDUE='', THIS_MORNING='', TODAY='', BONUS='', 
                   STREAK='', STATUS='', DUE='', MULTI_APPROVE_MARK='',
                   SHARED_MARK='', PENDING='', CLAIMED='', APPROVED='',
-                  NO_DUE_DATE=''
-                ) -%}    
+                  NO_DUE_DATE='', DAILY='', WEEKLY='', DUE_THIS_WEEK=''
+                ) -%}  
 
                 {#-- ************* Set Translatable Text ************* --#}  
 
@@ -223,6 +234,8 @@ sections:
                 {%- set ns.THIS_MORNING = "Gøres Denne Morgen" -%} 
 
                 {%- set ns.TODAY = "Gøres I Dag" -%}
+
+                {%- set ns.DUE_THIS_WEEK = "Skal udføres denne uge" -%} 
 
                 {%- set ns.BONUS = "Senere & Bonus" -%} 
 
@@ -242,7 +255,11 @@ sections:
 
                 {%- set ns.APPROVED = "Godkendt" -%}
 
-                {%- set ns.NO_DUE_DATE = "Ingen Forfaldsdato" -%}        
+                {%- set ns.NO_DUE_DATE = "Ingen Forfaldsdato" -%}  
+
+                {%- set ns.DAILY = "Daglig" -%}
+
+                {%- set ns.WEEKLY = "Ugentlig" -%}        
 
                 {#-- ************* End Translatable Text ************* --#}
 
@@ -253,6 +270,12 @@ sections:
                 {%- set ns.pref_use_overdue_grouping = true -%}
 
                 {%- set ns.pref_use_today_grouping = true -%}
+
+                {%- set ns.pref_include_daily_recurring_in_today = true -%}
+
+                {%- set ns.pref_use_weekly_grouping = true -%}
+
+                {%- set ns.pref_include_weekly_recurring_in_weekly = true -%}
 
                 {%- set ns.pref_exclude_approved = false -%}
 
@@ -282,10 +305,16 @@ sections:
                 {%- set ns.today_12 = ns.today_00 + (12 * 60 * 60) -%} 
                 {%- set ns.today_24 = ns.today_00 + (24 * 60 * 60) -%}
 
+                {#-- Get timestamp for the next Monday (day 0) at 12 AM for Weekly Processing--#} 
+                {%- set week_start = 0 -%} 
+                {%- set days_until_week_start = 7 if now().weekday() == week_start else (7 - now().weekday()) % 7 -%} 
+                {%- set ns.week_start_00 = as_timestamp((now() + timedelta(days=days_until_week_start)).replace(hour=0, minute=0, second=0, microsecond=0)) -%}
+
                 {%- for button in buttons -%}
                   {%- set chore_sensor_id = button.entity_id | regex_replace('^button\\.kc_', 'sensor.kc_') | regex_replace('_chore_claim_', '_chore_status_') -%}
                   {%- set sensor_state = states(chore_sensor_id) -%}
                   {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') -%}
+                  {%- set recurring = state_attr(chore_sensor_id, 'recurring_frequency') -%}
                   {%- set chore_labels = state_attr(chore_sensor_id, 'labels') -%}
                   {%- if not (chore_labels | select('in', ns.pref_exclude_label_list) | list | count > 0) -%}
                     {%- if sensor_state == 'overdue' and ns.pref_use_overdue_grouping -%}
@@ -298,19 +327,25 @@ sections:
                         {%- set ns.all_chore_labels = (ns.all_chore_labels | list + [label]) -%}
                         {%- set ns.all_label_buttons = ns.all_label_buttons + [(label, [button])] -%}
                       {%- endfor -%}
-                    {%- elif ns.pref_use_today_grouping -%}
+                    {%- elif ns.pref_use_today_grouping or ns.pref_use_weekly_grouping -%}
                       {#-- Calculate Due this Morning and Due Today --#}
                       {%- if due_date_str is not none and due_date_str != 'unknown' -%}
                         {%- set due_date_ts = as_timestamp(due_date_str) -%}
-                        {%- if ns.today_00 <= due_date_ts < ns.today_24 -%}
+                        {%- if (ns.today_00 <= due_date_ts < ns.today_24) and ns.pref_use_today_grouping -%}
                           {%- if due_date_ts < ns.today_12 -%}
                             {%- set ns.am_buttons = ns.am_buttons + [button] -%}
                           {%- elif due_date_ts < ns.today_24 -%}
                             {%- set ns.pm_buttons = ns.pm_buttons + [button] -%}
                           {%- endif -%}
+                        {%- elif (due_date_ts < ns.week_start_00) and ns.pref_use_weekly_grouping -%}
+                          {%- set ns.weekly_buttons = ns.weekly_buttons + [button] -%}
                         {%- else -%}
                           {%- set ns.other_buttons = ns.other_buttons + [button] -%}
                         {%- endif -%}
+                      {%- elif recurring == 'daily' and ns.pref_include_daily_recurring_in_today -%}
+                        {%- set ns.pm_buttons = ns.pm_buttons + [button] -%}
+                      {%- elif recurring == 'weekly' and ns.pref_include_weekly_recurring_in_weekly -%}
+                        {%- set ns.weekly_buttons = ns.weekly_buttons + [button] -%}
                       {%- else -%}
                         {%- set ns.other_buttons = ns.other_buttons + [button] -%}
                       {%- endif -%}
@@ -320,9 +355,9 @@ sections:
                   {%- endif -%}
                 {%- endfor -%}
 
-                {#-- Create Button Groups by Label --#}  
-                {%- set ns.all_chore_labels = ns.all_chore_labels | unique | list | sort
-                -%} {%- set ns.all_chore_labels = ns.all_chore_labels| reject('in',
+                {#-- Create Button Groups by Label --#}   {%- set ns.all_chore_labels =
+                ns.all_chore_labels | unique | list | sort -%} {%- set
+                ns.all_chore_labels = ns.all_chore_labels| reject('in',
                 ns.pref_exclude_label_list) | list -%} {%- for label in
                 ns.all_chore_labels -%}
                   {%- set ns.temp_label_button_group = [] -%}
@@ -335,23 +370,22 @@ sections:
                     {%- set ns.label_button_groups = ns.label_button_groups + [{'name': label, 'buttons': ns.temp_label_button_group, 'icon': 'mdi:label'}] -%}
                 {%- endfor -%}
 
-                {#-- Build the button groups --#} 
-                {%- set button_groups = [
+                {#-- Build the button groups --#}  {%- set button_groups = [
                     {'name': "!!!!!!!!!!! " ~ ns.OVERDUE ~ " !!!!!!!!!!!", 'buttons': ns.overdue_buttons, 'icon': 'mdi:alert-octagon'},
                     {'name': ns.THIS_MORNING, 'buttons': ns.am_buttons, 'icon': 'mdi:alarm'},
-                    {'name': ns.TODAY, 'buttons': ns.pm_buttons, 'icon': 'mdi:calendar-today'}
+                    {'name': ns.TODAY, 'buttons': ns.pm_buttons, 'icon': 'mdi:calendar-today'},
+                    {'name': ns.DUE_THIS_WEEK, 'buttons': ns.weekly_buttons, 'icon': 'mdi:calendar-week'}
                 ] -%}
 
-                {#-- Insert label-based groups here (between overdue and this morning) --#} 
-                {%- set button_groups = button_groups + ns.label_button_groups -%}
+                {#-- Insert label-based groups here (between overdue and this morning)
+                --#}  {%- set button_groups = button_groups + ns.label_button_groups -%}
 
-                {#-- Continue with existing time-based button groups --#} 
-                {%- set button_groups = button_groups + [
+                {#-- Continue with existing time-based button groups --#}  {%- set
+                button_groups = button_groups + [
                     {'name': ns.BONUS, 'buttons': ns.other_buttons, 'icon': 'mdi:calendar-clock'}
                 ] -%}
 
-                {#-- Display the overall chores heading card --#}
-                {{
+                {#-- Display the overall chores heading card --#} {{
                   {
                     'type': 'heading',
                     'icon': 'mdi:broom',
@@ -392,11 +426,15 @@ sections:
                       {%- endif -%}
                       {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') | string -%}
                       {%- set due_date = as_datetime(due_date_str).astimezone(now().tzinfo) if due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
+                      {%- set recurring = state_attr(chore_sensor_id, 'recurring_frequency') -%}
                       {%- set today = now().astimezone(now().tzinfo).date() -%}          
                       {%- set due_date_short = 
-                        ns.NO_DUE_DATE if not due_date 
-                        else (
-                          due_date.strftime('%-I:%M %p') if due_date.date() == today else as_timestamp(due_date) | timestamp_custom('%a %b %-d', true)) -%}
+                          ns.DAILY if recurring == 'daily' and not due_date else 
+                          ns.WEEKLY if recurring == 'weekly' and not due_date else
+                          ns.NO_DUE_DATE if not due_date else 
+                          (due_date.strftime('%-I:%M %p') if due_date.date() == today else as_timestamp(due_date) | timestamp_custom('%a %b %-d', true)) 
+                      -%}
+
                           
                       {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
                       {%- set chore_state = states(chore_sensor_id) -%}
