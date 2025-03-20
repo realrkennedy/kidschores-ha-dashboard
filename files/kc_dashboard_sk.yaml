@@ -1465,21 +1465,6 @@
 
                   {#-- ************* Set Translatable Text ************* --#}  
 
-                  {%- set ns.PARENT_DASHBOARD_LABEL = "Parent Dashboard for" -%} 
-
-                  {%- set ns.CHORES_COMPLETED_LABEL = "Chores Completed" -%} 
-
-                  {%- set ns.TODAY_LABEL = "Today" -%} 
-
-                  {%- set ns.WEEK_LABEL = "Week" -%}  
-
-                  {%- set ns.MONTH_LABEL = "Month" -%}  
-
-                  {%- set ns.OVERDUE_CHORES_LABEL = "Overdue Chores" -%}  
-
-                  {%- set ns.NONE = "None" -%}  
-
-
                   {%- set ns.PARENT_DASHBOARD_LABEL = "Rodičovský prehľad" -%}
 
                   {%- set ns.CHORES_COMPLETED_LABEL = "Splnené úlohy" -%}
