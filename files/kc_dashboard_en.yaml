@@ -16,7 +16,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- ************* Version KCD_0.3.6 ************* --#}
+                {#-- ************* Version KCD_0.4.x ************* --#}
                 {%- set ns = namespace(Kid_name='',  Kid_name_normalize='', 
                 points=0, points_label='',  points_icon='',  overdue=0, 
                 weekly_completed=0, todays_completed=0,  all_time_completed='', 
@@ -2240,23 +2240,24 @@ sections:
                 {#-- Extract numeric values from entity names --#} 
                 {%- set numbers = buttons 
                     | map(attribute='entity_id') 
-                    | map('regex_replace', '.*_(plus|minus)_(\\d+)_points$', '\\1\\2') 
+                    | map('regex_replace', '.*_(plus|minus)_(\\d+(?:_\\d+)?)_points$', '\\1\\2') 
                     | map('replace', 'plus', '') 
-                    | map('replace', 'minus', '-') 
-                    | map('int') 
+                    | map('replace', 'minus', '-')
+                    | map('replace', '_', '.') 
+                    | map('float') 
                     | list -%}
 
                 {% set sorted_numbers = numbers | sort %} {% for num in sorted_numbers %}
                   {% if num < 0 %}
-                    {% set ns.sorted_entities = ns.sorted_entities + [ns.prefix_pattern | replace('\\', '')~'_minus_' ~ (num * -1) ~ '_points'  ] %}
+                    {% set ns.sorted_entities = ns.sorted_entities + [ns.prefix_pattern | replace('\\', '')~'_minus_' ~ (num * -1) | replace('.','_') ~ '_points'] %}
                   {% else %}
-                    {% set ns.sorted_entities = ns.sorted_entities + [ns.prefix_pattern | replace('\\', '')~'_plus_' ~ num ~ '_points'] %}
+                    {% set ns.sorted_entities = ns.sorted_entities + [ns.prefix_pattern | replace('\\', '')~'_plus_' ~ num | replace('.','_') ~ '_points'] %}
                   {% endif %}
                 {% endfor %}
 
                 {% for button_name in ns.sorted_entities -%}
 
-                    {%- set primary = '+'~ button_name.split('_')[-2] if '_plus_' in button_name else '-'~ button_name.split('_')[-2] -%}          
+                    {%- set primary = ( ('+' if '_plus_' in button_name else '-') ~ ((button_name.split('_plus_')[1].split('_points')[0] if '_plus_' in button_name else button_name.split('_minus_')[1].split('_points')[0]) | replace('_', '.')) ) -%}          
                     {%- set icon = 'mdi:plus-circle' if '_plus_' in button_name else 'mdi:minus-circle' -%}
                     {%- set icon_color = 'green' if '_plus_' in button_name else 'red' -%}
                     {{
