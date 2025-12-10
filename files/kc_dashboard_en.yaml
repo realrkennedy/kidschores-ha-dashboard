@@ -2593,8 +2593,10 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(Kid_name='', Kid_name_normalize='',
-                entity_list=[]) -%}
+                {%- set ns = namespace(
+                Kid_name='',
+                Kid_name_normalize=''
+                ) -%}
 
                 {#-- Set Kid_name and normalize --#}
 
@@ -2602,27 +2604,17 @@ sections:
 
                 {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
 
-                {#-- Build a list of entities for this kid, excluding unwanted
-                sensors --#} {%- set prefix_pattern = '(button|sensor)\\.kc_' ~
-                (ns.Kid_name_normalize) ~ '_' -%} {%- set exclude_pattern =
-                '^sensor\\.kc_' ~ (ns.Kid_name_normalize) ~
-                '_(chore_(claims|approvals|streak)|reward_(claims|approvals))_'
-                -%}
+                {#-- Use Dashboard Helper for Activity Monitor Entities --#}
+                {%- set dashboard_helper = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set entity_list = state_attr(dashboard_helper, 'activity_monitor_entities') | default([], true) -%}
 
-                {%- set entities = (states.button | selectattr('entity_id',
-                'match', prefix_pattern) | list) +
-                                   (states.sensor | selectattr('entity_id', 'match', prefix_pattern)
-                                    | rejectattr('entity_id', 'match', exclude_pattern) | list) -%}
-
-                {%- for entity in entities -%}
-                    {%- set ns.entity_list = ns.entity_list + [entity.entity_id] -%}
-                {%- endfor -%} {{
+                {{
                   {
                     'type': 'logbook',
                     'title': '',
                     'hours_to_show': 168,
                     'target': {
-                      'entity_id': ns.entity_list
+                      'entity_id': entity_list
                     },
                   }
                 }},
