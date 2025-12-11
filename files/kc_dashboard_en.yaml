@@ -777,7 +777,7 @@ sections:
                 {%- if earned -%}
                     {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** ✅ " ~ ui.get('earned', 'err-earned') ~ "  \n" -%}
                 {%- else -%}
-                    {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** 🔒 " ~ ui.get('locked', 'err-locked') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** 🔒 " ~ ui.get('future_goal', 'err-future_goal') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- AWARD COUNT & LAST AWARDED (Only for Highest Earned Badge) --#}
@@ -854,7 +854,7 @@ sections:
                     {%- endif -%}
 
                     {%- if pts_val > 0 -%}
-                        {%- set footer_elements = footer_elements + ["🚀 **" ~ ui.get('remaining', 'err-remaining') ~ ":** " ~ pts_val ~ " " ~ ns.points_label] -%}
+                        {%- set footer_elements = footer_elements + ["🚀 **" ~ ui.get('to_unlock', 'err-to_unlock') ~ ":** " ~ pts_val ~ " " ~ ns.points_label] -%}
                     {%- endif -%}
                 {%- endif -%}
 
@@ -886,25 +886,25 @@ sections:
           template: >-
             {#-- ===== GENERAL BADGE CARD ===== --#}
 
-            {#-- 1. User Configuration --#} {%- set Kid_name = 'Kidname' -%}
+            {#-- 1. User Configuration --#}
+            {%- set Kid_name = 'Kidname' -%}
 
-            {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
-            Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_' ~
-            Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-            state_attr(dashboard_helper, 'ui_translations') or {} -%}
-
-            {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
-            '_points' -%} {%- set points = states(points_sensor) |
-            int(default=0) -%} {%- set points_label = state_attr(points_sensor,
-            'unit_of_measurement') | default('Pts', true) -%}
+            {#-- 2. Initialize Variables --#}
+            {%- set Kid_name_normalize = Kid_name | slugify() -%}
+            {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+            {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
 
             {%- set ns = namespace(
               badges=[]
             ) -%}
 
-            {#-- 3. Collect Data --#} {%- set badge_list =
-            state_attr(dashboard_helper, 'badges') | default([], true) -%} {%-
-            for badge in badge_list -%}
+            {#-- 3. Collect Data --#}
+            {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+            {%- set points = states(points_sensor) | int(default=0) -%}
+            {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') | default('Pts', true) -%}
+
+            {%- set badge_list = state_attr(dashboard_helper, 'badges') | default([], true) -%}
+            {%- for badge in badge_list -%}
               {%- set badge_sensor_id = badge.eid if badge is mapping else badge -%}
 
               {#-- Filter by Assigned Kids --#}
@@ -929,14 +929,15 @@ sections:
               {%- set ns.badges = ns.badges + [badge_info] -%}
             {%- endfor -%}
 
-            {#-- 4. Build Display --#} {%- set sorted_badges = ns.badges |
-            sort(attribute='name') -%}
+            {#-- 4. Build Display --#}
+            {%- set sorted_badges = ns.badges | sort(attribute='name') -%}
 
-            {#-- 5. Render --#} {%- if sorted_badges | length == 0 -%}
+            {#-- 5. Render --#}
+            {%- if sorted_badges | length == 0 -%}
               {{
                 {
                   'type': 'markdown',
-                  'content': "### 🏅 " ~ (ui.get('no_badges_found', 'err-no_badges_found') if ui else 'No Badges Found') ~ " \n" ~ (ui.get('badge_setup_prompt', 'err-badge_setup_prompt') if ui else 'Set up badges to track your progress!')
+                  'content': "### 🏅 " ~ ui.get('no_badges_found', 'err-no_badges_found') ~ " \n" ~ ui.get('badge_setup_prompt', 'err-badge_setup_prompt')
                 }
               }},
             {%- else -%}
@@ -951,34 +952,34 @@ sections:
 
                 {#-- STATUS LINE --#}
                 {%- if badge.status == 'earned' -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** ✅ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') ~ "  \n" -%}
+                  {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** ✅ " ~ ui.get('earned', 'err-earned') ~ "  \n" -%}
                 {%- elif badge.status == 'in_progress' -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** ⏳ " ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Progress') ~ "  \n" -%}
+                  {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** ⏳ " ~ ui.get('in_progress', 'err-in_progress') ~ "  \n" -%}
                 {%- else -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** 🔒 " ~ (ui.get('locked', 'err-locked') if ui else 'Future Goal') ~ "  \n" -%}
+                  {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** 🔒 " ~ ui.get('locked', 'err-locked') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- PROGRESS LINE --#}
-                {%- set content = content ~ "📊 **" ~ (ui.get('progress', 'err-progress') if ui else 'Progress') ~ ":** " ~ badge.progress|round(1) ~ "%  \n" -%}
+                {%- set content = content ~ "📊 **" ~ ui.get('progress', 'err-progress') ~ ":** " ~ badge.progress|round(1) ~ "%  \n" -%}
 
                 {#-- START DATE --#}
                 {%- if badge.start_date -%}
-                    {%- set content = content ~ "📅 **" ~ (ui.get('start_date', 'err-start_date') if ui else 'Start Date') ~ ":** " ~ badge.start_date ~ "  \n" -%}
+                  {%- set content = content ~ "📅 **" ~ ui.get('start_date', 'err-start_date') ~ ":** " ~ badge.start_date ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- END DATE --#}
                 {%- if badge.end_date -%}
-                    {%- set content = content ~ "📅 **" ~ (ui.get('end_date', 'err-end_date') if ui else 'End Date') ~ ":** " ~ badge.end_date ~ "  \n" -%}
+                  {%- set content = content ~ "📅 **" ~ ui.get('end_date', 'err-end_date') ~ ":** " ~ badge.end_date ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- AWARD COUNT --#}
                 {%- if badge.award_count > 0 -%}
-                    {%- set content = content ~ "🎖️ **" ~ (ui.get('award_count', 'err-award_count') if ui else 'Award Count') ~ ":** " ~ badge.award_count ~ "  \n" -%}
+                  {%- set content = content ~ "🎖️ **" ~ ui.get('award_count', 'err-award_count') ~ ":** " ~ badge.award_count ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- LAST AWARDED DATE --#}
                 {%- if badge.last_awarded -%}
-                    {%- set content = content ~ "⭐ **" ~ (ui.get('last_awarded', 'err-last_awarded') if ui else 'Last Awarded') ~ ":** " ~ badge.last_awarded ~ "  \n" -%}
+                  {%- set content = content ~ "⭐ **" ~ ui.get('last_awarded', 'err-last_awarded') ~ ":** " ~ badge.last_awarded ~ "  \n" -%}
                 {%- endif -%}
 
                 {{
@@ -1003,18 +1004,13 @@ sections:
               template: >-
                 {#-- ===== ACHIEVEMENTS CARD ===== --#}
 
-                {#-- 1. User Configuration --#} {%- set Kid_name = 'Kidname' -%}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
 
-                {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
-                Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-                ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-                state_attr(dashboard_helper, 'ui_translations') -%}
-
-                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
-                '_points' -%} {%- set current_points = states(points_sensor) |
-                int(default=0) -%} {%- set points_label =
-                state_attr(points_sensor, 'unit_of_measurement') -%} {%- set
-                points_icon = state_attr(points_sensor, 'icon') -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
 
                 {%- set ns = namespace(
                   STREAK_GOAL='Streak Goal',
@@ -1022,17 +1018,23 @@ sections:
                   DAILY_MINIMUM='Daily Minimum'
                 ) -%}
 
-                {#-- 3. Collect Data --#} {%- set achievements =
-                state_attr(dashboard_helper, 'achievements') | default([], true)
-                -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set current_points = states(points_sensor) | int(default=0) -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
+                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
 
-                {#-- 4. Build Display --#} {#-- (No pre-processing needed) --#}
+                {%- set achievements = state_attr(dashboard_helper, 'achievements') | default([], true) -%}
 
-                {#-- 5. Render --#} {%- if achievements | length == 0 -%}
+                {#-- 4. Build Display --#}
+                {#-- (No pre-processing needed) --#}
+
+                {#-- 5. Render --#}
+                {%- if achievements | length == 0 -%}
                   {{
                     {
                       'type': 'markdown',
-                      'content': "### 🏆 " ~ (ui.no_achievements_found if ui else 'No Achievements Found') ~ "  \n" ~ (ui.start_achievement if ui else 'Start an achievement to track your progress!')
+                      'content': "### 🏆 " ~ ui.get('no_achievements_found', 'err-no_achievements_found') ~ "  \n" ~ ui.get('start_achievement', 'err-start_achievement')
                     }
                   }},
                 {%- else -%}
@@ -1052,32 +1054,38 @@ sections:
                     {%- set criteria = state_attr(achievement_sensor_id, 'criteria') | default('') -%}
                     {%- set assigned_kids = state_attr(achievement_sensor_id, 'assigned_kids') | default([], true) -%}
 
-                    {%- set awarded_text = "✔️ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') if awarded else "⌛ " ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Process') -%}
+                    {%- set awarded_text = "✔️ " ~ ui.get('earned', 'err-earned') if awarded else "⌛ " ~ ui.get('in_progress', 'err-in_progress') -%}
                     {%- set goal_type_label =
                       target_value ~ ' (' ~ ns.STREAK_GOAL ~ ')' if achievement_type == 'chore_streak'
                       else target_value ~ ' (' ~ ns.DAILY_MINIMUM ~ ')' if achievement_type == 'daily_minimum'
                       else target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' -%}
                     {%- set kids_display = assigned_kids | join(', ') if assigned_kids | count > 0 else '' -%}
 
+                    {%- set content = "## <ha-icon icon=" ~ achievement_icon ~ "></ha-icon> " ~ ui.get('achievement', 'err-achievement') ~ ": " ~ achievement_name ~ "  \n" -%}
+                    {%- set content = content ~ "### 🏅 " ~ ui.get('award_status', 'err-award_status') ~ ": &nbsp;&nbsp;" ~ awarded_text ~ "  \n" -%}
 
-                    {%- set content = "## <ha-icon icon=" ~ achievement_icon ~ "></ha-icon> " ~ (ui.achievement if ui else 'Achievement') ~ ": " ~ achievement_name ~ "  \n" -%}
-                    {%- set content = content ~ "### 🏅 " ~ (ui.award_status if ui else 'Award Status') ~ ": &nbsp;&nbsp;" ~ awarded_text ~ "  \n" -%}
                     {%- if description -%}
                       {%- set content = content ~ "#### 📖 &nbsp;&nbsp;" ~ description ~ "  \n" -%}
                     {%- endif -%}
+
                     {%- if criteria -%}
-                      {%- set content = content ~ "**📌 " ~ (ui.criteria if ui else 'Criteria') ~ ":** &nbsp;&nbsp;" ~ criteria ~ "  \n" -%}
+                      {%- set content = content ~ "**📌 " ~ ui.get('criteria', 'err-criteria') ~ ":** &nbsp;&nbsp;" ~ criteria ~ "  \n" -%}
                     {%- endif -%}
-                    {%- set content = content ~ "**🎯 " ~ (ui.goal if ui else 'Goal') ~ ":** &nbsp;&nbsp;" ~ goal_type_label ~ "  \n" -%}
+
+                    {%- set content = content ~ "**🎯 " ~ ui.get('goal', 'err-goal') ~ ":** &nbsp;&nbsp;" ~ goal_type_label ~ "  \n" -%}
+
                     {%- if reward_points > 0 -%}
-                      {%- set content = content ~ "**💎 " ~ (ui.reward if ui else 'Reward') ~ ":** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ points_label ~ " \n" -%}
+                      {%- set content = content ~ "**💎 " ~ ui.get('reward', 'err-reward') ~ ":** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ points_label ~ " \n" -%}
                     {%- endif -%}
-                    {%- set content = content ~ "\n **📊 " ~ (ui.get('progress', 'err-progress') if ui else 'Progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
+
+                    {%- set content = content ~ "\n **📊 " ~ ui.get('progress', 'err-progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
+
                     {%- if kids_display -%}
-                      {%- set content = content ~ "**👥 " ~ (ui.assigned_to if ui else 'Assigned To') ~ ":** &nbsp;&nbsp;" ~ kids_display ~ "  \n" -%}
+                      {%- set content = content ~ "**👥 " ~ ui.get('assigned_to', 'err-assigned_to') ~ ":** &nbsp;&nbsp;" ~ kids_display ~ "  \n" -%}
                     {%- endif -%}
+
                     {%- if associated_chore -%}
-                      {%- set content = content ~ "**🛠 " ~ (ui.related_chore if ui else 'Related Chore') ~ ":** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" -%}
+                      {%- set content = content ~ "**🛠 " ~ ui.get('related_chore', 'err-related_chore') ~ ":** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" -%}
                     {%- endif -%}
 
                     {{
@@ -1100,65 +1108,30 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- Initialize Namespace Variables --#}
-
-                {%- set ns = namespace(
-                  Kid_name='',
-                  Kid_name_normalize='',
-                  current_points='',
-                  points_label='',
-                  challenges=[],
-
-                  NO_CHALLENGES_FOUND='',
-                  START_A_CHALLENGE='',
-                  CHALLENGE_LABEL='',
-                  AWARD_STATUS_LABEL='',
-                  EARNED_LABEL='',
-                  IN_PROCESS_LABEL='',
-                  DESCRIPTION_LABEL='',
-                  CRITERIA_LABEL='',
-                  GOAL_LABEL='',
-                  START_DATE_LABEL='',
-                  END_DATE_LABEL='',
-                  REWARD_LABEL='',
-                  PROGRESS_LABEL='',
-                  ASSIGNED_TO_LABEL='',
-                  RELATED_CHORE_LABEL='',
-                  TOTAL_CHORES='',
-                  PER_DAY_GOAL='',
-                ) -%}
-
                 {#-- ===== CHALLENGES CARD ===== --#}
 
-                {#-- 1. User Configuration --#} {%- set Kid_name = 'Kidname' -%}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
 
-                {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
-                Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-                ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-                state_attr(dashboard_helper, 'ui_translations') -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
 
-                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
-                '_points' -%} {%- set current_points = states(points_sensor) |
-                int(default=0) -%} {%- set points_label =
-                state_attr(points_sensor, 'unit_of_measurement') -%} {%- set
-                points_icon = state_attr(points_sensor, 'icon') -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set challenges = state_attr(dashboard_helper, 'challenges') | default([], true) -%}
 
-                {%- set ns = namespace(
-                  TOTAL_CHORES='Total Chores',
-                  PER_DAY_GOAL='Per Day Goal'
-                ) -%}
+                {#-- 4. Build Display --#}
+                {#-- (No pre-processing needed) --#}
 
-                {#-- 3. Collect Data --#} {%- set challenges =
-                state_attr(dashboard_helper, 'challenges') | default([], true)
-                -%}
-
-                {#-- 4. Build Display --#} {#-- (No pre-processing needed) --#}
-
-                {#-- 5. Render --#} {%- if challenges | length == 0 -%}
+                {#-- 5. Render --#}
+                {%- if challenges | length == 0 -%}
                   {{
                     {
                       'type': 'markdown',
-                      'content': "### 🏁 " ~ (ui.no_challenges_found if ui else 'No Challenges Found') ~ "  \n" ~ (ui.start_challenge if ui else 'Start a challenge to push your limits!')
+                      'content': "### 🏁 " ~ ui.get('no_challenges_found', 'err-no_challenges_found') ~ "  \n" ~ ui.get('start_challenge', 'err-start_challenge')
                     }
                   }},
                 {%- else -%}
@@ -1178,36 +1151,42 @@ sections:
                     {%- set criteria = state_attr(challenge_sensor_id, 'criteria') | default('') -%}
                     {%- set assigned_kids = state_attr(challenge_sensor_id, 'assigned_kids') | default([], true) -%}
 
-                    {%- set awarded_text = "✔️ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') if awarded else "⌛ " ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Process') -%}
-                    {%- set goal_type_label = target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' if challenge_type == 'total_within_window' else target_value ~ ' (' ~ ns.PER_DAY_GOAL ~ ')' -%}
+                    {%- set awarded_text = "✔️ " ~ ui.get('earned', 'err-earned') if awarded else "⌛ " ~ ui.get('in_progress', 'err-in_progress') -%}
+                    {%- set goal_type_label = target_value ~ ' (' ~ ui.get('total_chores', 'err-total_chores') ~ ')' if challenge_type == 'total_within_window' else target_value ~ ' (' ~ ui.get('per_day_goal', 'err-per_day_goal') ~ ')' -%}
                     {%- set kids_display = assigned_kids | join(', ') if assigned_kids | count > 0 else '' -%}
-                    {#-- Convert start and end dates to local time and short format --#}
+
                     {%- set start_date_utc = state_attr(challenge_overall_sensor, 'start_date') -%}
                     {%- set end_date_utc = state_attr(challenge_overall_sensor, 'end_date') -%}
                     {%- set start_date = as_datetime(start_date_utc).astimezone().strftime('%b %d, %Y') if start_date_utc else 'N/A' -%}
                     {%- set end_date = as_datetime(end_date_utc).astimezone().strftime('%b %d, %Y') if end_date_utc else 'N/A' -%}
 
+                    {%- set content = "## <ha-icon icon=" ~ challenge_icon ~ "></ha-icon> " ~ ui.get('challenge', 'err-challenge') ~ ": " ~ challenge_name ~ "  \n" -%}
+                    {%- set content = content ~ "### 🏅 " ~ ui.get('award_status', 'err-award_status') ~ ": &nbsp;&nbsp;" ~ awarded_text ~ "  \n" -%}
 
-                    {%- set content = "## <ha-icon icon=" ~ challenge_icon ~ "></ha-icon> " ~ (ui.challenge if ui else 'Challenge') ~ ": " ~ challenge_name ~ "  \n" -%}
-                    {%- set content = content ~ "### 🏅 " ~ (ui.award_status if ui else 'Award Status') ~ ": &nbsp;&nbsp;" ~ awarded_text ~ "  \n" -%}
                     {%- if description -%}
                       {%- set content = content ~ "#### 📖 &nbsp;&nbsp;" ~ description ~ "  \n" -%}
                     {%- endif -%}
+
                     {%- if criteria -%}
-                      {%- set content = content ~ "**📌 " ~ (ui.criteria if ui else 'Criteria') ~ ":** &nbsp;&nbsp;" ~ criteria ~ "  \n" -%}
+                      {%- set content = content ~ "**📌 " ~ ui.get('criteria', 'err-criteria') ~ ":** &nbsp;&nbsp;" ~ criteria ~ "  \n" -%}
                     {%- endif -%}
-                    {%- set content = content ~ "**🎯 " ~ (ui.goal if ui else 'Goal') ~ ":** &nbsp;&nbsp;" ~ goal_type_label ~ "  \n" -%}
-                    {%- set content = content ~ "**📅 " ~ (ui.get('start_date', 'err-start_date') if ui else 'Start Date') ~ ":** &nbsp;&nbsp;" ~ start_date ~ "  \n" -%}
-                    {%- set content = content ~ "**📅 " ~ (ui.get('end_date', 'err-end_date') if ui else 'End Date') ~ ":** &nbsp;&nbsp;" ~ end_date ~ "  \n" -%}
+
+                    {%- set content = content ~ "**🎯 " ~ ui.get('goal', 'err-goal') ~ ":** &nbsp;&nbsp;" ~ goal_type_label ~ "  \n" -%}
+                    {%- set content = content ~ "**📅 " ~ ui.get('start_date', 'err-start_date') ~ ":** &nbsp;&nbsp;" ~ start_date ~ "  \n" -%}
+                    {%- set content = content ~ "**📅 " ~ ui.get('end_date', 'err-end_date') ~ ":** &nbsp;&nbsp;" ~ end_date ~ "  \n" -%}
+
                     {%- if reward_points > 0 -%}
-                      {%- set content = content ~ "**💎 " ~ (ui.reward if ui else 'Reward') ~ ":** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ points_label ~ " \n" -%}
+                      {%- set content = content ~ "**💎 " ~ ui.get('reward', 'err-reward') ~ ":** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ points_label ~ " \n" -%}
                     {%- endif -%}
-                    {%- set content = content ~ "\n **📊 " ~ (ui.get('progress', 'err-progress') if ui else 'Progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
+
+                    {%- set content = content ~ "\n **📊 " ~ ui.get('progress', 'err-progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
+
                     {%- if kids_display -%}
-                      {%- set content = content ~ "**👥 " ~ (ui.assigned_to if ui else 'Assigned To') ~ ":** &nbsp;&nbsp;" ~ kids_display ~ "  \n" -%}
+                      {%- set content = content ~ "**👥 " ~ ui.get('assigned_to', 'err-assigned_to') ~ ":** &nbsp;&nbsp;" ~ kids_display ~ "  \n" -%}
                     {%- endif -%}
+
                     {%- if associated_chore -%}
-                      {%- set content = content ~ "**🛠 " ~ (ui.related_chore if ui else 'Related Chore') ~ ":** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" -%}
+                      {%- set content = content ~ "**🛠 " ~ ui.get('related_chore', 'err-related_chore') ~ ":** &nbsp;&nbsp;" ~ associated_chore ~ "  \n" -%}
                     {%- endif -%}
 
                     {{
@@ -1232,67 +1211,37 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(
-                  Kid_name='',
-                  Kid_name_normalize='',
-                  points=0,
-                  points_label='',
-                  points_icon='',
-                  todays_completed=0,
-                  weekly_completed=0,
-                  monthly_completed=0,
-                  overdue_chores=0,
-                  PARENT_DASHBOARD_LABEL='',
-                  NONE=''
-                ) -%}
-
                 {#-- ===== PARENT DASHBOARD CARD ===== --#}
 
-                {#-- ************* Set Translatable Text ************* --#} {%-
-                set ns.PARENT_DASHBOARD_LABEL = "Parent Dashboard for" -%} {%-
-                set ns.NONE = "None" -%} {#-- ************* End Translatable
-                Text ************* --#}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
 
-                {#-- Set Kid_name and normalize --#} {%- set ns.Kid_name = 'Kidname'
-                -%} {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+                {%- set total_chores_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_chores_completed_total' -%}
 
-                {#-- Collect Points Info --#} {%- set points_sensor =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
-                ns.points = states(points_sensor) | int(default=0) -%} {%- set
-                ns.points_label = state_attr(points_sensor,
-                'unit_of_measurement') -%} {%- set ns.points_icon =
-                state_attr(points_sensor, 'icon') -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set points = states(points_sensor) | int(default=0) -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
+                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
+                {%- set todays_completed = state_attr(total_chores_sensor, 'chore_stat_approved_today') | int(default=0) -%}
+                {%- set weekly_completed = state_attr(total_chores_sensor, 'chore_stat_approved_week') | int(default=0) -%}
+                {%- set monthly_completed = state_attr(total_chores_sensor, 'chore_stat_approved_month') | int(default=0) -%}
+                {%- set overdue_chores = state_attr(total_chores_sensor, 'chore_stat_current_overdue') | int(default=0) -%}
 
-                {#-- Dashboard Helper --#} {%- set dashboard_helper =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper'
-                -%} {%- set ui = state_attr(dashboard_helper, 'ui_translations')
-                -%}
+                {#-- 4. Build Display --#}
+                {%- set content = "## 👨‍👩‍👧 " ~ ui.get('parent_dashboard_for', 'err-parent_dashboard_for') ~ ": " ~ Kid_name ~ "  \n" -%}
+                {%- set content = content ~ "<ha-icon icon=" ~ points_icon ~ "></ha-icon> **" ~ points_label ~ ":** &nbsp;&nbsp;" ~ points ~ "  \n" -%}
+                {%- set content = content ~ "#### 📅 " ~ ui.get('chores_completed', 'err-chores_completed') ~ ":  \n" -%}
+                {%- set content = content ~ "- ☀️ " ~ ui.get('today', 'err-today') ~ ": &nbsp;&nbsp;" ~ todays_completed ~ "  \n" -%}
+                {%- set content = content ~ "- 📅 " ~ ui.get('week', 'err-week') ~ ": &nbsp;&nbsp;" ~ weekly_completed ~ "  \n" -%}
+                {%- set content = content ~ "- 🗓️ " ~ ui.get('month', 'err-month') ~ ": &nbsp;&nbsp;" ~ monthly_completed ~ "  \n" -%}
+                {%- set content = content ~ "- 🚨 " ~ ui.get('overdue_chores', 'err-overdue_chores') ~ ": &nbsp;&nbsp;" ~ overdue_chores ~ "  \n\n" -%}
 
-                {#-- Collect Chore Stats from Total Sensor --#} {%- set
-                total_chores_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~
-                '_chores_completed_total' -%} {%- set ns.todays_completed =
-                state_attr(total_chores_sensor, 'chore_stat_approved_today') |
-                int(default=0) -%} {%- set ns.weekly_completed =
-                state_attr(total_chores_sensor, 'chore_stat_approved_week') |
-                int(default=0) -%} {%- set ns.monthly_completed =
-                state_attr(total_chores_sensor, 'chore_stat_approved_month') |
-                int(default=0) -%} {%- set ns.overdue_chores =
-                state_attr(total_chores_sensor, 'chore_stat_current_overdue') |
-                int(default=0) -%}
-
-                {#-- Store the Markdown content in a variable --#} {%- set
-                content =
-                  "## 👨‍👩‍👧 " ~ ns.PARENT_DASHBOARD_LABEL ~ ": " ~ ns.Kid_name ~ "  \n"
-                  "<ha-icon icon=" ~ ns.points_icon ~ "></ha-icon> **" ~ ns.points_label ~ ":** &nbsp;&nbsp;" ~ ns.points ~ "  \n"
-                  "#### 📅 " ~ (ui.chores_completed if ui else 'Chores Completed') ~ ":  \n"
-                  "- ☀️ " ~ (ui.today if ui else 'Today') ~ ": &nbsp;&nbsp;" ~ ns.todays_completed ~ "  \n"
-                  "- 📅 " ~ (ui.week if ui else 'Week') ~ ": &nbsp;&nbsp;" ~ ns.weekly_completed ~ "  \n"
-                  "- 🗓️ " ~ (ui.month if ui else 'Month') ~ ": &nbsp;&nbsp;" ~ ns.monthly_completed ~ "  \n"
-                  "- 🚨 " ~ (ui.overdue_chores if ui else 'Overdue Chores') ~ ": &nbsp;&nbsp;" ~ ns.overdue_chores ~ "  \n\n"
-                -%}
-
-                {#-- Use the content variable inside the markdown card --#}
-
+                {#-- 5. Render --#}
                 {{
                   {
                     'type': 'markdown',
