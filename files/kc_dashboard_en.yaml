@@ -1389,365 +1389,286 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace(
-                  Kid_name='',
-                  Kid_name_normalize='',
-                  replacements=[],
-                  chore_select_entity='',
-                  chore_selected='',
-                  chore_selected_normalize='',
-                  chore_sensor_id_prefix='',
-                  chore_sensor_id='',
-                  current_status='',
-                  chore_description='',
-                  chore_days='',
-                  chore_allow_multiple='',
-                  global_status='Unknown',
-                  shared_chore='False',
-                  due_date_formatted='None',
-                  recurrence='Not Recurring',
-                  chore_custom_freq_unit='',
-                  chore_custom_freq_int='',
-                  chore_icon='mdi:clipboard-check',
-                  chore_value='N/A',
-                  points='',
-                  points_label='',
-                  points_icon='',
-                  content='',
-                  select_new_date_and_time_secondary='',
-
-                  CHORE_ADMIN_ACTIONS='',
-                  SELECT_CHORE_TO_EDIT_DUE_DATE='',
-                  CHORE_DETAIL_LABEL='',
-                  NO_CHORE_SELECTED_LABEL='',
-                  PLUS_NEXT_DUE='',
-                  PLUS_1_DAY='',
-                  PLUS_1_WEEK='',
-                  CLEAR_DATE='',
-                  SELECT_NEW_DATE_AND_TIME='',
-                  TAP_TO_CHANGE_HOLD_TO_SET='',
-                  RESET_ALL='',
-                  RESET_OVERDUE_STATUS='',
-                  NONE=''
-                ) -%}
-
                 {#-- ===== ADMIN ACTIONS CARD ===== --#}
 
-                {#-- ************* Set Translatable Text ************* --#} {%-
-                set ns.SELECT_CHORE_TO_EDIT_DUE_DATE = "Select Chore to Edit Due
-                Date" -%} {%- set ns.CHORE_DETAIL_LABEL = "Chore Detail" -%} {%-
-                set ns.NO_CHORE_SELECTED_LABEL = "No Chore Selected or Status
-                Unavailable" -%} {%- set ns.PLUS_NEXT_DUE = "+Next Due" -%} {%-
-                set ns.PLUS_1_DAY = "+1 Day" -%} {%- set ns.PLUS_1_WEEK = "+1
-                Week" -%} {%- set ns.CLEAR_DATE = "Clear Date" -%} {%- set
-                ns.SELECT_NEW_DATE_AND_TIME = "Select New Date & Time" -%} {%-
-                set ns.TAP_TO_CHANGE_HOLD_TO_SET = "(Tap to Change / Hold to
-                Set)" -%} {%- set ns.RESET_ALL = "Reset All" -%} {%- set
-                ns.RESET_OVERDUE_STATUS = "Reset Overdue Status" -%} {%- set
-                ns.CHORE_ADMIN_ACTIONS = "Chore Admin Actions" -%} {%- set
-                ns.NONE = "None" -%} {#-- ************* End Translatable Text
-                ************* --#}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
 
-                {#-- Set Kid_name and normalize --#} {%- set ns.Kid_name = 'Kidname'
-                -%} {%- set ns.Kid_name_normalize = ns.Kid_name | slugify() -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+                {%- set chore_select_entity = 'select.kc_' ~ Kid_name_normalize ~ '_chore_list' -%}
+                {%- set chore_sensor_id_prefix = 'sensor.kc_' ~ Kid_name_normalize ~ '_chore_status_' -%}
 
-                {#-- Dashboard Helper --#} {%- set dashboard_helper =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper'
-                -%} {%- set ui = state_attr(dashboard_helper, 'ui_translations')
-                -%}
+                {%- set ns = namespace(
+                  chore_selected=states(chore_select_entity),
+                  chore_selected_normalize='',
+                  chore_sensor_id='',
+                  current_status='',
+                  global_status='',
+                  shared_chore='',
+                  chore_allow_multiple='',
+                  recurrence='',
+                  chore_value=0,
+                  chore_icon='',
+                  chore_description='',
+                  chore_days=[],
+                  chore_custom_freq_unit='',
+                  chore_custom_freq_int='',
+                  due_date_formatted='',
+                  select_new_date_and_time_secondary='',
+                  content=''
+                ) -%}
 
-                {#-- Collect Points --#}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
+                {%- set chore_list = state_attr(dashboard_helper, 'chores') | default([], true) -%}
+                {%- set overdue_count = chore_list | selectattr('status', 'eq', 'overdue') | list | length -%}
 
-                {%- set points_sensor = 'sensor.kc_' ~ ns.Kid_name_normalize ~
-                '_points' -%} {%- set ns.points = states(points_sensor) |
-                int(default=0) -%} {%- set ns.points_label =
-                state_attr(points_sensor, 'unit_of_measurement') -%} {%- set
-                ns.points_icon = state_attr(points_sensor, 'icon') -%}
-
-                {#-- Get Selected Chore from Input Select --#}
-
-                {%- set ns.chore_select_entity = 'select.kc_' ~
-                ns.Kid_name_normalize ~ '_chore_list' -%} {%- set
-                ns.chore_selected = states(ns.chore_select_entity) -%} {%- set
-                ns.chore_sensor_id_prefix ='sensor.kc_' ~ ns.Kid_name_normalize
-                ~ '_chore_status_' -%}
-
-                {#-- Collect Chore Status Sensor and Details --#}
-
-                {%- if ns.chore_selected | lower not in ['none', 'unknown',
-                'unavailable', ''] -%}
-
-                 {%- set ns.chore_selected_normalize = ns.chore_selected | slugify() -%}
-
-                  {%- set ns.chore_sensor_id = ns.chore_sensor_id_prefix ~ ns.chore_selected_normalize -%}
+                {%- if ns.chore_selected | lower not in ['none', 'unknown', 'unavailable', ''] -%}
+                  {%- set ns.chore_selected_normalize = ns.chore_selected | slugify() -%}
+                  {%- set ns.chore_sensor_id = chore_sensor_id_prefix ~ ns.chore_selected_normalize -%}
                   {%- set ns.current_status = states(ns.chore_sensor_id) | default('Unknown') -%}
                   {%- set ns.global_status = state_attr(ns.chore_sensor_id, 'global_state') | default('Unknown') -%}
+
                   {%- set state_map = {
-                      'pending': (ui.pending if ui else 'Pending'),
-                      'claimed': (ui.claimed if ui else 'Claimed'),
-                      'approved': (ui.approved if ui else 'Approved'),
-                      'overdue': (ui.overdue if ui else 'Overdue')
+                      'pending': ui.get('pending', 'err-pending'),
+                      'claimed': ui.get('claimed', 'err-claimed'),
+                      'approved': ui.get('approved', 'err-approved'),
+                      'overdue': ui.get('overdue', 'err-overdue')
                   } -%}
+
                   {%- set current_status_display = state_map[ns.current_status] if ns.current_status in state_map else ns.current_status -%}
                   {%- set global_status_display = state_map[ns.global_status] if ns.global_status in state_map else ns.global_status -%}
                   {%- set ns.shared_chore = state_attr(ns.chore_sensor_id, 'shared_chore') | string | default('False') -%}
                   {%- set ns.chore_allow_multiple = state_attr(ns.chore_sensor_id, 'allow_multiple_claims_per_day') | string | default('False') -%}
+
                   {%- set state_map_tf = {
-                      'False': ns.FALSE,
-                      'True': ns.TRUE
+                      'False': ui.get('false', 'err-false'),
+                      'True': ui.get('true', 'err-true')
                   } -%}
+
                   {%- set shared_chore_display = state_map_tf[ns.shared_chore] if ns.shared_chore in state_map_tf else ns.shared_chore -%}
-                  {%- set chore_allow_multiple_display = state_map_tf[ ns.chore_allow_multiple] if  ns.chore_allow_multiple in state_map_tf else  ns.chore_allow_multiple -%}
-                  {%- set ns.recurrence = state_attr(ns.chore_sensor_id, 'recurring_frequency') if state_attr(ns.chore_sensor_id, 'recurring_frequency') != 'none' else ns.NONE -%}
+                  {%- set chore_allow_multiple_display = state_map_tf[ns.chore_allow_multiple] if ns.chore_allow_multiple in state_map_tf else ns.chore_allow_multiple -%}
+                  {%- set ns.recurrence = state_attr(ns.chore_sensor_id, 'recurring_frequency') if state_attr(ns.chore_sensor_id, 'recurring_frequency') != 'none' else ui.get('none', 'err-none') -%}
                   {%- set ns.chore_value = state_attr(ns.chore_sensor_id, 'default_points') | int(default=0) -%}
                   {%- set ns.chore_icon = state_attr(ns.chore_sensor_id, 'icon') | default('mdi:clipboard-check') -%}
                   {%- set ns.chore_description = state_attr(ns.chore_sensor_id, 'description') | default('') -%}
-                  {%- set ns.chore_days = state_attr(ns.chore_sensor_id, 'applicable_days') | default([], true)  -%}
-                  {%- set ns.chore_custom_freq_unit = state_attr(ns.chore_sensor_id, 'custom_frequency_unit') | default('')  -%}
+                  {%- set ns.chore_days = state_attr(ns.chore_sensor_id, 'applicable_days') | default([], true) -%}
+                  {%- set ns.chore_custom_freq_unit = state_attr(ns.chore_sensor_id, 'custom_frequency_unit') | default('') -%}
                   {%- set ns.chore_custom_freq_int = state_attr(ns.chore_sensor_id, 'custom_frequency_interval') | default('') -%}
 
                   {#-- Convert and Format Due Date --#}
-                  {%- set due_date_str = state_attr(ns.chore_sensor_id, 'due_date') | string-%}
+                  {%- set due_date_str = state_attr(ns.chore_sensor_id, 'due_date') | string -%}
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
-                  {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ns.NONE -%}
+                  {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ui.get('none', 'err-none') -%}
 
-                  {%- set ns.select_new_date_and_time_secondary = ns.TAP_TO_CHANGE_HOLD_TO_SET + "\n \n" + state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else 'No date set' -%}
+                  {%- set ns.select_new_date_and_time_secondary = ui.get('tap_to_change_hold_to_set', 'err-tap_to_change_hold_to_set') ~ "\n \n" ~ state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else ui.get('no_date_set', 'err-no_date_set') -%}
 
-                  {#-- Store the Markdown content in a variable --#}
-
-                  {%- set ns.content =  "### <ha-icon icon='" ~ ns.chore_icon ~
-                  "'></ha-icon> " ~ ns.CHORE_DETAIL_LABEL ~ ": " ~ (ns.chore_selected |
-                  title) ~ "  \n" -%}
-
-                  {%- set ns.content =  ns.content ~ "#### 📖 &nbsp;&nbsp;" ~
-                  ns.chore_description ~ "  \n" if ns.chore_description else ns.content
-                  -%}
-
+                  {#-- 4. Build Display --#}
+                  {%- set ns.content = "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ui.get('chore_detail', 'err-chore_detail') ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%}
+                  {%- set ns.content = ns.content ~ "#### 📖 &nbsp;&nbsp;" ~ ns.chore_description ~ "  \n" if ns.chore_description else ns.content -%}
                   {%- set ns.content = ns.content ~
-                    "**📌 " ~ (ui.current_status if ui else 'Current Status') ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
-                    "**🌍 " ~ (ui.global_status if ui else 'Global Status') ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
-                    "**👥 " ~ (ui.shared_chore if ui else 'Shared Chore') ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
-                    "**📥 " ~ (ui.allow_multiple_claims if ui else 'Allow Multiple Claims') ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
-                    "**💎 " ~ (ui.value if ui else 'Value') ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ ns.points_label ~ "  \n\n"
-                    "**📅 " ~ (ui.due_date if ui else 'Due Date') ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
-                    "**🔁 " ~ (ui.recurrence if ui else 'Recurrence') ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
-
-                  {%- set ns.content = ns.content ~ (("**🔵 " ~ (ui.applicable_days if ui else 'Applicable Days') ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title)
+                    "**📌 " ~ ui.get('current_status', 'err-current_status') ~ ":** &nbsp;" ~ current_status_display ~ "  \n"
+                    "**🌍 " ~ ui.get('global_status', 'err-global_status') ~ ":** &nbsp;" ~ global_status_display ~ "  \n"
+                    "**👥 " ~ ui.get('shared_chore', 'err-shared_chore') ~ ":** &nbsp;" ~ shared_chore_display ~ "  \n"
+                    "**📥 " ~ ui.get('allow_multiple_claims', 'err-allow_multiple_claims') ~ ":** &nbsp;" ~ chore_allow_multiple_display ~ "  \n"
+                    "**💎 " ~ ui.get('value', 'err-value') ~ ":** &nbsp;" ~ ns.chore_value ~ " " ~ points_label ~ "  \n\n"
+                    "**📅 " ~ ui.get('due_date', 'err-due_date') ~ ":** &nbsp;" ~ ns.due_date_formatted ~ "  \n"
+                    "**🔁 " ~ ui.get('recurrence', 'err-recurrence') ~ ":** &nbsp;" ~ ns.recurrence | title ~ "  \n" -%}
+                  {%- set ns.content = ns.content ~ (("**🔵 " ~ ui.get('applicable_days', 'err-applicable_days') ~ ":** &nbsp;" ~ ns.chore_days | join(', ') | title)
                     if ns.chore_days is iterable and ns.chore_days | length > 0 else "") -%}
-
-                  {%- set ns.content = ns.content ~ ("**🔵 " ~ (ui.interval if ui else 'Interval') ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int ~ " " ~ ns.chore_custom_freq_unit | title
-                    if ns.recurrence == 'custom' else "" ) -%}
-
-                  {%- set ns.content =  ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable']  else "**🚫 " ~ ns.NO_CHORE_SELECTED_LABEL ~ "**" -%}
-
+                  {%- set ns.content = ns.content ~ ("**🔵 " ~ ui.get('interval', 'err-interval') ~ ":** &nbsp;" ~ ns.chore_custom_freq_int | int(default=0) ~ " " ~ ns.chore_custom_freq_unit | title
+                    if ns.recurrence != ui.get('none', 'err-none') and ns.chore_custom_freq_int else "") -%}
+                  {%- set ns.content = ns.content if ns.chore_selected not in ['None', 'unknown', 'unavailable'] else "**🚫 " ~ ui.get('no_chore_selected', 'err-no_chore_selected') ~ "**" -%}
                 {%- endif -%}
 
-                {#-- Use Dashboard Helper for Overdue Chore Check --#} {%- set
-                dashboard_helper = 'sensor.kc_' ~ ns.Kid_name_normalize ~
-                '_ui_dashboard_helper' -%} {%- set chore_list =
-                state_attr(dashboard_helper, 'chores') | default([], true) -%}
-                {%- set overdue_count = chore_list | selectattr('status', 'eq',
-                'overdue') | list | length -%}
-
-                {#-- Construct Overdue chore reset, chore dropdown, Markdown
-                Card for Chore Details, and chore actions --#} {{
-                  {
-                    'type': 'heading',
-                    'icon': 'mdi:rocket-launch',
-                    'heading': ns.CHORE_ADMIN_ACTIONS,
-                    'heading_style': 'title',
-                  }
-                }}, {%- if overdue_count > 0 -%}
-
-                  {{
+                {#-- 5. Render --#}
+                {{- {
+                  'type': 'heading',
+                  'icon': 'mdi:rocket-launch',
+                  'heading': ui.get('chore_admin_actions', 'err-chore_admin_actions'),
+                  'heading_style': 'title'
+                } -}},
+                {%- if overdue_count > 0 -%}
+                {{- {
+                  'type': 'grid',
+                  'title': '',
+                  'columns': 1,
+                  'square': false,
+                  'cards': [
                     {
-                      'type': 'grid',
-                      'title': '',
-                      'columns': 1,
-                      'square': false,
-                      'cards': [
-                        {
-                          'type': 'custom:mushroom-template-card',
-                          'primary': ns.RESET_ALL ~ ' ' ~ ns.Kid_name ~ '\'s ' ~ (ui.overdue_chores if ui else 'Overdue Chores'),
-                          'icon': 'mdi:restore-alert',
-                          'icon_color': 'orange',
-                          'tap_action': {
-                            'action': 'call-service',
-                            'service': 'kidschores.reset_overdue_chores',
-                            'data': {
-                              'kid_name': ns.Kid_name
-                            }
-                          }
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('reset_all', 'err-reset_all') ~ ' ' ~ Kid_name ~ '\'s ' ~ ui.get('overdue_chores', 'err-overdue_chores'),
+                      'icon': 'mdi:restore-alert',
+                      'icon_color': 'orange',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.reset_overdue_chores',
+                        'data': {
+                          'kid_name': Kid_name
                         }
-                      ]
+                      }
                     }
-                  }},
+                  ]
+                } -}},
                 {%- endif -%}
-                  {{
-                      {
-                        'type': 'custom:mushroom-select-card',
-                        'entity': ns.chore_select_entity,
-                        'name': ns.SELECT_CHORE_TO_EDIT_DUE_DATE,
-                        'icon': 'mdi:clipboard-edit',
-                        'icon_color': 'blue',
-                        'secondary_info': 'none'
-                      }
-                  }},
-
-                 {%- if ns.chore_selected | lower not in ['none', 'unknown', 'unavailable', ''] -%}
-                     {{
-                      {
-                        'type': 'markdown',
-                        'content': ns.content
-                      }
-                    }},
-                    {%- if states(ns.chore_sensor_id) | lower in ['overdue'] -%}
-                        {{
-                          {
-                            'type': 'grid',
-                            'title': '',
-                            'columns': 1,
-                            'square': false,
-                            'cards': [
-                              {
-                                'type': 'custom:mushroom-template-card',
-                                'primary': ns.RESET_OVERDUE_STATUS,
-                                'icon': 'mdi:restore',
-                                'icon_color': 'orange',
-                                'tap_action': {
-                                  'action': 'call-service',
-                                  'service': 'kidschores.reset_overdue_chores',
-                                  'data': {
-                                    'chore_name': ns.chore_selected,
-                                    'kid_name': ns.Kid_name
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }},
-                      {%- endif -%}
-                      {{
-                        {
-                          'type': 'grid',
-                          'title': '',
-                          'columns': 4,
-                          'square': False,
-                          'cards': [
-                            {
-                              'type': 'custom:mushroom-template-card',
-                              'primary': ns.PLUS_NEXT_DUE,
-                              'icon': 'mdi:calendar-refresh',
-                              'icon_color': 'blue',
-                              'layout': 'vertical',
-                              'tap_action': {
-                                'action': 'call-service',
-                                'service': 'kidschores.skip_chore_due_date',
-                                'data': {
-                                  'chore_name': ns.chore_selected
-                                }
-                              }
-                            },
-                            {
-                              'type': 'custom:mushroom-template-card',
-                              'primary': ns.PLUS_1_DAY,
-                              'icon': 'mdi:calendar-plus',
-                              'icon_color': 'blue',
-                              'layout': 'vertical',
-                              'tap_action': {
-                                'action': 'call-service',
-                                'service': 'kidschores.set_chore_due_date',
-                                'data': {
-                                  'chore_name': ns.chore_selected,
-                                  'due_date': (as_datetime(due_date) + timedelta(days=1)).isoformat() if due_date else ''
-                                }
-                              }
-                            },
-                            {
-                              'type': 'custom:mushroom-template-card',
-                              'primary': ns.PLUS_1_WEEK,
-                              'icon': 'mdi:calendar-arrow-right',
-                              'icon_color': 'blue',
-                              'layout': 'vertical',
-                              'tap_action': {
-                                'action': 'call-service',
-                                'service': 'kidschores.set_chore_due_date',
-                                'data': {
-                                  'chore_name': ns.chore_selected,
-                                  'due_date': (as_datetime(due_date) + timedelta(weeks=1)).isoformat() if due_date else ''
-                                }
-                              }
-                            },
-                            {
-                              'type': 'custom:mushroom-template-card',
-                              'primary': ns.CLEAR_DATE,
-                              'icon': 'mdi:calendar-remove',
-                              'icon_color': 'blue',
-                              'layout': 'vertical',
-                              'tap_action': {
-                                'action': 'call-service',
-                                'service': 'kidschores.set_chore_due_date',
-                                'data': {
-                                  'chore_name': ns.chore_selected,
-                                  'due_date': ''
-                                }
-                              }
-                            }
-                          ]
+                {{- {
+                  'type': 'custom:mushroom-select-card',
+                  'entity': chore_select_entity,
+                  'name': ui.get('select_chore_edit', 'err-select_chore_edit'),
+                  'icon': 'mdi:clipboard-edit',
+                  'icon_color': 'blue',
+                  'secondary_info': 'none'
+                } -}},
+                {%- if ns.chore_selected | lower not in ['none', 'unknown', 'unavailable', ''] -%}
+                {{- {
+                  'type': 'markdown',
+                  'content': ns.content
+                } -}},
+                {%- if states(ns.chore_sensor_id) | lower in ['overdue'] -%}
+                {{- {
+                  'type': 'grid',
+                  'title': '',
+                  'columns': 1,
+                  'square': false,
+                  'cards': [
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('reset_overdue_status', 'err-reset_overdue_status'),
+                      'icon': 'mdi:restore',
+                      'icon_color': 'orange',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.reset_overdue_chores',
+                        'data': {
+                          'chore_name': ns.chore_selected,
+                          'kid_name': Kid_name
                         }
-                      }},{{
-                      {
-                        'type': 'grid',
-                        'columns': 1,
-                        'square': false,
-                        'cards': [
-                          {
-                            'type': 'custom:mushroom-template-card',
-                            'entity': 'input_datetime.kc_ui_set_date_helper',
-                            'primary': ns.SELECT_NEW_DATE_AND_TIME,
-                            'secondary': ns.select_new_date_and_time_secondary,
-                            'multiline_secondary': 'true',
-                            'fill_container': 'true',
-                            'icon': 'mdi:calendar-edit',
-                            'icon_color': 'blue',
-                            'tap_action': {
-                              'action': 'more-info'
-                            },
-                            'hold_action': {
-                              'action': 'call-service',
-                              'service': 'kidschores.set_chore_due_date',
-                              'data': {
-                                'chore_name': ns.chore_selected,
-                                'due_date': states('input_datetime.kc_ui_set_date_helper')
-                              }
-                            }
-                          },
-                        ]
                       }
-                    }},
-                {%- endif -%} {{
-                  {
-                    'type': 'grid',
-                    'columns': 1,
-                    'square': false,
-                    'cards': [
-                      {
-                        'type': 'custom:mushroom-template-card',
-                        'primary': 'Configure',
-                        'fill_container': 'true',
-                        'icon': 'mdi:cog',
-                        'icon_color': 'blue',
-                        'hold_action': {
-                          'action': 'more-info'
-                        },
-                        'tap_action': {
-                          'action': 'url',
-                          'url_path': '/config/integrations/integration/kidschores',
+                    }
+                  ]
+                } -}},
+                {%- endif -%}
+                {{- {
+                  'type': 'grid',
+                  'title': '',
+                  'columns': 4,
+                  'square': false,
+                  'cards': [
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('plus_next_due', 'err-plus_next_due'),
+                      'icon': 'mdi:calendar-refresh',
+                      'icon_color': 'blue',
+                      'layout': 'vertical',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.skip_chore_due_date',
+                        'data': {
+                          'chore_name': ns.chore_selected
                         }
+                      }
+                    },
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('plus_1_day', 'err-plus_1_day'),
+                      'icon': 'mdi:calendar-plus',
+                      'icon_color': 'blue',
+                      'layout': 'vertical',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.set_chore_due_date',
+                        'data': {
+                          'chore_name': ns.chore_selected,
+                          'due_date': (as_datetime(due_date) + timedelta(days=1)).isoformat() if due_date else ''
+                        }
+                      }
+                    },
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('plus_1_week', 'err-plus_1_week'),
+                      'icon': 'mdi:calendar-arrow-right',
+                      'icon_color': 'blue',
+                      'layout': 'vertical',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.set_chore_due_date',
+                        'data': {
+                          'chore_name': ns.chore_selected,
+                          'due_date': (as_datetime(due_date) + timedelta(weeks=1)).isoformat() if due_date else ''
+                        }
+                      }
+                    },
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('clear_date', 'err-clear_date'),
+                      'icon': 'mdi:calendar-remove',
+                      'icon_color': 'blue',
+                      'layout': 'vertical',
+                      'tap_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.set_chore_due_date',
+                        'data': {
+                          'chore_name': ns.chore_selected,
+                          'due_date': ''
+                        }
+                      }
+                    }
+                  ]
+                } -}},
+                {{- {
+                  'type': 'grid',
+                  'columns': 1,
+                  'square': false,
+                  'cards': [
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'entity': 'input_datetime.kc_ui_set_date_helper',
+                      'primary': ui.get('select_new_date', 'err-select_new_date'),
+                      'secondary': ui.get('tap_to_change', 'err-tap_to_change'),
+                      'multiline_secondary': 'true',
+                      'fill_container': 'true',
+                      'icon': 'mdi:calendar-edit',
+                      'icon_color': 'blue',
+                      'tap_action': {
+                        'action': 'more-info'
                       },
-                    ]
-                  }
-                }}
+                      'hold_action': {
+                        'action': 'call-service',
+                        'service': 'kidschores.set_chore_due_date',
+                        'data': {
+                          'chore_name': ns.chore_selected,
+                          'due_date': states('input_datetime.kc_ui_set_date_helper')
+                        }
+                      }
+                    }
+                  ]
+                } -}},
+                {%- endif -%}
+                {{- {
+                  'type': 'grid',
+                  'columns': 1,
+                  'square': false,
+                  'cards': [
+                    {
+                      'type': 'custom:mushroom-template-card',
+                      'primary': ui.get('configure', 'err-configure'),
+                      'fill_container': 'true',
+                      'icon': 'mdi:cog',
+                      'icon_color': 'blue',
+                      'hold_action': {
+                        'action': 'more-info'
+                      },
+                      'tap_action': {
+                        'action': 'url',
+                        'url_path': '/config/integrations/integration/kidschores'
+                      }
+                    }
+                  ]
+                } -}}
       - type: grid
         square: false
         columns: 1
