@@ -1236,7 +1236,7 @@ sections:
                 {%- set content = "## 👨‍👩‍👧 " ~ ui.get('parent_dashboard_for', 'err-parent_dashboard_for') ~ ": " ~ Kid_name ~ "  \n" -%}
                 {%- set content = content ~ "<ha-icon icon=" ~ points_icon ~ "></ha-icon> **" ~ points_label ~ ":** &nbsp;&nbsp;" ~ points ~ "  \n" -%}
                 {%- set content = content ~ "#### 📅 " ~ ui.get('chores_completed', 'err-chores_completed') ~ ":  \n" -%}
-                {%- set content = content ~ "- ☀️ " ~ ui.get('today', 'err-today') ~ ": &nbsp;&nbsp;" ~ todays_completed ~ "  \n" -%}
+                {%- set content = content ~ "- ☀️ " ~ ui.get('today', 'err-todays_completed') ~ ": &nbsp;&nbsp;" ~ todays_completed ~ "  \n" -%}
                 {%- set content = content ~ "- 📅 " ~ ui.get('week', 'err-week') ~ ": &nbsp;&nbsp;" ~ weekly_completed ~ "  \n" -%}
                 {%- set content = content ~ "- 🗓️ " ~ ui.get('month', 'err-month') ~ ": &nbsp;&nbsp;" ~ monthly_completed ~ "  \n" -%}
                 {%- set content = content ~ "- 🚨 " ~ ui.get('overdue_chores', 'err-overdue_chores') ~ ": &nbsp;&nbsp;" ~ overdue_chores ~ "  \n\n" -%}
@@ -1260,104 +1260,90 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {%- set ns = namespace( Kid_name='', Kid_name_normalize='',
-                pref_column_count='', approve_chore_buttons=[],
-                approve_reward_buttons=[], heading_card_blank='',
-                has_approvals='false', chore_name_normalize='',
-                reward_name_normalize='', group_cards=[], OK='', NO='' ) -%}
-
                 {#-- ===== APPROVAL ACTIONS CARD ===== --#}
 
-                {#-- ************* Set Translatable Text ************* --#} {%-
-                set ns.OK = "OK" -%} {%- set ns.NO = "NO" -%} {#-- *************
-                End Translatable Text ************* --#}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
+                {%- set pref_column_count = 2 -%}
 
-                {#-- ************* Set Preferences ************* --#} {%- set
-                ns.pref_column_count = 2 -%} {#-- ************* End Preferences
-                ************* --#}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
 
-                {#-- ************* Set Kid_Name and Normalize ************* --#}
-                {%- set ns.Kid_name = 'Kidname'-%} {%- set ns.Kid_name_normalize =
-                ns.Kid_name | slugify() -%}
+                {%- set ns = namespace(
+                  approve_chore_buttons=[],
+                  approve_reward_buttons=[],
+                  group_cards=[],
+                  has_approvals='false'
+                ) -%}
 
-                {#-- Dashboard Helper --#} {%- set dashboard_helper =
-                'sensor.kc_' ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper'
-                -%} {%- set ui = state_attr(dashboard_helper, 'ui_translations')
-                -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
 
-                {#-- ************* Find pending approval sensors - multiple
-                listed to support legacy sensor names in 0.2.2 and before
-                ************* --#} {%- set pending_chore_data =
-                state_attr('sensor.kc_global_chore_pending_approvals',
-                ns.Kid_name) | default([], true)
-                  if states('sensor.kc_global_chore_pending_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_pending_chore_approvals', ns.Kid_name) | default([], true)
-                  if states('sensor.kc_pending_chore_approvals') not in ['unavailable', 'unknown'] else  [{'chore_name': 'error', 'Claimed on':'2000-01-01'}] -%}
+                {%- set pending_chore_data = state_attr('sensor.kc_global_chore_pending_approvals', Kid_name) | default([], true) if states('sensor.kc_global_chore_pending_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_pending_chore_approvals', Kid_name) | default([], true) if states('sensor.kc_pending_chore_approvals') not in ['unavailable', 'unknown'] else [] -%}
 
-                {%- set pending_reward_data =
-                state_attr('sensor.kc_global_reward_pending_approvals',
-                ns.Kid_name) | default([], true)
-                  if states('sensor.kc_global_reward_pending_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_global_pending_reward_approvals', ns.Kid_name) | default([], true)
-                  if states('sensor.kc_global_pending_reward_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_pending_reward_approvals', ns.Kid_name) | default([], true)
-                  if states('sensor.kc_pending_reward_approvals') not in ['unavailable', 'unknown'] else  [{'reward_name': 'error', 'Redeemed on': '2000-01-01'}] -%}
+                {%- set pending_reward_data = state_attr('sensor.kc_global_reward_pending_approvals', Kid_name) | default([], true) if states('sensor.kc_global_reward_pending_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_global_pending_reward_approvals', Kid_name) | default([], true) if states('sensor.kc_global_pending_reward_approvals') not in ['unavailable', 'unknown'] else state_attr('sensor.kc_pending_reward_approvals', Kid_name) | default([], true) if states('sensor.kc_pending_reward_approvals') not in ['unavailable', 'unknown'] else [] -%}
 
-                {#-- ************* Build button lists for claimed chores and
-                rewards ************* --#} {%- if pending_chore_data | count > 0
-                -%}
-                  {#-- For each pending chore entry, store ready-to-render button dicts --#}
+                {#-- 4. Build Display --#}
+                {%- if pending_chore_data | count > 0 -%}
                   {%- for entry in pending_chore_data -%}
                     {%- set ap = entry.approve_button_eid | default('') -%}
                     {%- set dis = entry.disapprove_button_eid | default('') -%}
                     {%- set cname = entry.chore_name | default('') -%}
+
                     {%- if ap != '' -%}
                       {%- if ap not in (ns.approve_chore_buttons | map(attribute='eid') | list) -%}
-                        {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + [{'eid': ap, 'primary': ns.OK ~ ': ' ~ cname, 'icon': 'mdi:thumb-up', 'icon_color': 'green'}] -%}
+                        {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + [{'eid': ap, 'primary': ui.get('ok', 'err-ok') ~ ': ' ~ cname, 'icon': 'mdi:thumb-up', 'icon_color': 'green'}] -%}
                       {%- endif -%}
                     {%- endif -%}
+
                     {%- if dis != '' -%}
                       {%- if dis not in (ns.approve_chore_buttons | map(attribute='eid') | list) -%}
-                        {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + [{'eid': dis, 'primary': ns.NO ~ ': ' ~ cname, 'icon': 'mdi:thumb-down', 'icon_color': 'red'}] -%}
+                        {%- set ns.approve_chore_buttons = ns.approve_chore_buttons + [{'eid': dis, 'primary': ui.get('no', 'err-no') ~ ': ' ~ cname, 'icon': 'mdi:thumb-down', 'icon_color': 'red'}] -%}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
-                {%- endif -%} {%- if pending_reward_data | count > 0 -%}
-                  {#-- For each pending reward entry, store ready-to-render button dicts --#}
+                {%- endif -%}
+
+                {%- if pending_reward_data | count > 0 -%}
                   {%- for entry in pending_reward_data -%}
                     {%- set ap = entry.approve_button_eid | default('') -%}
                     {%- set dis = entry.disapprove_button_eid | default('') -%}
                     {%- set rname = entry.reward_name | default('') -%}
+
                     {%- if ap != '' -%}
                       {%- if ap not in (ns.approve_reward_buttons | map(attribute='eid') | list) -%}
-                        {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + [{'eid': ap, 'primary': ns.OK ~ ': ' ~ rname, 'icon': 'mdi:thumb-up', 'icon_color': 'green'}] -%}
+                        {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + [{'eid': ap, 'primary': ui.get('ok', 'err-ok') ~ ': ' ~ rname, 'icon': 'mdi:thumb-up', 'icon_color': 'green'}] -%}
                       {%- endif -%}
                     {%- endif -%}
+
                     {%- if dis != '' -%}
                       {%- if dis not in (ns.approve_reward_buttons | map(attribute='eid') | list) -%}
-                        {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + [{'eid': dis, 'primary': ns.NO ~ ': ' ~ rname, 'icon': 'mdi:thumb-down', 'icon_color': 'red'}] -%}
+                        {%- set ns.approve_reward_buttons = ns.approve_reward_buttons + [{'eid': dis, 'primary': ui.get('no', 'err-no') ~ ': ' ~ rname, 'icon': 'mdi:thumb-down', 'icon_color': 'red'}] -%}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
                 {%- endif -%}
 
                 {%- set button_groups = [
-                    {'name': (ui.chore_approvals if ui else 'Chore Approvals'), 'buttons': ns.approve_chore_buttons, 'icon': 'mdi:thumb-up-outline'},
-                    {'name': (ui.reward_approvals if ui else 'Reward Approvals'), 'buttons': ns.approve_reward_buttons, 'icon': 'mdi:thumb-up-outline'},
+                    {'name': ui.get('chore_approvals', 'err-chore_approvals'), 'buttons': ns.approve_chore_buttons, 'icon': 'mdi:thumb-up-outline'},
+                    {'name': ui.get('reward_approvals', 'err-reward_approvals'), 'buttons': ns.approve_reward_buttons, 'icon': 'mdi:thumb-up-outline'}
                 ] -%}
 
+                {#-- 5. Render --#}
                 {%- for group in button_groups -%}
                   {%- set ns.group_cards = [] -%}
+
                   {%- if group.buttons | length > 0 -%}
                     {%- set ns.has_approvals = 'true' -%}
-                    {%- set heading_card =
-                      {
-                        'type': 'heading',
-                        'icon': group.icon,
-                        'heading': group.name,
-                        'heading_style': 'title',
-                      }
-                    -%}
+                    {%- set heading_card = {
+                      'type': 'heading',
+                      'icon': group.icon,
+                      'heading': group.name,
+                      'heading_style': 'title'
+                    } -%}
 
                     {%- for button in group.buttons -%}
-                      {#-- Buttons are simple dicts with eid/primary/icon/icon_color when coming from pending sensors --#}
                       {%- if button is mapping -%}
                         {%- set eid = button.eid -%}
                         {%- set primary = button.primary -%}
@@ -1366,27 +1352,25 @@ sections:
                       {%- endif -%}
 
                       {%- set ns.group_cards = ns.group_cards + [{
-                            'type': 'custom:mushroom-template-card',
-                            'entity': eid,
-                            'primary': primary,
-                            'icon': icon,
-                            'layout': '',
-                            'icon_color': icon_color,
-                            'tap_action': {
-                              'action': 'toggle'
-                            },
-                            'hold_action': {
-                              'action': 'more-info'
-                            },
-                          }]
-                      -%}
+                        'type': 'custom:mushroom-template-card',
+                        'entity': eid,
+                        'primary': primary,
+                        'icon': icon,
+                        'layout': '',
+                        'icon_color': icon_color,
+                        'tap_action': {
+                          'action': 'toggle'
+                        },
+                        'hold_action': {
+                          'action': 'more-info'
+                        }
+                      }] -%}
                     {%- endfor -%}
 
-                    {#-- Display the cards for this group --#}
                     {{- heading_card -}}, {{
                       {
                         'type': 'grid',
-                        'columns': ns.pref_column_count,
+                        'columns': pref_column_count,
                         'square': false,
                         'cards': ns.group_cards
                       }
