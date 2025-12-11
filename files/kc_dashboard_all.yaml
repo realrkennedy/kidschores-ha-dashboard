@@ -227,18 +227,6 @@ sections:
                       {%- set claim_button_eid = state_attr(chore_sensor_id, 'claim_button_eid') | default('', true) -%}
                       {%- set primary = state_attr(chore_sensor_id, 'chore_name') ~ (' (S)' if state_attr(chore_sensor_id, 'shared_chore') else '')  -%}
                       {%- set button_state = states(claim_button_eid) if claim_button_eid else 'unknown' -%}
-                      {%- if button_state not in ['unknown', 'unavailable', 'error'] -%}
-                        {%- set ts_diff = (now().timestamp() - as_timestamp(button_state)) | float(0) -%}
-                        {%- set last_update = (
-                            '%.0f minutes ago' % (ts_diff / 60)
-                            if ts_diff < 3600 else
-                            '%.0f hours ago' % (ts_diff / 3600)
-                            if ts_diff < 86400 else
-                            '%.0f days ago' % (ts_diff / 86400)
-                          ) -%}
-                      {%- else -%}
-                        {%- set last_update = '' -%}
-                      {%- endif -%}
                       {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') | string -%}
                       {%- set due_date = as_datetime(due_date_str).astimezone(now().tzinfo) if due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                       {%- set recurring = state_attr(chore_sensor_id, 'recurring_frequency') -%}
@@ -1024,9 +1012,7 @@ sections:
 
                 {#-- 3. Collect Data --#}
                 {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
-                {%- set current_points = states(points_sensor) | int(default=0) -%}
                 {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
-                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
 
                 {%- set achievements = state_attr(dashboard_helper, 'achievements') | default([], true) -%}
 
@@ -1038,7 +1024,7 @@ sections:
                   {{
                     {
                       'type': 'markdown',
-                      'content': "### 🏆 " ~ ui.get('no_achievements_found', 'err-no_achievements_found') ~ "  \n" ~ ui.get('start_achievement', 'err-start_achievement')
+                      'content': "### 🏆 " ~ ui.get('no_achievements_found', 'err-no_achievements_found') ~ "  \n" ~ ui.get('start_achievement_prompt', 'err-start_achievement')
                     }
                   }},
                 {%- else -%}
@@ -1135,7 +1121,7 @@ sections:
                   {{
                     {
                       'type': 'markdown',
-                      'content': "### 🏁 " ~ ui.get('no_challenges_found', 'err-no_challenges_found') ~ "  \n" ~ ui.get('start_challenge', 'err-start_challenge')
+                      'content': "### 🏁 " ~ ui.get('no_challenges_found', 'err-no_challenges_found') ~ "  \n" ~ ui.get('start_challenge_prompt', 'err-start_challenge')
                     }
                   }},
                 {%- else -%}
@@ -1339,7 +1325,6 @@ sections:
                   {%- set ns.group_cards = [] -%}
 
                   {%- if group.buttons | length > 0 -%}
-                    {%- set ns.has_approvals = 'true' -%}
                     {%- set heading_card = {
                       'type': 'heading',
                       'icon': group.icon,
@@ -1469,7 +1454,7 @@ sections:
                   {%- set due_date = as_datetime(due_date_str) if due_date_str and due_date_str not in ['None', 'unknown', 'unavailable'] else None -%}
                   {%- set ns.due_date_formatted = as_timestamp(due_date) | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if due_date else ui.get('none', 'err-none') -%}
 
-                  {%- set ns.select_new_date_and_time_secondary = ui.get('tap_to_change_hold_to_set', 'err-tap_to_change_hold_to_set') ~ "\n \n" ~ state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else ui.get('no_date_set', 'err-no_date_set') -%}
+                  {%- set ns.select_new_date_and_time_secondary = ui.get('tap_to_change', 'err-tap_to_change') ~ "\n \n" ~ state_attr('input_datetime.kc_ui_set_date_helper', 'timestamp') | timestamp_custom('%a, %b %d, %Y %I:%M %p', true) if states('input_datetime.kc_ui_set_date_helper') != 'unknown' else ui.get('no_date_set', 'err-no_date_set') -%}
 
                   {#-- 4. Build Display --#}
                   {%- set ns.content = "### <ha-icon icon='" ~ ns.chore_icon ~ "'></ha-icon> " ~ ui.get('chore_detail', 'err-chore_detail') ~ ": " ~ (ns.chore_selected | title) ~ "  \n" -%}
@@ -1632,7 +1617,7 @@ sections:
                       'type': 'custom:mushroom-template-card',
                       'entity': 'input_datetime.kc_ui_set_date_helper',
                       'primary': ui.get('select_new_date', 'err-select_new_date'),
-                      'secondary': ui.get('tap_to_change', 'err-tap_to_change'),
+                      'secondary': ns.select_new_date_and_time_secondary,
                       'multiline_secondary': 'true',
                       'fill_container': 'true',
                       'icon': 'mdi:calendar-edit',
