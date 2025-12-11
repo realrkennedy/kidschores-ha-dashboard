@@ -445,42 +445,18 @@ sections:
               template: >-
                 {#-- ===== SHOWCASE CARD ===== --#}
 
-                {#-- 1. User Configuration --#} {%- set Kid_name = 'Kidname' -%} {%-
-                set pref_show_penalties = true -%}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
+                {%- set pref_show_penalties = true -%}
 
-                {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
-                Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-                ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-                state_attr(dashboard_helper, 'ui_translations') -%}
-
-                {#-- 3. Collect Data --#} {%- set points_sensor = 'sensor.kc_' ~
-                Kid_name_normalize ~ '_points' -%} {%- set points =
-                states(points_sensor) | int(default=0) -%} {%- set
-                points_earned_all_time = state_attr(points_sensor,
-                'point_stat_points_earned_all_time') | int(default=0) -%} {%-
-                set points_label = state_attr(points_sensor,
-                'unit_of_measurement') -%} {%- set points_icon =
-                state_attr(points_sensor, 'icon') -%}
-
-                {%- set all_time_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
-                '_chores_completed_total' -%} {%- set all_time_completed =
-                states(all_time_sensor) | int(default=0) -%}
-
-                {%- set highest_badge_entity = 'sensor.kc_' ~ Kid_name_normalize
-                ~ '_highest_badge' -%} {%- set highest_badge =
-                states(highest_badge_entity) or 'None' -%} {%- set
-                highest_badge_icon = state_attr(highest_badge_entity, 'icon') or
-                'mdi:medal-outline' -%} {%- set highest_badge_multiplier =
-                (state_attr(highest_badge_entity, 'awards') or
-                {}).get('points_multiplier') | float(1) -%} {%- set all_badges =
-                state_attr(highest_badge_entity, 'all_earned_badges') |
-                default([], true) -%}
-
-                {%- set reward_status_entities = state_attr(dashboard_helper,
-                'rewards') | default([], true) -%} {%- set bonus_list =
-                state_attr(dashboard_helper, 'bonuses') | default([], true) -%}
-                {%- set penalty_list = state_attr(dashboard_helper, 'penalties')
-                | default([], true) -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
+                {%- set all_time_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_chores_completed_total' -%}
+                {%- set highest_badge_entity = 'sensor.kc_' ~ Kid_name_normalize ~ '_highest_badge' -%}
 
                 {%- set ns = namespace(
                   badge_list="\n ",
@@ -494,10 +470,20 @@ sections:
                   content=''
                 ) -%}
 
-                {#-- 4. Build Display --#} {%- set badge_display_line = ui.none
-                if highest_badge in ['None', 'unknown', 'Unknown',
-                'unavailable'] else "<ha-icon icon='" ~ highest_badge_icon ~
-                "'></ha-icon> " ~ highest_badge -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set points = states(points_sensor) | int(default=0) -%}
+                {%- set points_earned_all_time = state_attr(points_sensor, 'point_stat_points_earned_all_time') | int(default=0) -%}
+                {%- set all_time_completed = states(all_time_sensor) | int(default=0) -%}
+                {%- set highest_badge = states(highest_badge_entity) or 'None' -%}
+                {%- set highest_badge_icon = state_attr(highest_badge_entity, 'icon') or 'mdi:medal-outline' -%}
+                {%- set highest_badge_multiplier = (state_attr(highest_badge_entity, 'awards') or {}).get('points_multiplier') | float(1) -%}
+                {%- set all_badges = state_attr(highest_badge_entity, 'all_earned_badges') | default([], true) -%}
+                {%- set reward_status_entities = state_attr(dashboard_helper, 'rewards') | default([], true) -%}
+                {%- set bonus_list = state_attr(dashboard_helper, 'bonuses') | default([], true) -%}
+                {%- set penalty_list = state_attr(dashboard_helper, 'penalties') | default([], true) -%}
+                {#-- 4. Build Display --#}
+                {%- set badge_display_line = ui.get('none', 'err-none') if highest_badge in ['None', 'unknown', 'Unknown', 'unavailable'] else "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge -%}
 
                 {%- for badge in all_badges -%}
                   {%- set badge_name_normalize = badge | slugify() -%}
@@ -514,8 +500,8 @@ sections:
                   {%- set approval_count = state_attr(status_sensor, 'reward_approvals_count') | int(default=0) -%}
                   {%- if claim_count > 0 or approval_count > 0 -%}
                     {%- set ns.reward_progress = ns.reward_progress + [
-                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; " ~ ui.claims ~ ": &nbsp;"
-                      ~ claim_count ~ "&nbsp; |&nbsp; " ~ ui.approvals ~ ": &nbsp;" ~ approval_count
+                      "- <ha-icon icon='" ~ reward_icon ~ "'></ha-icon> **" ~ reward_name ~ ":** &nbsp;&nbsp; " ~ ui.get('claims', 'err-claims') ~ ": &nbsp;"
+                      ~ claim_count ~ "&nbsp; |&nbsp; " ~ ui.get('approvals', 'err-approvals') ~ ": &nbsp;" ~ approval_count
                     ] -%}
                   {%- endif -%}
                 {%- endfor -%}
@@ -529,7 +515,7 @@ sections:
                   {%- if bonus_count > 0 -%}
                     {%- set ns.total_bonus_points = ns.total_bonus_points + (bonus_points * bonus_count) -%}
                     {%- set ns.bonuses = ns.bonuses + [
-                      "- <ha-icon icon='" ~ bonus_icon ~ "'></ha-icon> **" ~ bonus_name ~ ":** " ~ ui.applied ~ " "
+                      "- <ha-icon icon='" ~ bonus_icon ~ "'></ha-icon> **" ~ bonus_name ~ ":** " ~ ui.get('applied', 'err-applied') ~ " "
                       ~ bonus_count ~ " (💰 " ~ (bonus_points * bonus_count) ~ " " ~ points_label ~ ")"
                     ] -%}
                   {%- endif -%}
@@ -544,7 +530,7 @@ sections:
                   {%- if penalty_count > 0 -%}
                     {%- set ns.total_penalty_points = ns.total_penalty_points + (-penalty_points * penalty_count) -%}
                     {%- set ns.penalties = ns.penalties + [
-                      "- <ha-icon icon='" ~ penalty_icon ~ "'></ha-icon> **" ~ penalty_name ~ ":** " ~ ui.applied ~ " "
+                      "- <ha-icon icon='" ~ penalty_icon ~ "'></ha-icon> **" ~ penalty_name ~ ":** " ~ ui.get('applied', 'err-applied') ~ " "
                       ~ penalty_count ~ " (💥 " ~ (-penalty_points * penalty_count) ~ " " ~ points_label ~ ")"
                     ] -%}
                   {%- endif -%}
@@ -566,7 +552,7 @@ sections:
 
                   {%- set reward_points = state_attr(overall_sensor, 'reward_points') | int(default=0) -%}
 
-                  {%- set status = ui.completed if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
+                  {%- set status = ui.get('completed', 'err-completed') if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
                   {%- set ns.achievements = ns.achievements + ["- " ~ "<ha-icon icon='" ~ icon ~ "'></ha-icon>&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
                 {%- endfor -%}
 
@@ -584,43 +570,43 @@ sections:
                   {%- set overall_sensor = challenge_sensor | regex_replace('^sensor\\.kc_.*?_achievement_status_', 'sensor.kc_achievement_status_') -%}
                   {%- set reward_points = state_attr(overall_sensor, 'reward_points') | int(default=0) -%}
 
-                  {%- set status = "✔️ " ~ ui.completed if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
+                  {%- set status = "✔️ " ~ ui.get('completed', 'err-completed') if award_status == 'true' else '⌛ ' ~ progress|round(0) ~ '%' -%}
                   {%- set ns.challenges = ns.challenges + ["- " ~ "<ha-icon icon='" ~ icon ~ "'></ha-icon>&nbsp;" ~ name ~ " (" ~ status ~ ", 💎 " ~ reward_points ~ ")"] -%}
                 {%- endfor -%}
 
                 {#-- Create Content Variable --#}
 
                 {%- set ns.content =
-                  "## 🏅 " ~ Kid_name ~ "’s " ~ ui.showcase ~ "  \n"
+                  "## 🏅 " ~ Kid_name ~ "’s " ~ ui.get('showcase', 'err-showcase') ~ "  \n"
                   "<ha-icon icon=" ~ points_icon ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ points_label ~ ":** &nbsp;&nbsp;" ~ points ~ " \n\n"
-                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**" ~ ui.earned_all_time ~ ":** &nbsp;&nbsp;" ~ points_earned_all_time ~ " \n\n"
-                  "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ui.total_completed ~ ":** &nbsp;&nbsp;" ~ all_time_completed ~ " \n\n"
-                  "**🥇 " ~ ui.highest_badge_earned ~ ":** &nbsp;&nbsp;" ~ badge_display_line ~ "  \n"
-                  "**💎 " ~ points_label ~ " " ~ ui.multiplier ~ ":** &nbsp;&nbsp;x" ~ highest_badge_multiplier ~ "  \n\n"
-                  "**🥇 " ~ ui.all_earned_badges ~ ":**  " ~ (ns.badge_list if all_badges | length > 0 else "&nbsp;" ~ ui.none) ~ "  \n"
-                  "#### 🎁 " ~ ui.rewards ~ ": &nbsp;&nbsp;" ~
-                  ("\n" ~ ('\n'.join(ns.reward_progress)) if ns.reward_progress | length > 0 else ui.none) ~ "  \n\n"
-                  "#### ⭐ " ~ ui.bonuses_applied ~ ": &nbsp;&nbsp;" ~
+                  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**" ~ ui.get('earned_all_time', 'err-earned_all_time') ~ ":** &nbsp;&nbsp;" ~ points_earned_all_time ~ " \n\n"
+                  "<ha-icon icon=" ~ 'mdi:broom' ~ "></ha-icon>" ~ "&nbsp;&nbsp;**" ~ ui.get('total_completed', 'err-total_completed') ~ ":** &nbsp;&nbsp;" ~ all_time_completed ~ " \n\n"
+                  "**🥇 " ~ ui.get('highest_badge_earned', 'err-highest_badge_earned') ~ ":** &nbsp;&nbsp;" ~ badge_display_line ~ "  \n"
+                  "**💎 " ~ points_label ~ " " ~ ui.get('multiplier', 'err-multiplier') ~ ":** &nbsp;&nbsp;x" ~ highest_badge_multiplier ~ "  \n\n"
+                  "**🥇 " ~ ui.get('all_earned_badges', 'err-all_earned_badges') ~ ":**  " ~ (ns.badge_list if all_badges | length > 0 else "&nbsp;" ~ ui.get('none', 'err-none')) ~ "  \n"
+                  "#### 🎁 " ~ ui.get('rewards', 'err-rewards') ~ ": &nbsp;&nbsp;" ~
+                  ("\n" ~ ('\n'.join(ns.reward_progress)) if ns.reward_progress | length > 0 else ui.get('none', 'err-none')) ~ "  \n\n"
+                  "#### ⭐ " ~ ui.get('bonuses_applied', 'err-bonuses_applied') ~ ": &nbsp;&nbsp;" ~
                   ("\n" ~ ('\n'.join(ns.bonuses)) ~ "  \n"
-                  "**💰 " ~ ui.total_bonus ~ " " ~ points_label ~ ":** &nbsp;&nbsp;" ~ ns.total_bonus_points ~ "  \n"
-                  if ns.bonuses | length > 0 else ui.none) ~ " \n"
+                  "**💰 " ~ ui.get('total_bonus', 'err-total_bonus') ~ " " ~ points_label ~ ":** &nbsp;&nbsp;" ~ ns.total_bonus_points ~ "  \n"
+                  if ns.bonuses | length > 0 else ui.get('none', 'err-none')) ~ " \n"
                   -%}
 
                   {%- if pref_show_penalties -%}
                     {%- set ns.content = ns.content ~
-                      "#### ⚠️ " ~ ui.penalties_applied ~ ": &nbsp;&nbsp;" ~
+                      "#### ⚠️ " ~ ui.get('penalties_applied', 'err-penalties_applied') ~ ": &nbsp;&nbsp;" ~
                       ("\n" ~ ('\n'.join(ns.penalties))  ~ "  \n"
-                      "**💥 " ~ ui.total_penalty ~ " " ~ points_label ~ ":** &nbsp;&nbsp;" ~ ns.total_penalty_points ~ "  \n"
-                      if ns.penalties | length > 0 else ui.none) ~ " \n"
+                      "**💥 " ~ ui.get('total_penalty', 'err-total_penalty') ~ " " ~ points_label ~ ":** &nbsp;&nbsp;" ~ ns.total_penalty_points ~ "  \n"
+                      if ns.penalties | length > 0 else ui.get('none', 'err-none')) ~ " \n"
                       -%}
                   {%- endif -%}
 
 
                   {%- set ns.content = ns.content ~
-                  "#### 🏆 " ~ ui.achievements ~ ": &nbsp;&nbsp; " ~
-                  ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;" ~ ui.none) ~ "  \n"
-                  "#### 🏁 " ~ ui.challenges ~ ": &nbsp;&nbsp; " ~
-                  ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;" ~ ui.none) ~ "  \n"
+                  "#### 🏆 " ~ ui.get('achievements', 'err-achievements') ~ ": &nbsp;&nbsp; " ~
+                  ('\n' ~ ('\n'.join(ns.achievements)) if ns.achievements | length > 0 else "&nbsp;" ~ ui.get('none', 'err-none')) ~ "  \n"
+                  "#### 🏁 " ~ ui.get('challenges', 'err-challenges') ~ ": &nbsp;&nbsp; " ~
+                  ('\n' ~ ('\n'.join(ns.challenges)) if ns.challenges | length > 0 else "&nbsp;" ~ ui.get('none', 'err-none')) ~ "  \n"
                 -%}
 
                 {{
@@ -665,8 +651,7 @@ sections:
 
             {#-- Set Kid_name and normalize --#} {%- set ns.Kid_name_normalize =
             ns.Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-            ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-            state_attr(dashboard_helper, 'ui_translations') -%}
+            ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper' -%}
 
             {#-- Collect Points & Labels --#} {%- set points_sensor =
             'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
@@ -676,7 +661,8 @@ sections:
 
             {#-- Collect Highest Badge Data --#} {%- set ns.highest_badge_sensor
             = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_highest_badge' -%} {%-
-            set hb_state = states(ns.highest_badge_sensor) -%}
+            set hb_state = states(ns.highest_badge_sensor) -%} {%- set ui =
+            state_attr(dashboard_helper, 'ui_translations') or {} -%}
 
             {#-- Extract Live Maintenance Details (if valid) --#} {%- if
             hb_state not in ['unknown', 'unavailable'] -%}
@@ -754,7 +740,7 @@ sections:
                     'name': (state_attr(badge_entity, 'friendly_name') | default(bname)) | regex_replace('^Badge - ', ''),
                     'icon': state_attr(badge_entity, 'icon') | default('mdi:medal-outline'),
                     'description': state_attr(badge_entity, 'description') | default(''),
-                    'type': ui.cumulative if ui else 'Cumulative',
+                    'type': ui.get('cumulative', 'err-cumulative') if ui else 'Cumulative',
                     'threshold': threshold_val,
                     'award_items': award_items_list,
                     'kids_earned': earned_list,
@@ -792,7 +778,7 @@ sections:
               {{
                 {
                   'type': 'markdown',
-                  'content': "### 🏅 " ~ (ui.no_badges_found if ui else 'No Cumulative Badges Found') ~ " \n" ~ (ui.badge_setup_prompt if ui else 'Set up cumulative badges to reward lifetime milestones!')
+                  'content': "### 🏅 " ~ (ui.get('no_badges_found', 'err-no_badges_found') if ui else 'No Cumulative Badges Found') ~ " \n" ~ (ui.get('badge_setup_prompt', 'err-badge_setup_prompt') if ui else 'Set up cumulative badges to reward lifetime milestones!')
                 }
               }},
             {%- else -%}
@@ -807,60 +793,60 @@ sections:
                 {%- if badge.description -%}
                   {%- set content = content ~ "_" ~ badge.description ~ "_  \n" -%}
                 {%- else -%}
-                  {%- set content = content ~ "_" ~ badge.type ~ " " ~ (ui.badge if ui else 'Badge') ~ "_  \n" -%}
+                  {%- set content = content ~ "_" ~ badge.type ~ " " ~ (ui.get('badge', 'err-badge') if ui else 'Badge') ~ "_  \n" -%}
                 {%- endif -%}
 
                 {#-- STATUS --#}
                 {%- if earned -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.status if ui else 'Status') ~ ":** ✅ " ~ (ui.earned if ui else 'Earned') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** ✅ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') ~ "  \n" -%}
                 {%- else -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.status if ui else 'Status') ~ ":** 🔒 " ~ (ui.locked if ui else 'Future Goal') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** 🔒 " ~ (ui.get('locked', 'err-locked') if ui else 'Future Goal') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- AWARD COUNT & LAST AWARDED (Only for Highest Earned Badge) --#}
                 {%- if is_highest_earned -%}
                     {%- if ns.m_award_count > 0 or ns.m_last_awarded -%}
                         {%- if ns.m_last_awarded -%}
-                            {%- set content = content ~ "⭐ **" ~ (ui.last_earned if ui else 'Last Earned') ~ ":** " ~ ns.m_last_awarded ~ "  \n" -%}
+                            {%- set content = content ~ "⭐ **" ~ (ui.get('last_earned', 'err-last_earned') if ui else 'Last Earned') ~ ":** " ~ ns.m_last_awarded ~ "  \n" -%}
                         {%- endif -%}
                         {%- if ns.m_award_count > 0 -%}
-                            {%- set content = content ~ "🎖️ **" ~ (ui.earned_count if ui else 'Earned Count') ~ ":** " ~ ns.m_award_count ~ "  \n" -%}
+                            {%- set content = content ~ "🎖️ **" ~ (ui.get('earned_count', 'err-earned_count') if ui else 'Earned Count') ~ ":** " ~ ns.m_award_count ~ "  \n" -%}
                         {%- endif -%}
                     {%- endif -%}
                 {%- endif -%}
 
                 {#-- THRESHOLD --#}
                 {%- set content = content ~ "\n---\n" -%}
-                {%- set content = content ~ "🎯 **" ~ (ui.threshold if ui else 'Threshold') ~ ":** " ~ badge.threshold|int ~ " " ~ ns.points_label ~ "  \n" -%}
+                {%- set content = content ~ "🎯 **" ~ (ui.get('threshold', 'err-threshold') if ui else 'Threshold') ~ ":** " ~ badge.threshold|int ~ " " ~ ns.points_label ~ "  \n" -%}
 
                 {#-- AWARDS SECTION --#}
                 {%- if badge.award_items | length > 0 -%}
-                    {%- set content = content ~ "💎 **" ~ (ui.awards if ui else 'Awards') ~ ":** " ~ badge.award_items | join(', ') ~ "  \n" -%}
+                    {%- set content = content ~ "💎 **" ~ (ui.get('awards', 'err-awards') if ui else 'Awards') ~ ":** " ~ badge.award_items | join(', ') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- MIDDLE: LIVE MAINTENANCE (Only for Highest Earned Badge) --#}
                 {%- if is_highest_earned -%}
                     {%- if ns.m_required > 0 or badge.maintenance > 0 -%}
                         {%- set content = content ~ "\n---\n" -%}
-                        {%- set content = content ~ "#### 🔄 **" ~ (ui.maintenance if ui else 'Maintenance') ~ ":** " -%}
+                        {%- set content = content ~ "#### 🔄 **" ~ (ui.get('maintenance', 'err-maintenance') if ui else 'Maintenance') ~ ":** " -%}
 
                         {#- Status Line -#}
                         {%- if ns.m_status == 'active' -%}
-                            {%- set content = content ~ " 🟢 " ~ (ui.active if ui else 'Active') ~ " \n" -%}
+                            {%- set content = content ~ " 🟢 " ~ (ui.get('active', 'err-active') if ui else 'Active') ~ " \n" -%}
                         {%- elif ns.m_status == 'demoted'-%}
-                            {%- set content = content ~ "⚠️ " ~ (ui.demoted if ui else 'Demoted') ~ "  \n" -%}
+                            {%- set content = content ~ "⚠️ " ~ (ui.get('demoted', 'err-demoted') if ui else 'Demoted') ~ "  \n" -%}
                         {%- else -%}
                             {%- set content = content ~ "⚠️ " ~ ns.m_status|title ~ "  \n" -%}
                         {%- endif -%}
 
                         {#- Progress Line -#}
                         {%- set req_pts = ns.m_required if ns.m_required > 0 else badge.maintenance -%}
-                        {%- set content = content ~ "- ⏳ **" ~ (ui.in_progress if ui else 'In Progress') ~ ":** " ~ ns.m_cycle_pts ~ " / " ~ req_pts ~ " " ~ ns.points_label ~ "  \n" -%}
+                        {%- set content = content ~ "- ⏳ **" ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Progress') ~ ":** " ~ ns.m_cycle_pts ~ " / " ~ req_pts ~ " " ~ ns.points_label ~ "  \n" -%}
 
                         {%- if ns.m_remaining > 0 -%}
                             {%- set content = content ~ "- 🔥 **" ~ (ui.need if ui else 'Need') ~ ":** " ~ ns.m_remaining ~ " " ~ ns.points_label ~ "  \n" -%}
                         {%- else -%}
-                            {%- set content = content ~ "- 🎉 " ~ (ui.requirement_met if ui else 'Requirement Met!') ~ " \n" -%}
+                            {%- set content = content ~ "- 🎉 " ~ (ui.get('requirement_met', 'err-requirement_met') if ui else 'Requirement Met!') ~ " \n" -%}
                         {%- endif -%}
 
                         {#- Dates -#}
@@ -868,7 +854,7 @@ sections:
                             {%- set content = content ~ "- 📅 **" ~ (ui.due if ui else 'Due') ~ ":** " ~ ns.m_end_date ~ "  \n" -%}
                         {%- endif -%}
                         {%- if ns.m_grace_end -%}
-                            {%- set content = content ~ "- 🚑 **" ~ (ui.grace_period if ui else 'Grace Period') ~ ":** " ~ ns.m_grace_end ~ "  \n" -%}
+                            {%- set content = content ~ "- 🚑 **" ~ (ui.get('grace_period', 'err-grace_period') if ui else 'Grace Period') ~ ":** " ~ ns.m_grace_end ~ "  \n" -%}
                         {%- endif -%}
                     {%- endif -%}
                 {%- endif -%}
@@ -891,13 +877,13 @@ sections:
                     {%- endif -%}
 
                     {%- if pts_val > 0 -%}
-                        {%- set footer_elements = footer_elements + ["🚀 **" ~ (ui.remaining if ui else 'To Unlock') ~ ":** " ~ pts_val ~ " " ~ ns.points_label] -%}
+                        {%- set footer_elements = footer_elements + ["🚀 **" ~ (ui.get('remaining', 'err-remaining') if ui else 'To Unlock') ~ ":** " ~ pts_val ~ " " ~ ns.points_label] -%}
                     {%- endif -%}
                 {%- endif -%}
 
                 {#-- 2. Add "Earned By" if applicable (Any card) --#}
                 {%- if badge.kids_earned | length > 0 -%}
-                    {%- set footer_elements = footer_elements + ["👥 **" ~ (ui.earned_by if ui else 'Earned By') ~ ":** " ~ badge.kids_earned | join(', ')] -%}
+                    {%- set footer_elements = footer_elements + ["👥 **" ~ (ui.get('earned', 'err-earned')_by if ui else 'Earned By') ~ ":** " ~ badge.kids_earned | join(', ')] -%}
                 {%- endif -%}
 
                 {#-- Render Footer if elements exist --#}
@@ -928,7 +914,7 @@ sections:
             {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
             Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_' ~
             Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-            state_attr(dashboard_helper, 'ui_translations') -%}
+            state_attr(dashboard_helper, 'ui_translations') or {} -%}
 
             {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
             '_points' -%} {%- set points = states(points_sensor) |
@@ -973,7 +959,7 @@ sections:
               {{
                 {
                   'type': 'markdown',
-                  'content': "### 🏅 " ~ (ui.no_badges_found if ui else 'No Badges Found') ~ " \n" ~ (ui.badge_setup_prompt if ui else 'Set up badges to track your progress!')
+                  'content': "### 🏅 " ~ (ui.get('no_badges_found', 'err-no_badges_found') if ui else 'No Badges Found') ~ " \n" ~ (ui.get('badge_setup_prompt', 'err-badge_setup_prompt') if ui else 'Set up badges to track your progress!')
                 }
               }},
             {%- else -%}
@@ -988,34 +974,34 @@ sections:
 
                 {#-- STATUS LINE --#}
                 {%- if badge.status == 'earned' -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.status if ui else 'Status') ~ ":** ✅ " ~ (ui.earned if ui else 'Earned') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** ✅ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') ~ "  \n" -%}
                 {%- elif badge.status == 'in_progress' -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.status if ui else 'Status') ~ ":** ⏳ " ~ (ui.in_progress if ui else 'In Progress') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** ⏳ " ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Progress') ~ "  \n" -%}
                 {%- else -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.status if ui else 'Status') ~ ":** 🔒 " ~ (ui.locked if ui else 'Future Goal') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** 🔒 " ~ (ui.get('locked', 'err-locked') if ui else 'Future Goal') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- PROGRESS LINE --#}
-                {%- set content = content ~ "📊 **" ~ (ui.progress if ui else 'Progress') ~ ":** " ~ badge.progress|round(1) ~ "%  \n" -%}
+                {%- set content = content ~ "📊 **" ~ (ui.get('progress', 'err-progress') if ui else 'Progress') ~ ":** " ~ badge.progress|round(1) ~ "%  \n" -%}
 
                 {#-- START DATE --#}
                 {%- if badge.start_date -%}
-                    {%- set content = content ~ "📅 **" ~ (ui.start_date if ui else 'Start Date') ~ ":** " ~ badge.start_date ~ "  \n" -%}
+                    {%- set content = content ~ "📅 **" ~ (ui.get('start_date', 'err-start_date') if ui else 'Start Date') ~ ":** " ~ badge.start_date ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- END DATE --#}
                 {%- if badge.end_date -%}
-                    {%- set content = content ~ "📅 **" ~ (ui.end_date if ui else 'End Date') ~ ":** " ~ badge.end_date ~ "  \n" -%}
+                    {%- set content = content ~ "📅 **" ~ (ui.get('end_date', 'err-end_date') if ui else 'End Date') ~ ":** " ~ badge.end_date ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- AWARD COUNT --#}
                 {%- if badge.award_count > 0 -%}
-                    {%- set content = content ~ "🎖️ **" ~ (ui.award_count if ui else 'Award Count') ~ ":** " ~ badge.award_count ~ "  \n" -%}
+                    {%- set content = content ~ "🎖️ **" ~ (ui.get('award_count', 'err-award_count') if ui else 'Award Count') ~ ":** " ~ badge.award_count ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- LAST AWARDED DATE --#}
                 {%- if badge.last_awarded -%}
-                    {%- set content = content ~ "⭐ **" ~ (ui.last_awarded if ui else 'Last Awarded') ~ ":** " ~ badge.last_awarded ~ "  \n" -%}
+                    {%- set content = content ~ "⭐ **" ~ (ui.get('last_awarded', 'err-last_awarded') if ui else 'Last Awarded') ~ ":** " ~ badge.last_awarded ~ "  \n" -%}
                 {%- endif -%}
 
                 {{
@@ -1089,7 +1075,7 @@ sections:
                     {%- set criteria = state_attr(achievement_sensor_id, 'criteria') | default('') -%}
                     {%- set assigned_kids = state_attr(achievement_sensor_id, 'assigned_kids') | default([], true) -%}
 
-                    {%- set awarded_text = "✔️ " ~ (ui.earned if ui else 'Earned') if awarded else "⌛ " ~ (ui.in_progress if ui else 'In Process') -%}
+                    {%- set awarded_text = "✔️ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') if awarded else "⌛ " ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Process') -%}
                     {%- set goal_type_label =
                       target_value ~ ' (' ~ ns.STREAK_GOAL ~ ')' if achievement_type == 'chore_streak'
                       else target_value ~ ' (' ~ ns.DAILY_MINIMUM ~ ')' if achievement_type == 'daily_minimum'
@@ -1109,7 +1095,7 @@ sections:
                     {%- if reward_points > 0 -%}
                       {%- set content = content ~ "**💎 " ~ (ui.reward if ui else 'Reward') ~ ":** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ points_label ~ " \n" -%}
                     {%- endif -%}
-                    {%- set content = content ~ "\n **📊 " ~ (ui.progress if ui else 'Progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
+                    {%- set content = content ~ "\n **📊 " ~ (ui.get('progress', 'err-progress') if ui else 'Progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
                     {%- if kids_display -%}
                       {%- set content = content ~ "**👥 " ~ (ui.assigned_to if ui else 'Assigned To') ~ ":** &nbsp;&nbsp;" ~ kids_display ~ "  \n" -%}
                     {%- endif -%}
@@ -1215,7 +1201,7 @@ sections:
                     {%- set criteria = state_attr(challenge_sensor_id, 'criteria') | default('') -%}
                     {%- set assigned_kids = state_attr(challenge_sensor_id, 'assigned_kids') | default([], true) -%}
 
-                    {%- set awarded_text = "✔️ " ~ (ui.earned if ui else 'Earned') if awarded else "⌛ " ~ (ui.in_progress if ui else 'In Process') -%}
+                    {%- set awarded_text = "✔️ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') if awarded else "⌛ " ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Process') -%}
                     {%- set goal_type_label = target_value ~ ' (' ~ ns.TOTAL_CHORES ~ ')' if challenge_type == 'total_within_window' else target_value ~ ' (' ~ ns.PER_DAY_GOAL ~ ')' -%}
                     {%- set kids_display = assigned_kids | join(', ') if assigned_kids | count > 0 else '' -%}
                     {#-- Convert start and end dates to local time and short format --#}
@@ -1234,12 +1220,12 @@ sections:
                       {%- set content = content ~ "**📌 " ~ (ui.criteria if ui else 'Criteria') ~ ":** &nbsp;&nbsp;" ~ criteria ~ "  \n" -%}
                     {%- endif -%}
                     {%- set content = content ~ "**🎯 " ~ (ui.goal if ui else 'Goal') ~ ":** &nbsp;&nbsp;" ~ goal_type_label ~ "  \n" -%}
-                    {%- set content = content ~ "**📅 " ~ (ui.start_date if ui else 'Start Date') ~ ":** &nbsp;&nbsp;" ~ start_date ~ "  \n" -%}
-                    {%- set content = content ~ "**📅 " ~ (ui.end_date if ui else 'End Date') ~ ":** &nbsp;&nbsp;" ~ end_date ~ "  \n" -%}
+                    {%- set content = content ~ "**📅 " ~ (ui.get('start_date', 'err-start_date') if ui else 'Start Date') ~ ":** &nbsp;&nbsp;" ~ start_date ~ "  \n" -%}
+                    {%- set content = content ~ "**📅 " ~ (ui.get('end_date', 'err-end_date') if ui else 'End Date') ~ ":** &nbsp;&nbsp;" ~ end_date ~ "  \n" -%}
                     {%- if reward_points > 0 -%}
                       {%- set content = content ~ "**💎 " ~ (ui.reward if ui else 'Reward') ~ ":** &nbsp;&nbsp;" ~ reward_points|string ~ " " ~ points_label ~ " \n" -%}
                     {%- endif -%}
-                    {%- set content = content ~ "\n **📊 " ~ (ui.progress if ui else 'Progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
+                    {%- set content = content ~ "\n **📊 " ~ (ui.get('progress', 'err-progress') if ui else 'Progress') ~ ":** &nbsp;&nbsp;" ~ raw_progress|int|string ~ "/" ~ target_value|string ~ " (" ~ progress_percentage|string ~ "%)  \n" -%}
                     {%- if kids_display -%}
                       {%- set content = content ~ "**👥 " ~ (ui.assigned_to if ui else 'Assigned To') ~ ":** &nbsp;&nbsp;" ~ kids_display ~ "  \n" -%}
                     {%- endif -%}
