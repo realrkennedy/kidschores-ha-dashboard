@@ -78,28 +78,24 @@ sections:
               template: >-
                 {#-- ===== CHORES CARD ===== --#}
 
-                {#-- 1. User Configuration --#} {%- set Kid_name = 'Kidname' -%} {%-
-                set pref_column_count = 2 -%} {%- set pref_use_overdue_grouping
-                = true -%} {%- set pref_use_today_grouping = true -%} {%- set
-                pref_include_daily_recurring_in_today = true -%} {%- set
-                pref_use_weekly_grouping = true -%} {%- set
-                pref_include_weekly_recurring_in_weekly = true -%} {%- set
-                pref_exclude_approved = false -%} {%- set
-                pref_use_label_grouping = true -%} {%- set
-                pref_exclude_label_list = [ "Example_label_1", "Example_label_2"
-                ] -%}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
+                {%- set pref_column_count = 2 -%}
+                {%- set pref_use_overdue_grouping = true -%}
+                {%- set pref_use_today_grouping = true -%}
+                {%- set pref_include_daily_recurring_in_today = true -%}
+                {%- set pref_use_weekly_grouping = true -%}
+                {%- set pref_include_weekly_recurring_in_weekly = true -%}
+                {%- set pref_exclude_approved = false -%}
+                {%- set pref_use_label_grouping = true -%}
+                {%- set pref_exclude_label_list = ["Example_label_1", "Example_label_2"] -%}
 
-                {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
-                Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-                ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-                state_attr(dashboard_helper, 'ui_translations') -%} {%- set
-                chore_list = state_attr(dashboard_helper, 'chores') |
-                default([], true) -%}
-
-                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
-                '_points' -%} {%- set points_label = state_attr(points_sensor,
-                'unit_of_measurement') -%} {%- set points_icon =
-                state_attr(points_sensor, 'icon') -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
+                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
 
                 {%- set ns = namespace(
                   overdue_buttons=[],
@@ -109,21 +105,23 @@ sections:
                   other_buttons=[],
                   label_button_groups=[],
                   all_label_buttons=[],
-                  all_chore_labels=[]
+                  all_chore_labels=[],
+                  group_cards=[]
                 ) -%}
 
-                {#-- 3. Calculate Timestamps --#} {%- set today_00 =
-                as_timestamp(now().replace(hour=0, minute=0, second=0,
-                microsecond=0)) -%} {%- set today_12 = today_00 + (12 * 60 * 60)
-                -%} {%- set today_24 = today_00 + (24 * 60 * 60) -%} {%- set
-                week_start = 0 -%} {%- set days_until_week_start = 7 if
-                now().weekday() == week_start else (7 - now().weekday()) % 7 -%}
-                {%- set week_start_00 = as_timestamp((now() +
-                timedelta(days=days_until_week_start)).replace(hour=0, minute=0,
-                second=0, microsecond=0)) -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set chore_list = state_attr(dashboard_helper, 'chores') | default([], true) -%}
 
-                {#-- 4. Process Chores and Group --#} {%- for chore in
-                chore_list -%}
+                {%- set today_00 = as_timestamp(now().replace(hour=0, minute=0, second=0, microsecond=0)) -%}
+                {%- set today_12 = today_00 + (12 * 60 * 60) -%}
+                {%- set today_24 = today_00 + (24 * 60 * 60) -%}
+                {%- set week_start = 0 -%}
+                {%- set days_until_week_start = 7 if now().weekday() == week_start else (7 - now().weekday()) % 7 -%}
+                {%- set week_start_00 = as_timestamp((now() + timedelta(days=days_until_week_start)).replace(hour=0, minute=0, second=0, microsecond=0)) -%}
+
+                {#-- 4. Build Display --#}
+                {%- for chore in chore_list -%}
                   {%- set chore_sensor_id = chore.eid if chore is mapping else chore -%}
                   {%- set sensor_state = states(chore_sensor_id) -%}
                   {%- set due_date_str = state_attr(chore_sensor_id, 'due_date') -%}
@@ -168,47 +166,47 @@ sections:
                   {%- endif -%}
                 {%- endfor -%}
 
-                {#-- 5. Create Label Groups and Build Display --#} {%- set
-                ns.all_chore_labels = ns.all_chore_labels | unique | list | sort
-                -%} {%- set ns.all_chore_labels = ns.all_chore_labels |
-                reject('in', pref_exclude_label_list) | list -%} {%- for label
-                in ns.all_chore_labels -%}
+                {#-- Create Label Groups --#}
+                {%- set ns.all_chore_labels = ns.all_chore_labels | unique | list | sort -%}
+                {%- set ns.all_chore_labels = ns.all_chore_labels | reject('in', pref_exclude_label_list) | list -%}
+                {%- for label in ns.all_chore_labels -%}
                   {%- set temp_label_button_group = [] -%}
                   {%- for label_entry, sensor_id in ns.all_label_buttons -%}
                     {%- if label_entry == label -%}
-                      {#-- Only ever 1 sensor in each label_entry, so only taking first rather than loop --#}
                       {%- set temp_label_button_group = temp_label_button_group + ([sensor_id] | first) -%}
                     {%- endif -%}
                   {%- endfor -%}
                   {%- set ns.label_button_groups = ns.label_button_groups + [{'name': label, 'buttons': temp_label_button_group, 'icon': 'mdi:label'}] -%}
                 {%- endfor -%}
 
-                {#-- Build the button groups --#} {%- set button_groups = [
-                    {'name': "!!!!!!!!!!! " ~ ui.overdue ~ " !!!!!!!!!!!", 'buttons': ns.overdue_buttons, 'icon': 'mdi:alert-octagon'},
-                    {'name': ui.due_this_morning, 'buttons': ns.am_buttons, 'icon': 'mdi:alarm'},
-                    {'name': ui.due_today, 'buttons': ns.pm_buttons, 'icon': 'mdi:calendar-today'},
-                    {'name': ui.due_this_week, 'buttons': ns.weekly_buttons, 'icon': 'mdi:calendar-week'}
+                {#-- Build the button groups --#}
+                {%- set button_groups = [
+                    {'name': "!!!!!!!!!!! " ~ ui.get('overdue', 'err-overdue') ~ " !!!!!!!!!!!", 'buttons': ns.overdue_buttons, 'icon': 'mdi:alert-octagon'},
+                    {'name': ui.get('due_this_morning', 'err-due_this_morning'), 'buttons': ns.am_buttons, 'icon': 'mdi:alarm'},
+                    {'name': ui.get('due_today', 'err-due_today'), 'buttons': ns.pm_buttons, 'icon': 'mdi:calendar-today'},
+                    {'name': ui.get('due_this_week', 'err-due_this_week'), 'buttons': ns.weekly_buttons, 'icon': 'mdi:calendar-week'}
                 ] -%}
 
-                {#-- Insert label-based groups --#} {%- set button_groups =
-                button_groups + ns.label_button_groups -%}
+                {#-- Insert label-based groups --#}
+                {%- set button_groups = button_groups + ns.label_button_groups -%}
 
-                {#-- Continue with bonus group --#} {%- set button_groups =
-                button_groups + [
-                    {'name': ui.upcoming_bonus, 'buttons': ns.other_buttons, 'icon': 'mdi:calendar-clock'}
+                {#-- Continue with bonus group --#}
+                {%- set button_groups = button_groups + [
+                    {'name': ui.get('upcoming_bonus', 'err-upcoming_bonus'), 'buttons': ns.other_buttons, 'icon': 'mdi:calendar-clock'}
                 ] -%}
 
-                {#-- 6. Render --#} {{
+                {#-- 5. Render --#}
+                {{
                   {
                     'type': 'heading',
                     'icon': 'mdi:broom',
-                    'heading': ui.chores,
+                    'heading': ui.get('chores', 'err-chores'),
                     'heading_style': 'title',
                   }
                 }},
 
-                {#-- Loop through the button groups and create all claim buttons
-                --#} {%- for group in button_groups -%}
+                {#-- Loop through the button groups and create all claim buttons --#}
+                {%- for group in button_groups -%}
                   {%- set ns.group_cards = [] -%}
                   {%- if group.buttons | length > 0 -%}
                     {%- set heading_card =
@@ -242,25 +240,25 @@ sections:
                       {%- set recurring = state_attr(chore_sensor_id, 'recurring_frequency') -%}
                       {%- set today = now().astimezone(now().tzinfo).date() -%}
                       {%- set due_date_short =
-                          ui.daily if recurring == 'daily' and not due_date else
-                          ui.weekly if recurring == 'weekly' and not due_date else
-                          ui.no_due_date if not due_date else
+                          ui.get('daily', 'err-daily') if recurring == 'daily' and not due_date else
+                          ui.get('weekly', 'err-weekly') if recurring == 'weekly' and not due_date else
+                          ui.get('no_due_date', 'err-no_due_date') if not due_date else
                           (due_date.strftime('%-I:%M %p') if due_date.date() == today else as_timestamp(due_date) | timestamp_custom('%a %b %-d', true))
                       -%}
 
                       {%- set multi_approve = state_attr(chore_sensor_id, 'allow_multiple_claims_per_day') -%}
                       {%- set chore_state = states(chore_sensor_id) -%}
                       {%- set state_map = {
-                          'pending': ui.pending,
-                          'claimed': ui.claimed,
-                          'approved': ui.approved,
-                          'overdue': ui.overdue
+                          'pending': ui.get('pending', 'err-pending'),
+                          'claimed': ui.get('claimed', 'err-claimed'),
+                          'approved': ui.get('approved', 'err-approved'),
+                          'overdue': ui.get('overdue', 'err-overdue')
                       } -%}
                       {%- set chore_state_display = (state_map[chore_state] if chore_state in state_map else chore_state) ~ ' (M)' if multi_approve == true else (state_map[chore_state] if chore_state in state_map else chore_state) -%}
                       {%- set points = state_attr(chore_sensor_id, 'default_points') | string -%}
                       {%- set global_chore_state = state_attr(chore_sensor_id, 'global_state') -%}
                       {%- set streak = state_attr(chore_sensor_id, 'chore_current_streak') | string -%}
-                      {%- set secondary = points_label ~ ': ' + points + '\n' + ui.streak + ': ' + streak + '\n \n' + ui.status + ': ' + chore_state_display + '\n' + ui.due + ': ' + due_date_short -%}
+                      {%- set secondary = points_label ~ ': ' + points + '\n' + ui.get('streak', 'err-streak') + ': ' + streak + '\n \n' + ui.get('status', 'err-status') + ': ' + chore_state_display + '\n' + ui.get('due', 'err-due') + ': ' + due_date_short -%}
                       {%- set icon_color = (
                             'blue' if chore_state == 'approved' and multi_approve == true else
                             'green' if chore_state == 'approved' else
@@ -337,23 +335,17 @@ sections:
               template: >-
                 {#-- ===== REWARDS CARD ===== --#}
 
-                {#-- 1. User Configuration --#} {%- set Kid_name = 'Kidname' -%} {%-
-                set pref_column_count = 1 -%} {%- set pref_use_label_grouping =
-                false -%} {%- set pref_exclude_label_list = [ "Example_label_1",
-                "Example_label_2" ] -%}
+                {#-- 1. User Configuration --#}
+                {%- set Kid_name = 'Kidname' -%}
+                {%- set pref_column_count = 1 -%} {%- set pref_use_label_grouping = false -%}
+                {%- set pref_exclude_label_list = [ "Example_label_1", "Example_label_2" ] -%}
 
-                {#-- 2. Initialize Variables --#} {%- set Kid_name_normalize =
-                Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-                ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%} {%- set ui =
-                state_attr(dashboard_helper, 'ui_translations') -%} {%- set
-                reward_list = state_attr(dashboard_helper, 'rewards') |
-                default([], true) -%}
-
-                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~
-                '_points' -%} {%- set current_points = states(points_sensor) |
-                int(default=0) -%} {%- set points_label =
-                state_attr(points_sensor, 'unit_of_measurement') -%} {%- set
-                points_icon = state_attr(points_sensor, 'icon') -%}
+                {#-- 2. Initialize Variables --#}
+                {%- set Kid_name_normalize = Kid_name | slugify() -%}
+                {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+                {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+                {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
+                {%- set points_icon = state_attr(points_sensor, 'icon') -%}
 
                 {%- set ns = namespace(
                   all_reward_labels=[],
@@ -363,7 +355,13 @@ sections:
                   group_cards=[]
                 ) -%}
 
-                {#-- 3. Collect Data --#} {%- for sensor in reward_list -%}
+                {#-- 3. Collect Data --#}
+                {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+                {%- set reward_list = state_attr(dashboard_helper, 'rewards') | default([], true) -%}
+                {%- set current_points = states(points_sensor) | int(default=0) -%}
+
+                {#-- 4. Build Display Groups --#}
+                {%- for sensor in reward_list -%}
                   {%- set sensor_eid = sensor.eid if sensor is mapping else sensor -%}
                   {%- set reward_labels = state_attr(sensor_eid, 'labels') | default(['-No Label-'], true) -%}
 
@@ -403,12 +401,12 @@ sections:
                       {%- set claims = state_attr(sensor, 'reward_claims_count') | int(default=0) -%}
 
                       {%- set points_needed = reward_cost - current_points if reward_cost > current_points else 0 -%}
-                      {%- set can_claim = "✅" if points_needed == 0 else "❌ " ~ ui.need ~ " " ~ points_needed ~ " " ~ ui.more -%}
+                      {%- set can_claim = "✅" if points_needed == 0 else "❌ " ~ ui.get('need', 'err-need') ~ " " ~ points_needed ~ " " ~ ui.get('more', 'err-more') -%}
 
                       {%- set ns.group_cards = ns.group_cards + [{
                         'type': 'custom:mushroom-template-card',
                         'primary': reward_name,
-                        'secondary': "💰 " ~ ui.cost ~ ": " ~ reward_cost|string ~ " | 👍 " ~ approvals|string ~ " | 📥 " ~ claims|string ~ " | " ~ can_claim,
+                        'secondary': "💰 " ~ ui.get('cost', 'err-cost') ~ ": " ~ reward_cost|string ~ " | 👍 " ~ approvals|string ~ " | 📥 " ~ claims|string ~ " | " ~ can_claim,
                         'icon': reward_icon,
                         'icon_color': 'green' if points_needed == 0 else 'grey',
                         'tap_action': { 'action': 'call-service', 'service': 'button.press', 'target': {'entity_id': claim_button } }
@@ -419,7 +417,7 @@ sections:
                     {
                       'type': 'heading',
                       'icon': 'mdi:gift-outline',
-                      'heading': group.name if group.name != '-No Label-' else ui.rewards,
+                      'heading': group.name if group.name != '-No Label-' else ui.get('rewards', 'err-rewards'),
                       'heading_style': 'title',
                     }
                   }},{{
@@ -427,7 +425,7 @@ sections:
                       'type': 'grid',
                       'columns': pref_column_count,
                       'square': false,
-                      'cards': ns.group_cards if ns.group_cards | length > 0 else [{'type': 'markdown', 'content': ui.no_rewards}]
+                      'cards': ns.group_cards if ns.group_cards | length > 0 else [{'type': 'markdown', 'content': ui.get('no_rewards', 'err-no_rewards')}]
                     }
                   }},
                 {%- endfor -%}
