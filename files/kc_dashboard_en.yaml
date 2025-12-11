@@ -625,11 +625,17 @@ sections:
           template: >-
             {#-- ===== CUMULATIVE BADGE CARD ===== --#}
 
-            {#-- Initialize Namespace Variables --#} {%- set ns = namespace(
-              Kid_name='Kidname',
-              Kid_name_normalize='',
+            {#-- 1. User Configuration --#}
+            {%- set Kid_name = 'Kidname' -%}
+
+            {#-- 2. Initialize Variables --#}
+            {%- set Kid_name_normalize = Kid_name | slugify() -%}
+            {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
+            {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
+
+            {%- set ns = namespace(
               badges=[],
-              points='',
+              points=0,
               points_label='',
               highest_badge_sensor='',
               m_status='',
@@ -646,60 +652,42 @@ sections:
               has_earned_any=false
             ) -%}
 
-            {#-- Translatable text now comes from ui translations in dashboard
-            helper --#}
+            {#-- 3. Collect Data --#}
+            {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+            {%- set ns.points = states(points_sensor) | int(default=0) -%}
+            {%- set ns.points_label = state_attr(points_sensor, 'unit_of_measurement') | default('Pts', true) -%}
+            {%- set ns.highest_badge_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_highest_badge' -%}
+            {%- set hb_state = states(ns.highest_badge_sensor) -%}
 
-            {#-- Set Kid_name and normalize --#} {%- set ns.Kid_name_normalize =
-            ns.Kid_name | slugify() -%} {%- set dashboard_helper = 'sensor.kc_'
-            ~ ns.Kid_name_normalize ~ '_ui_dashboard_helper' -%}
-
-            {#-- Collect Points & Labels --#} {%- set points_sensor =
-            'sensor.kc_' ~ ns.Kid_name_normalize ~ '_points' -%} {%- set
-            ns.points = states(points_sensor) | int(default=0) -%} {%- set
-            ns.points_label = state_attr(points_sensor, 'unit_of_measurement') |
-            default('Pts', true) -%}
-
-            {#-- Collect Highest Badge Data --#} {%- set ns.highest_badge_sensor
-            = 'sensor.kc_' ~ ns.Kid_name_normalize ~ '_highest_badge' -%} {%-
-            set hb_state = states(ns.highest_badge_sensor) -%} {%- set ui =
-            state_attr(dashboard_helper, 'ui_translations') or {} -%}
-
-            {#-- Extract Live Maintenance Details (if valid) --#} {%- if
-            hb_state not in ['unknown', 'unavailable'] -%}
-                {%- set ns.points_to_next = state_attr(ns.highest_badge_sensor, 'points_to_next_badge') | int(default=0) -%}
-                {%- if ns.points_to_next is none -%}
-                    {%- set ns.points_to_next = 0 -%}
-                {%- endif -%}
-                {%- set ns.m_status = state_attr(ns.highest_badge_sensor, 'badge_status') | default('active') -%}
-                {%- set ns.m_cycle_pts = state_attr(ns.highest_badge_sensor, 'cycle_points') | int(default=0) -%}
-                {%- set ns.m_end_date = state_attr(ns.highest_badge_sensor, 'maintenance_end_date') -%}
-                {%- set ns.m_grace_end = state_attr(ns.highest_badge_sensor, 'maintenance_grace_end_date') -%}
-                {%- set ns.m_required = state_attr(ns.highest_badge_sensor, 'maintenance_points_required') | int(default=0) -%}
-                {%- set ns.m_remaining = state_attr(ns.highest_badge_sensor, 'maintenance_points_remaining') | int(default=0) -%}
-                {%- set ns.m_last_awarded = state_attr(ns.highest_badge_sensor, 'last_awarded_date') -%}
-                {%- set ns.m_award_count = state_attr(ns.highest_badge_sensor, 'award_count') | int(default=0) -%}
+            {#-- Extract Live Maintenance Details (if valid) --#}
+            {%- if hb_state not in ['unknown', 'unavailable'] -%}
+              {%- set ns.points_to_next = state_attr(ns.highest_badge_sensor, 'points_to_next_badge') | int(default=0) -%}
+              {%- if ns.points_to_next is none -%}
+                {%- set ns.points_to_next = 0 -%}
+              {%- endif -%}
+              {%- set ns.m_status = state_attr(ns.highest_badge_sensor, 'badge_status') | default('active') -%}
+              {%- set ns.m_cycle_pts = state_attr(ns.highest_badge_sensor, 'cycle_points') | int(default=0) -%}
+              {%- set ns.m_end_date = state_attr(ns.highest_badge_sensor, 'maintenance_end_date') -%}
+              {%- set ns.m_grace_end = state_attr(ns.highest_badge_sensor, 'maintenance_grace_end_date') -%}
+              {%- set ns.m_required = state_attr(ns.highest_badge_sensor, 'maintenance_points_required') | int(default=0) -%}
+              {%- set ns.m_remaining = state_attr(ns.highest_badge_sensor, 'maintenance_points_remaining') | int(default=0) -%}
+              {%- set ns.m_last_awarded = state_attr(ns.highest_badge_sensor, 'last_awarded_date') -%}
+              {%- set ns.m_award_count = state_attr(ns.highest_badge_sensor, 'award_count') | int(default=0) -%}
             {%- endif -%}
 
-            {#-- Badge Sensors: Only gather the three badges specified by the
-            highest_badge sensor --#} {%- set hb_current_name =
-            (states(ns.highest_badge_sensor) or
-            state_attr(ns.highest_badge_sensor, 'current_badge_name') or
-            state_attr(ns.highest_badge_sensor, 'highest_earned_badge_name')) |
-            default('') -%} {%- set hb_next_higher_name =
-            state_attr(ns.highest_badge_sensor, 'next_higher_badge_name') |
-            default('') -%} {%- set hb_next_lower_name =
-            state_attr(ns.highest_badge_sensor, 'next_lower_badge_name') |
-            default('') -%}
+            {#-- Collect Badge Sensors: Three badges from highest_badge sensor --#}
+            {%- set hb_current_name = (states(ns.highest_badge_sensor) or state_attr(ns.highest_badge_sensor, 'current_badge_name') or state_attr(ns.highest_badge_sensor, 'highest_earned_badge_name')) | default('') -%}
+            {%- set hb_next_higher_name = state_attr(ns.highest_badge_sensor, 'next_higher_badge_name') | default('') -%}
+            {%- set hb_next_lower_name = state_attr(ns.highest_badge_sensor, 'next_lower_badge_name') | default('') -%}
+            {%- set target_names = [hb_current_name, hb_next_higher_name, hb_next_lower_name] -%}
 
-            {%- set target_names = [hb_current_name, hb_next_higher_name,
-            hb_next_lower_name] -%} {%- set ns.badges = [] -%} {%- for bname in
-            target_names -%}
+            {#-- Process each badge and build badge list --#}
+            {%- for bname in target_names -%}
               {%- if bname and bname not in ['None', 'unknown', 'unavailable'] -%}
                 {%- set badge_name_normalize = bname | slugify() -%}
                 {%- set badge_entity = 'sensor.kc_' ~ badge_name_normalize ~ '_badge' -%}
                 {%- if states(badge_entity) not in ['unknown', 'unavailable'] -%}
-
-                  {#-- LOGIC: Target Data --#}
+                  {#-- Extract badge details --#}
                   {%- set target_data = state_attr(badge_entity, 'target') -%}
                   {%- set threshold_val = 0 -%}
                   {%- set maintenance_points = 0 -%}
@@ -710,23 +698,14 @@ sections:
                     {%- set threshold_val = state_attr(badge_entity, 'threshold_value') | float(default=0) -%}
                   {%- endif -%}
 
-                  {#-- LOGIC: Reset Schedule --#}
-                  {%- set reset_data = state_attr(badge_entity, 'reset_schedule') -%}
-                  {%- set frequency_val = 'none' -%}
-                  {%- set grace_period_val = 0 -%}
-                  {%- if reset_data is mapping -%}
-                    {%- set frequency_val = reset_data.recurring_frequency | default('none') -%}
-                    {%- set grace_period_val = reset_data.grace_period_days | int(default=0) -%}
-                  {%- endif -%}
-
-                  {#-- LOGIC: Awards --#}
+                  {#-- Extract awards --#}
                   {%- set awards_data = state_attr(badge_entity, 'awards') -%}
                   {%- set award_items_list = [] -%}
                   {%- if awards_data is iterable and awards_data is not string and awards_data is not none -%}
                     {%- set award_items_list = awards_data -%}
                   {%- endif -%}
 
-                  {#-- LOGIC: Kids Earned --#}
+                  {#-- Extract kids earned --#}
                   {%- set raw_earned = state_attr(badge_entity, 'kids_earned') -%}
                   {%- set earned_list = [] -%}
                   {%- if raw_earned is string -%}
@@ -735,12 +714,13 @@ sections:
                     {%- set earned_list = raw_earned -%}
                   {%- endif -%}
 
+                  {#-- Build badge info --#}
                   {%- set badge_info = {
                     'entity_id': badge_entity,
                     'name': (state_attr(badge_entity, 'friendly_name') | default(bname)) | regex_replace('^Badge - ', ''),
                     'icon': state_attr(badge_entity, 'icon') | default('mdi:medal-outline'),
                     'description': state_attr(badge_entity, 'description') | default(''),
-                    'type': ui.get('cumulative', 'err-cumulative') if ui else 'Cumulative',
+                    'type': ui.get('cumulative', 'err-cumulative'),
                     'threshold': threshold_val,
                     'award_items': award_items_list,
                     'kids_earned': earned_list,
@@ -749,7 +729,7 @@ sections:
                   } -%}
                   {%- set ns.badges = ns.badges + [badge_info] -%}
 
-                  {#-- Map highest/lowest ids for later checks --#}
+                  {#-- Map highest/lowest badge IDs for tracking --#}
                   {%- if state_attr(ns.highest_badge_sensor, 'current_badge_id') and state_attr(ns.highest_badge_sensor, 'current_badge_id') == badge_info.badge_id -%}
                     {%- set ns.highest_earned_id = badge_entity -%}
                     {%- set ns.has_earned_any = true -%}
@@ -763,22 +743,19 @@ sections:
                   {%- elif state_attr(ns.highest_badge_sensor, 'next_higher_badge_name') and state_attr(ns.highest_badge_sensor, 'next_higher_badge_name') == badge_info.name -%}
                     {%- set ns.lowest_unearned_id = badge_entity -%}
                   {%- endif -%}
-
                 {%- endif -%}
               {%- endif -%}
             {%- endfor -%}
 
-            {#-- Identification handled below when building the targeted badge
-            list --#}
+            {#-- 4. Build Display --#}
+            {%- set sorted_badges = ns.badges | sort(reverse=true, attribute='threshold') -%}
 
-            {#-- MAIN RENDER LOOP --#} {%- set sorted_badges = ns.badges |
-            sort(reverse=true, attribute='threshold') -%}
-
+            {#-- 5. Render --#}
             {%- if sorted_badges | length == 0 -%}
               {{
                 {
                   'type': 'markdown',
-                  'content': "### 🏅 " ~ (ui.get('no_badges_found', 'err-no_badges_found') if ui else 'No Cumulative Badges Found') ~ " \n" ~ (ui.get('badge_setup_prompt', 'err-badge_setup_prompt') if ui else 'Set up cumulative badges to reward lifetime milestones!')
+                  'content': "### 🏅 " ~ ui.get('no_badges_found', 'err-no_badges_found') ~ " \n" ~ ui.get('badge_setup_prompt', 'err-badge_setup_prompt')
                 }
               }},
             {%- else -%}
@@ -793,68 +770,68 @@ sections:
                 {%- if badge.description -%}
                   {%- set content = content ~ "_" ~ badge.description ~ "_  \n" -%}
                 {%- else -%}
-                  {%- set content = content ~ "_" ~ badge.type ~ " " ~ (ui.get('badge', 'err-badge') if ui else 'Badge') ~ "_  \n" -%}
+                  {%- set content = content ~ "_" ~ badge.type ~ " " ~ ui.get('badge', 'err-badge') ~ "_  \n" -%}
                 {%- endif -%}
 
                 {#-- STATUS --#}
                 {%- if earned -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** ✅ " ~ (ui.get('earned', 'err-earned') if ui else 'Earned') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** ✅ " ~ ui.get('earned', 'err-earned') ~ "  \n" -%}
                 {%- else -%}
-                    {%- set content = content ~ "🏅 **" ~ (ui.get('status', 'err-status') if ui else 'Status') ~ ":** 🔒 " ~ (ui.get('locked', 'err-locked') if ui else 'Future Goal') ~ "  \n" -%}
+                    {%- set content = content ~ "🏅 **" ~ ui.get('status', 'err-status') ~ ":** 🔒 " ~ ui.get('locked', 'err-locked') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- AWARD COUNT & LAST AWARDED (Only for Highest Earned Badge) --#}
                 {%- if is_highest_earned -%}
                     {%- if ns.m_award_count > 0 or ns.m_last_awarded -%}
                         {%- if ns.m_last_awarded -%}
-                            {%- set content = content ~ "⭐ **" ~ (ui.get('last_earned', 'err-last_earned') if ui else 'Last Earned') ~ ":** " ~ ns.m_last_awarded ~ "  \n" -%}
+                            {%- set content = content ~ "⭐ **" ~ ui.get('last_earned', 'err-last_earned') ~ ":** " ~ ns.m_last_awarded ~ "  \n" -%}
                         {%- endif -%}
                         {%- if ns.m_award_count > 0 -%}
-                            {%- set content = content ~ "🎖️ **" ~ (ui.get('earned_count', 'err-earned_count') if ui else 'Earned Count') ~ ":** " ~ ns.m_award_count ~ "  \n" -%}
+                            {%- set content = content ~ "🎖️ **" ~ ui.get('earned_count', 'err-earned_count') ~ ":** " ~ ns.m_award_count ~ "  \n" -%}
                         {%- endif -%}
                     {%- endif -%}
                 {%- endif -%}
 
                 {#-- THRESHOLD --#}
                 {%- set content = content ~ "\n---\n" -%}
-                {%- set content = content ~ "🎯 **" ~ (ui.get('threshold', 'err-threshold') if ui else 'Threshold') ~ ":** " ~ badge.threshold|int ~ " " ~ ns.points_label ~ "  \n" -%}
+                {%- set content = content ~ "🎯 **" ~ ui.get('threshold', 'err-threshold') ~ ":** " ~ badge.threshold|int ~ " " ~ ns.points_label ~ "  \n" -%}
 
                 {#-- AWARDS SECTION --#}
                 {%- if badge.award_items | length > 0 -%}
-                    {%- set content = content ~ "💎 **" ~ (ui.get('awards', 'err-awards') if ui else 'Awards') ~ ":** " ~ badge.award_items | join(', ') ~ "  \n" -%}
+                    {%- set content = content ~ "💎 **" ~ ui.get('awards', 'err-awards') ~ ":** " ~ badge.award_items | join(', ') ~ "  \n" -%}
                 {%- endif -%}
 
                 {#-- MIDDLE: LIVE MAINTENANCE (Only for Highest Earned Badge) --#}
                 {%- if is_highest_earned -%}
                     {%- if ns.m_required > 0 or badge.maintenance > 0 -%}
                         {%- set content = content ~ "\n---\n" -%}
-                        {%- set content = content ~ "#### 🔄 **" ~ (ui.get('maintenance', 'err-maintenance') if ui else 'Maintenance') ~ ":** " -%}
+                        {%- set content = content ~ "#### 🔄 **" ~ ui.get('maintenance', 'err-maintenance') ~ ":** " -%}
 
                         {#- Status Line -#}
                         {%- if ns.m_status == 'active' -%}
-                            {%- set content = content ~ " 🟢 " ~ (ui.get('active', 'err-active') if ui else 'Active') ~ " \n" -%}
+                            {%- set content = content ~ " 🟢 " ~ ui.get('active', 'err-active') ~ " \n" -%}
                         {%- elif ns.m_status == 'demoted'-%}
-                            {%- set content = content ~ "⚠️ " ~ (ui.get('demoted', 'err-demoted') if ui else 'Demoted') ~ "  \n" -%}
+                            {%- set content = content ~ "⚠️ " ~ ui.get('demoted', 'err-demoted') ~ "  \n" -%}
                         {%- else -%}
                             {%- set content = content ~ "⚠️ " ~ ns.m_status|title ~ "  \n" -%}
                         {%- endif -%}
 
                         {#- Progress Line -#}
                         {%- set req_pts = ns.m_required if ns.m_required > 0 else badge.maintenance -%}
-                        {%- set content = content ~ "- ⏳ **" ~ (ui.get('in_progress', 'err-in_progress') if ui else 'In Progress') ~ ":** " ~ ns.m_cycle_pts ~ " / " ~ req_pts ~ " " ~ ns.points_label ~ "  \n" -%}
+                        {%- set content = content ~ "- ⏳ **" ~ ui.get('in_progress', 'err-in_progress') ~ ":** " ~ ns.m_cycle_pts ~ " / " ~ req_pts ~ " " ~ ns.points_label ~ "  \n" -%}
 
                         {%- if ns.m_remaining > 0 -%}
-                            {%- set content = content ~ "- 🔥 **" ~ (ui.need if ui else 'Need') ~ ":** " ~ ns.m_remaining ~ " " ~ ns.points_label ~ "  \n" -%}
+                            {%- set content = content ~ "- 🔥 **" ~ ui.get('need', 'err-need') ~ ":** " ~ ns.m_remaining ~ " " ~ ns.points_label ~ "  \n" -%}
                         {%- else -%}
-                            {%- set content = content ~ "- 🎉 " ~ (ui.get('requirement_met', 'err-requirement_met') if ui else 'Requirement Met!') ~ " \n" -%}
+                            {%- set content = content ~ "- 🎉 " ~ ui.get('requirement_met', 'err-requirement_met') ~ " \n" -%}
                         {%- endif -%}
 
                         {#- Dates -#}
                         {%- if ns.m_end_date -%}
-                            {%- set content = content ~ "- 📅 **" ~ (ui.due if ui else 'Due') ~ ":** " ~ ns.m_end_date ~ "  \n" -%}
+                            {%- set content = content ~ "- 📅 **" ~ ui.get('due', 'err-due') ~ ":** " ~ ns.m_end_date ~ "  \n" -%}
                         {%- endif -%}
                         {%- if ns.m_grace_end -%}
-                            {%- set content = content ~ "- 🚑 **" ~ (ui.get('grace_period', 'err-grace_period') if ui else 'Grace Period') ~ ":** " ~ ns.m_grace_end ~ "  \n" -%}
+                            {%- set content = content ~ "- 🚑 **" ~ ui.get('grace_period', 'err-grace_period') ~ ":** " ~ ns.m_grace_end ~ "  \n" -%}
                         {%- endif -%}
                     {%- endif -%}
                 {%- endif -%}
@@ -877,13 +854,13 @@ sections:
                     {%- endif -%}
 
                     {%- if pts_val > 0 -%}
-                        {%- set footer_elements = footer_elements + ["🚀 **" ~ (ui.get('remaining', 'err-remaining') if ui else 'To Unlock') ~ ":** " ~ pts_val ~ " " ~ ns.points_label] -%}
+                        {%- set footer_elements = footer_elements + ["🚀 **" ~ ui.get('remaining', 'err-remaining') ~ ":** " ~ pts_val ~ " " ~ ns.points_label] -%}
                     {%- endif -%}
                 {%- endif -%}
 
                 {#-- 2. Add "Earned By" if applicable (Any card) --#}
                 {%- if badge.kids_earned | length > 0 -%}
-                    {%- set footer_elements = footer_elements + ["👥 **" ~ (ui.get('earned', 'err-earned')_by if ui else 'Earned By') ~ ":** " ~ badge.kids_earned | join(', ')] -%}
+                    {%- set footer_elements = footer_elements + ["👥 **" ~ ui.get('earned_by', 'err-earned_by') ~ ":** " ~ badge.kids_earned | join(', ')] -%}
                 {%- endif -%}
 
                 {#-- Render Footer if elements exist --#}
