@@ -20,6 +20,10 @@ sections:
                 {#-- ========== Version KCD_0.4.0beta2 =========== --#}
                 {#-- ============================================= --#}
 
+                {#-- Requires KidsChores Integration 0.4.0 beta 2 --#}
+                {#-- Language translation now managed by the integration --#}
+                {#-- Select language by going to integration options and editing the kid --#}
+
                 {#-- ===== WELCOME CARD ===== --#}
 
                 {#-- 1. User Configuration --#}
@@ -1390,7 +1394,7 @@ sections:
             card_param: cards
             filter:
               template: >-
-                {#-- ===== PARENT DASHBOARD CARD ===== --#}
+                {#-- ===== PARENT DASHBOARD ===== --#}
 
                 {#-- 1. User Configuration --#}
                 {%- set Kid_name = 'Kidname' -%}
@@ -1400,31 +1404,133 @@ sections:
                 {%- set dashboard_helper = 'sensor.kc_' ~ Kid_name_normalize ~ '_ui_dashboard_helper' -%}
                 {%- set points_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_points' -%}
                 {%- set total_chores_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_chores_completed_total' -%}
+                {%- set highest_badge_sensor = 'sensor.kc_' ~ Kid_name_normalize ~ '_highest_badge' -%}
 
                 {#-- 3. Collect Data --#}
                 {%- set ui = state_attr(dashboard_helper, 'ui_translations') or {} -%}
+
                 {%- set points = states(points_sensor) | int(default=0) -%}
                 {%- set points_label = state_attr(points_sensor, 'unit_of_measurement') -%}
                 {%- set points_icon = state_attr(points_sensor, 'icon') -%}
-                {%- set todays_completed = state_attr(total_chores_sensor, 'chore_stat_approved_today') | int(default=0) -%}
+
+                {#-- Points Stats from kid_points --#}
+                {%- set points_earned_week = state_attr(points_sensor, 'point_stat_points_earned_week') | int(default=0) -%}
+                {%- set points_spent_week = state_attr(points_sensor, 'point_stat_points_spent_week') | int(default=0) -%}
+
+                {#-- Chore Stats from kid_chores_completed_total --#}
                 {%- set weekly_completed = state_attr(total_chores_sensor, 'chore_stat_approved_week') | int(default=0) -%}
-                {%- set monthly_completed = state_attr(total_chores_sensor, 'chore_stat_approved_month') | int(default=0) -%}
-                {%- set overdue_chores = state_attr(total_chores_sensor, 'chore_stat_current_overdue') | int(default=0) -%}
+                {%- set chore_longest_streak = state_attr(total_chores_sensor, 'chore_stat_longest_streak_week') | int(default=0) -%}
+                {%- set most_completed_chore = state_attr(total_chores_sensor, 'chore_stat_most_completed_chore_week') | default('N/A') -%}
+                {%- set avg_chores_per_day_week = state_attr(total_chores_sensor, 'chore_stat_avg_per_day_week') | float(default=0) -%}
+                {%- set current_claimed = state_attr(total_chores_sensor, 'chore_stat_current_claimed') | int(default=0) -%}
+                {%- set current_overdue = state_attr(total_chores_sensor, 'chore_stat_current_overdue') | int(default=0) -%}
+                {%- set weekly_overdue = state_attr(total_chores_sensor, 'chore_stat_overdue_week') | int(default=0) -%}
+
+                {#-- Badge Stats from highest_badge --#}
+                {%- set highest_badge = states(highest_badge_sensor) or 'None' -%}
+                {%- set highest_badge_icon = state_attr(highest_badge_sensor, 'icon') or 'mdi:medal-outline' -%}
+                {%- set highest_badge_multiplier = (state_attr(highest_badge_sensor, 'awards') or {}).get('points_multiplier') | float(default=1) -%}
 
                 {#-- 4. Build Display --#}
-                {%- set content = "## 👨‍👩‍👧 " ~ ui.get('parent_dashboard_for', 'err-parent_dashboard_for') ~ ": " ~ Kid_name ~ "  \n" -%}
-                {%- set content = content ~ "<ha-icon icon=" ~ points_icon ~ "></ha-icon> **" ~ points_label ~ ":** &nbsp;&nbsp;" ~ points ~ "  \n" -%}
-                {%- set content = content ~ "#### 📅 " ~ ui.get('chores_completed', 'err-chores_completed') ~ ":  \n" -%}
-                {%- set content = content ~ "- ☀️ " ~ ui.get('today', 'err-todays_completed') ~ ": &nbsp;&nbsp;" ~ todays_completed ~ "  \n" -%}
-                {%- set content = content ~ "- 📅 " ~ ui.get('week', 'err-week') ~ ": &nbsp;&nbsp;" ~ weekly_completed ~ "  \n" -%}
-                {%- set content = content ~ "- 🗓️ " ~ ui.get('month', 'err-month') ~ ": &nbsp;&nbsp;" ~ monthly_completed ~ "  \n" -%}
-                {%- set content = content ~ "- 🚨 " ~ ui.get('overdue_chores', 'err-overdue_chores') ~ ": &nbsp;&nbsp;" ~ overdue_chores ~ "  \n\n" -%}
+                {%- if highest_badge not in ['None', 'unknown', 'Unknown', 'unavailable'] -%}
+                  {%- if highest_badge_multiplier > 1 -%}
+                    {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ " (x" ~ highest_badge_multiplier|string ~ ")  \n" -%}
+                  {%- else -%}
+                    {%- set badge_display = "<ha-icon icon='" ~ highest_badge_icon ~ "'></ha-icon> " ~ highest_badge ~ "  \n" -%}
+                  {%- endif -%}
+                {%- else -%}
+                  {%- set badge_display = "" -%}
+                {%- endif -%}
 
-                {#-- 5. Render --#}
+                {%- set content =
+                  "## 👨‍👩‍👧 " ~ ui.get('parent_dashboard_for', 'err-parent_dashboard_for') ~ ": " ~ Kid_name ~ " \n"
+                  "#### <ha-icon icon=" ~ points_icon ~ "></ha-icon>&nbsp;&nbsp;" ~ points_label ~ ": &nbsp;&nbsp;" ~ points ~ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" ~ badge_display ~ " \n\n"
+                -%}
+
+                {#-- STATUS TABLE: Pending Approvals and Overdue --#}
+                {%- set status_table = "<table width=100% border=0 cellspacing=0 cellpadding=0>" -%}
+                {%- set status_table = status_table ~ "<tbody>" -%}
+                {%- set status_table = status_table ~ "<tr><td style='padding: 8px;'>" -%}
+                {%- if current_claimed > 0 -%}
+                  {%- set status_table = status_table ~ "🚨 " ~ current_claimed ~ " " ~ ui.get('pending_approvals', 'err-pending_approvals') -%}
+                {%- else -%}
+                  {%- set status_table = status_table ~ "✅ No pending approvals" -%}
+                {%- endif -%}
+                {%- set status_table = status_table ~ "</td><td style='padding: 8px; text-align: right;'>" -%}
+                {%- if current_overdue > 0 -%}
+                  {%- set status_table = status_table ~ "⚠️ <strong style='color: #d32f2f;'>" ~ current_overdue ~ " " ~ ui.get('overdue_chores', 'err-overdue_chores') ~ "</strong>" -%}
+                {%- else -%}
+                  {%- set status_table = status_table ~ "✅ No overdue" -%}
+                {%- endif -%}
+                {%- set status_table = status_table ~ "</td></tr>" -%}
+                {%- set status_table = status_table ~ "</tbody></table>" -%}
+                {%- set content = content ~ status_table ~ "\n\n---\n\n" -%}
+
+                {#-- HTML TABLE FOR WEEKLY PERFORMANCE --#}
+                {%- set html_table = "<table width=100% border=0 cellspacing=0 cellpadding=0 style='margin-top: 12px;'>" -%}
+                {%- set html_table = html_table ~ "<thead><tr><th style='padding: 8px; text-align: left;'>" ~ ui.get('weekly_performance', 'err-weekly_performance') ~ "</th><th style='padding: 8px; text-align: center;'></th></tr></thead>" -%}
+                {%- set html_table = html_table ~ "<tbody>" -%}
+
+                {#-- Row 1: Points Earned --#}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>💰 " ~ points_label ~ " " ~ ui.get('earned', 'err-earned') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ points_earned_week ~ "</td></tr>" -%}
+
+                {#-- Row 1b: Average Points per Day --#}
+                {%- set avg_points_per_day_week = (points_earned_week / 7) | float(default=0) -%}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>📊 " ~ ui.get('points_per_day', 'err-points_per_day') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ avg_points_per_day_week | round(2) ~ "</td></tr>" -%}
+
+                {#-- Row 2: Chores Completed --#}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>🧹 " ~ ui.get('chores_completed', 'err-chores_completed') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ weekly_completed ~ "</td></tr>" -%}
+
+                {#-- Row 3: Average per Day --#}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>📊 " ~ ui.get('chores_per_day', 'err-chores_per_day') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ avg_chores_per_day_week | round(2) ~ "</td></tr>" -%}
+
+                {#-- Row 4: Longest Streak --#}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>🔥 " ~ ui.get('longest_streak', 'err-longest_streak') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ chore_longest_streak ~ " days</td></tr>" -%}
+
+                {#-- Row 5: Most Completed Chore --#}
+                {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>🏆 " ~ ui.get('most_completions', 'err-most_completions') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>" ~ most_completed_chore ~ "</td></tr>" -%}
+
+                {#-- Row 6: Weekly Overdue --#}
+                {%- if weekly_overdue > 0 -%}
+                  {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>⚠️ " ~ ui.get('went_overdue', 'err-went_overdue') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold; color: #d32f2f;'>" ~ weekly_overdue ~ "</td></tr>" -%}
+                {%- else -%}
+                  {%- set html_table = html_table ~ "<tr><td style='padding: 8px;'>✅ " ~ ui.get('went_overdue', 'err-went_overdue') ~ "</td><td style='padding: 8px; text-align: center; font-weight: bold;'>0</td></tr>" -%}
+                {%- endif -%}
+
+                {%- set html_table = html_table ~ "</tbody></table>" -%}
+
+                {%- set content = content ~ html_table -%}
+
+                {#-- 5. Render Markdown Summary --#}
                 {{
                   {
                     'type': 'markdown',
                     'content': content
+                  }
+                }},
+
+                {#-- DETAIL BUTTONS GRID --#}
+                {{
+                  {
+                    'type': 'grid',
+                    'columns': 2,
+                    'square': false,
+                    'cards': [
+                      {
+                        'type': 'button',
+                        'entity': points_sensor,
+                        'name': ui.get('points_details', 'err-points_details'),
+                        'icon': 'mdi:chart-box-outline',
+                        'icon_height': '24px'
+                      },
+                      {
+                        'type': 'button',
+                        'entity': total_chores_sensor,
+                        'name': ui.get('chores_details', 'err-chores_details'),
+                        'icon': 'mdi:clipboard-text-outline',
+                        'icon_height': '24px'
+                      }
+                    ]
                   }
                 }},
       - square: false
